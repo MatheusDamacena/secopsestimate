@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecOps · Ingestion Sizing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── DARK (default) ── */
+:root{
+  --bg:#080b12; --surface:#0d1118; --surface2:#111620; --surface3:#161c28;
+  --border:rgba(255,255,255,0.055); --border2:rgba(255,255,255,0.10);
+  --text:#e4e8f0; --text2:#8892a4; --text3:#4a5568;
+  --cyan:#00f5d4; --cyan2:#00c4a8;
+  --cg:rgba(0,245,212,0.10); --cg2:rgba(0,245,212,0.05);
+  --hbg:rgba(8,11,18,0.96);
+  --sans:'Outfit',sans-serif; --mono:'DM Mono',monospace;
+}
+/* ── LIGHT ── */
+[data-theme="light"]{
+  --bg:#f0f4f8; --surface:#ffffff; --surface2:#f5f7fa; --surface3:#eaeff5;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --text:#0f1923; --text2:#44556e; --text3:#8a9bb0;
+  --cyan:#007a68; --cyan2:#009a84;
+  --cg:rgba(0,122,104,0.10); --cg2:rgba(0,122,104,0.05);
+  --hbg:rgba(240,244,248,0.97);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--sans); background:var(--bg); color:var(--text);
+  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;
+  display:flex; flex-direction:column; min-height:100vh;
+}
+/* grid bg */
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:linear-gradient(rgba(0,245,212,0.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,245,212,0.022) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 50% at 50% 0%,black 40%,transparent 100%);
+}
+[data-theme="light"] body::before{
+  background-image:linear-gradient(rgba(0,122,104,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,122,104,0.04) 1px,transparent 1px);
+}
+
+/* ── HEADER ── */
+header{
+  position:sticky; top:0; z-index:200;
+  height:52px; border-bottom:1px solid var(--border);
+  background:var(--hbg); backdrop-filter:blur(20px);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; flex-shrink:0; position:relative; z-index:100;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-mark svg{width:28px;height:28px;display:block}
+.logo-name{font-family:var(--sans);font-weight:300;font-size:14px;letter-spacing:.08em;color:var(--text)}
+.logo-name b{color:var(--cyan);font-weight:500}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.hpill{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.08em;border:1px solid var(--border);padding:3px 9px;border-radius:100px}
+.hstatus{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;color:var(--cyan);letter-spacing:.06em}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 7px var(--cyan);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+/* language */
+.lang-sel{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  color:var(--text2);padding:5px 8px;outline:none;cursor:pointer;transition:border-color .15s;
+}
+.lang-sel:focus,.lang-sel:hover{border-color:var(--cyan);color:var(--text)}
+/* theme */
+.theme-btn{
+  width:30px;height:30px;border-radius:7px;border:1px solid var(--border);
+  background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--text3);transition:all .15s;
+}
+.theme-btn:hover{background:var(--surface3);color:var(--text2);border-color:var(--border2)}
+.theme-btn svg{width:13px;height:13px}
+.icon-sun{display:none}.icon-moon{display:block}
+[data-theme="light"] .icon-sun{display:block}
+[data-theme="light"] .icon-moon{display:none}
+
+/* ── METRICS ── */
+.metrics{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  border-bottom:1px solid var(--border);flex-shrink:0;position:relative;z-index:1;
+}
+.metric{padding:14px 18px;border-right:1px solid var(--border);position:relative;transition:background .15s}
+.metric:last-child{border-right:none}
+.metric:hover{background:var(--cg2)}
+.metric.feat{background:linear-gradient(135deg,var(--cg) 0%,transparent 65%)}
+.metric.feat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.mlbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.mlbl::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--text3);display:inline-block}
+.metric.feat .mlbl{color:var(--cyan2)}
+.metric.feat .mlbl::before{background:var(--cyan);box-shadow:0 0 5px var(--cyan)}
+.mval{font-family:var(--mono);font-size:22px;font-weight:400;color:var(--text);letter-spacing:-.02em;line-height:1}
+.metric.feat .mval{color:var(--cyan)}
+.munit{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:4px;letter-spacing:.06em}
+
+/* ── TABS ── */
+.tabs{
+  display:flex;align-items:center;border-bottom:1px solid var(--border);
+  background:var(--surface);padding:0 20px;flex-shrink:0;position:relative;z-index:1;
+}
+.tab{
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--text3);
+  padding:12px 16px;cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .15s;user-select:none;display:flex;align-items:center;gap:7px;margin-bottom:-1px;
+}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab svg{width:13px;height:13px;flex-shrink:0}
+.tbadge{font-size:8px;background:var(--surface3);color:var(--text3);padding:1px 6px;border-radius:100px}
+.tab.active .tbadge{background:var(--cg2);color:var(--cyan2)}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── PANEL 1: two-column layout ── */
+.p1-shell{display:flex;position:relative;z-index:1}
+
+/* icon rail */
+.leftnav{
+  width:52px;border-right:1px solid var(--border);background:var(--surface);
+  display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:3px;
+  flex-shrink:0;position:sticky;top:52px;height:calc(100vh - 52px - 89px - 41px);overflow-y:auto;
+}
+.nvi{
+  width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;border:1px solid transparent;position:relative;flex-shrink:0;
+}
+.nvi svg{width:15px;height:15px;color:var(--text3);transition:color .15s}
+.nvi:hover{background:var(--surface3);border-color:var(--border)}
+.nvi:hover svg{color:var(--text2)}
+.nvi.active{background:var(--cg);border-color:rgba(0,200,180,.2)}
+.nvi.active svg{color:var(--cyan)}
+.nvi.active::after{content:'';position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:2px;height:18px;border-radius:2px;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.ndiv{width:24px;height:1px;background:var(--border);margin:3px 0;flex-shrink:0}
+.ntt{
+  position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:var(--surface3);border:1px solid var(--border2);padding:4px 10px;border-radius:5px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--text2);
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:300;
+}
+.nvi:hover .ntt{opacity:1}
+/* collapse btn */
+.ncollapse{
+  width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;border:1px solid transparent;flex-shrink:0;
+}
+.ncollapse:hover{background:var(--surface3);border-color:var(--border)}
+.ncollapse svg{width:14px;height:14px;color:var(--text3);transition:color .15s,transform .22s}
+.ncollapse:hover svg{color:var(--text2)}
+.ncollapse.collapsed svg{transform:scaleX(-1)}
+
+/* sidebar */
+.sidebar{
+  width:210px;border-right:1px solid var(--border);background:var(--surface);
+  display:flex;flex-direction:column;flex-shrink:0;
+  transition:width .22s cubic-bezier(.4,0,.2,1);overflow:hidden;
+  position:sticky;top:52px;height:calc(100vh - 52px - 89px - 41px);
+}
+.sidebar.collapsed{width:0;border-right:none}
+.sidebar.collapsed .sb-hdr,.sidebar.collapsed .sb-body,.sidebar.collapsed .sb-foot{opacity:0;pointer-events:none}
+.sb-hdr,.sb-body,.sb-foot{transition:opacity .15s}
+.sb-hdr{padding:12px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-title{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.srch-wrap{position:relative}
+.srch-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--text3);pointer-events:none}
+.srch-inp{
+  width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:7px 9px 7px 28px;font-size:11.5px;font-family:var(--mono);color:var(--text);outline:none;
+  transition:border-color .15s;
+}
+.srch-inp::placeholder{color:var(--text3)}
+.srch-inp:focus{border-color:var(--cyan)}
+.sb-body{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.nsec{margin-bottom:16px}
+.nsec-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);padding:0 6px;margin-bottom:5px}
+.nl{
+  display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:6px;
+  cursor:pointer;font-size:11.5px;color:var(--text2);transition:all .12s;user-select:none;
+  border:1px solid transparent;margin-bottom:1px;
+}
+.nl:hover{background:var(--surface3);color:var(--text)}
+.nl.active{background:var(--cg2);color:var(--cyan);border-color:rgba(0,180,160,.12)}
+.nbadge{font-family:var(--mono);font-size:8.5px;color:var(--text3);background:var(--surface3);padding:1px 5px;border-radius:100px;min-width:20px;text-align:center}
+.nl.active .nbadge{background:var(--cg);color:var(--cyan2)}
+.sb-foot{padding:10px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:5px}
+.sact{
+  width:100%;background:transparent;border:1px solid var(--border);border-radius:6px;
+  padding:7px 10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;
+  color:var(--text2);cursor:pointer;text-align:left;display:flex;align-items:center;gap:7px;transition:all .12s;
+}
+.sact:hover{background:var(--surface3);border-color:var(--border2);color:var(--text)}
+.sact svg{width:11px;height:11px;flex-shrink:0}
+.sact.on{background:var(--cg2);border-color:rgba(0,180,160,.22);color:var(--cyan)}
+.sact.primary{background:var(--cg2);border-color:rgba(0,180,160,.22);color:var(--cyan)}
+.sact.primary:hover{background:var(--cg);border-color:var(--cyan)}
+
+/* table wrapper */
+.tbl-wrap{flex:1;overflow-x:auto;background:var(--bg);min-width:0}
+table{width:100%;border-collapse:collapse;min-width:720px}
+thead th{
+  padding:9px 13px;text-align:left;font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--text3);
+  border-bottom:1px solid var(--border2);background:var(--surface);white-space:nowrap;
+  position:sticky;top:0;z-index:10;
+}
+thead th.r{text-align:right}
+tr.cat-row td{
+  padding:8px 13px;font-size:9.5px;font-weight:500;font-family:var(--mono);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cyan2);background:var(--surface2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+tr.dr td{padding:6px 13px;border-bottom:1px solid var(--border);vertical-align:middle;transition:background .08s}
+tr.dr:hover td{background:var(--cg2)}
+tr.dr.lit td{background:var(--cg2)}
+tr.dr.lit:hover td{background:var(--cg)}
+.rn{font-size:12px;color:var(--text);white-space:nowrap}
+.rs{font-family:var(--mono);font-size:10px;color:var(--text3);max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ni{
+  width:64px;background:transparent;border:none;border-bottom:1px solid var(--border2);
+  padding:3px 4px;font-size:11px;font-family:var(--mono);color:var(--text);text-align:right;
+  outline:none;transition:border-color .12s,color .12s;display:block;margin-left:auto;
+  -moz-appearance:textfield;
+}
+.ni::-webkit-outer-spin-button,.ni::-webkit-inner-spin-button{-webkit-appearance:none}
+.ni:focus{border-bottom-color:var(--cyan)}
+.ni.on{color:var(--cyan);border-bottom-color:var(--cyan)}
+.nc{font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;white-space:nowrap}
+.nc.a{color:var(--text2)}.nc.h{color:var(--cyan);font-weight:500}
+.empty-row{padding:48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.06em}
+/* col resize */
+th.rs-th{position:relative;user-select:none}
+.cr{position:absolute;right:0;top:0;bottom:0;width:5px;cursor:col-resize;z-index:20;background:transparent;transition:background .12s}
+.cr:hover,.cr.dragging{background:var(--cyan);opacity:.5}
+
+/* ── PANEL 2: CALCULADORA RÁPIDA ── */
+.calc-wrap{
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:36px 24px 60px;background:var(--bg);position:relative;z-index:1;
+  min-height:calc(100vh - 52px - 89px - 41px);
+}
+.calc-card{width:100%;max-width:660px;background:var(--surface);border:1px solid var(--border2);border-radius:16px;overflow:hidden}
+.calc-card-hdr{
+  padding:20px 24px 16px;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,var(--cg2) 0%,transparent 60%);position:relative;
+}
+.calc-card-hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.cc-title{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan2);margin-bottom:4px}
+.cc-sub{font-size:13px;color:var(--text2)}
+.calc-body{padding:22px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:580px){.cg{grid-template-columns:1fr}}
+.cf{display:flex;flex-direction:column;gap:6px}
+.clbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.ci,.cs{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-size:12.5px;font-family:var(--mono);color:var(--text);outline:none;
+  transition:border-color .15s;width:100%;
+}
+.ci:focus,.cs:focus{border-color:var(--cyan)}
+.chint{font-family:var(--mono);font-size:9.5px;color:var(--text3);line-height:1.5}
+.chint.warn{color:#ffb84d}
+[data-theme="light"] .chint.warn{color:#8c4a00}
+.eps-blk{grid-column:1/-1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;display:none}
+.eps-blk.vis{display:block}
+.eps-inner{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+@media(max-width:580px){.eps-inner{grid-template-columns:1fr}}
+.cdiv{grid-column:1/-1;height:1px;background:var(--border);margin:4px 0}
+.cresult{
+  grid-column:1/-1;
+  background:linear-gradient(135deg,var(--cg) 0%,transparent 70%);
+  border:1px solid rgba(0,180,160,.22);border-radius:12px;
+  padding:20px 24px;position:relative;overflow:hidden;
+}
+.cresult::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.cr-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cr-lbl::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);display:inline-block}
+.cr-val{font-family:var(--mono);font-size:34px;font-weight:400;color:var(--cyan);letter-spacing:-.02em;line-height:1;margin-bottom:6px}
+.cr-det{font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.8;white-space:pre-line}
+.cactions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.cbtn{
+  background:transparent;border:1px solid var(--border);border-radius:6px;
+  padding:8px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .12s;
+}
+.cbtn:hover{background:var(--surface3);border-color:var(--border2);color:var(--text)}
+.cbtn svg{width:12px;height:12px}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);padding:11px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);flex-wrap:wrap;gap:8px;flex-shrink:0;position:relative;z-index:1;
+}
+.ft{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.04em;line-height:1.8}
+.ft em{color:var(--cyan2);font-style:normal}
+.ft .au{color:var(--text2)}
+
+@media(max-width:880px){
+  .leftnav{display:none}
+  .sidebar{position:static;height:auto;width:100%;border-right:none;border-bottom:1px solid var(--border)}
+  .sidebar.collapsed{height:0;overflow:hidden}
+  .p1-shell{flex-direction:column}
+  .metrics{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:540px){.metrics{grid-template-columns:repeat(2,1fr)}}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+header,.metrics,.tabs{animation:fi .3s ease both}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 28 28" fill="none">
+        <polygon points="14,1.5 26.5,8.5 26.5,19.5 14,26.5 1.5,19.5 1.5,8.5" stroke="rgba(0,245,212,0.3)" stroke-width="1"/>
+        <polygon points="14,6.5 22,11 22,17 14,21.5 6,17 6,11" stroke="rgba(0,245,212,0.6)" stroke-width="1"/>
+        <circle cx="14" cy="14" r="2.8" fill="#00f5d4"/>
+        <circle cx="14" cy="1.5" r="1" fill="rgba(0,245,212,0.45)"/>
+        <circle cx="26.5" cy="8.5" r="1" fill="rgba(0,245,212,0.45)"/>
+        <circle cx="26.5" cy="19.5" r="1" fill="rgba(0,245,212,0.45)"/>
+        <circle cx="14" cy="26.5" r="1" fill="rgba(0,245,212,0.45)"/>
+        <circle cx="1.5" cy="19.5" r="1" fill="rgba(0,245,212,0.45)"/>
+        <circle cx="1.5" cy="8.5" r="1" fill="rgba(0,245,212,0.45)"/>
+      </svg>
+    </div>
+    <div class="logo-name">SECOPS <b>SIZING</b></div>
+  </div>
+  <div class="hdr-r">
+    <div class="hpill">110 LOG SOURCES</div>
+    <div class="hpill">EPS → TB/ANO</div>
+    <div class="hstatus"><div class="dot"></div><span id="lbl-live">LIVE CALC</span></div>
+    <select class="lang-sel" onchange="setLang(this.value)">
+      <option value="pt">PT</option>
+      <option value="en">EN</option>
+      <option value="es">ES</option>
+    </select>
+    <button class="theme-btn" onclick="toggleTheme()">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- METRICS (shared) -->
+<div class="metrics">
+  <div class="metric"><div class="mlbl" id="lm-src">Fontes ativas</div><div class="mval" id="m-src">0</div><div class="munit" id="lm-cfg">configuradas</div></div>
+  <div class="metric"><div class="mlbl" id="lm-eps">EPS total</div><div class="mval" id="m-eps">0</div><div class="munit" id="lm-eps2">eventos / seg</div></div>
+  <div class="metric"><div class="mlbl" id="lm-evd">Eventos / dia</div><div class="mval" id="m-evd">0</div><div class="munit" id="lm-evd2">total diário</div></div>
+  <div class="metric"><div class="mlbl" id="lm-gbd">GB / dia</div><div class="mval" id="m-gbd">0,00</div><div class="munit">gigabytes</div></div>
+  <div class="metric"><div class="mlbl" id="lm-gbm">GB / mês</div><div class="mval" id="m-gbm">0</div><div class="munit" id="lm-est">estimativa</div></div>
+  <div class="metric feat"><div class="mlbl" id="lm-tby">TB / ano</div><div class="mval" id="m-tby">0,00</div><div class="munit" id="lm-base">base de cotação</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(1,this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <span id="t1lbl">SIZING POR FONTE</span>
+    <span class="tbadge" id="t1badge">110 fontes</span>
+  </div>
+  <div class="tab" onclick="switchTab(2,this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-3"/><path d="M9 15h3l8.5-8.5a2.12 2.12 0 0 0-3-3L9 12v3z"/></svg>
+    <span id="t2lbl">CALCULADORA RÁPIDA</span>
+    <span class="tbadge" id="t2badge">GB · EPS · TB</span>
+  </div>
+</div>
+
+<!-- ═══ PANEL 1 ═══ -->
+<div class="panel active" id="panel-1">
+  <div class="p1-shell">
+
+    <!-- icon rail -->
+    <nav class="leftnav">
+      <div class="ncollapse" id="collapseBtn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="ndiv"></div>
+      <div class="nvi active" data-tag="all" onclick="setF('all',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="ntt" id="tt-all">Todas</span></div>
+      <div class="ndiv"></div>
+      <div class="nvi" data-tag="Servidores" onclick="setF('Servidores',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="5" rx="1"/><rect x="2" y="10" width="20" height="5" rx="1"/><rect x="2" y="17" width="20" height="5" rx="1"/><circle cx="6" cy="5.5" r="1"/><circle cx="6" cy="12.5" r="1"/><circle cx="6" cy="19.5" r="1"/></svg><span class="ntt" id="tt-srv">Servidores</span></div>
+      <div class="nvi" data-tag="Rede" onclick="setF('Rede',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11l-5.5 6M12 11l5.5 6"/></svg><span class="ntt" id="tt-net">Rede</span></div>
+      <div class="nvi" data-tag="Endpoint" onclick="setF('Endpoint',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="13" rx="1"/><path d="M8 21h8M12 18v3"/></svg><span class="ntt">Endpoint</span></div>
+      <div class="nvi" data-tag="Identidade" onclick="setF('Identidade',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="ntt" id="tt-id">Identidade</span></div>
+      <div class="nvi" data-tag="Aplicações" onclick="setF('Aplicações',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M4 6h16M4 10h16M4 14h10"/></svg><span class="ntt" id="tt-app">Aplicações</span></div>
+      <div class="nvi" data-tag="Cloud" onclick="setF('Cloud',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 0 1 0 9Z"/></svg><span class="ntt">Cloud</span></div>
+      <div class="nvi" data-tag="Segurança" onclick="setF('Segurança',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/></svg><span class="ntt" id="tt-sec">Segurança</span></div>
+      <div class="nvi" data-tag="OT" onclick="setF('OT',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg><span class="ntt">OT / IoT</span></div>
+      <div class="nvi" data-tag="Dados" onclick="setF('Dados',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span class="ntt" id="tt-data">Dados / IA</span></div>
+      <div class="nvi" data-tag="Telecom" onclick="setF('Telecom',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 5 5l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 14.92z"/></svg><span class="ntt">Telecom</span></div>
+    </nav>
+
+    <!-- sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-hdr">
+        <div class="sb-title" id="sb-search-lbl">Buscar fonte</div>
+        <div class="srch-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="srch-inp" type="search" id="search" oninput="render()">
+        </div>
+      </div>
+      <div class="sb-body">
+        <div class="nsec">
+          <div class="nsec-lbl" id="sb-overview">Visão geral</div>
+          <div class="nl active" data-tag="all" onclick="setF('all',this)"><span id="sb-all">Todas as fontes</span><span class="nbadge">110</span></div>
+        </div>
+        <div class="nsec">
+          <div class="nsec-lbl" id="sb-infra">Infraestrutura</div>
+          <div class="nl" data-tag="Servidores" onclick="setF('Servidores',this)"><span id="sb-srv">Servidores</span><span class="nbadge">14</span></div>
+          <div class="nl" data-tag="Rede" onclick="setF('Rede',this)"><span id="sb-net">Rede</span><span class="nbadge">26</span></div>
+          <div class="nl" data-tag="Endpoint" onclick="setF('Endpoint',this)">Endpoint<span class="nbadge">10</span></div>
+        </div>
+        <div class="nsec">
+          <div class="nsec-lbl" id="sb-idapps">Identidade & Apps</div>
+          <div class="nl" data-tag="Identidade" onclick="setF('Identidade',this)"><span id="sb-id">Identidade</span><span class="nbadge">12</span></div>
+          <div class="nl" data-tag="Aplicações" onclick="setF('Aplicações',this)"><span id="sb-apps">Aplicações</span><span class="nbadge">20</span></div>
+        </div>
+        <div class="nsec">
+          <div class="nsec-lbl" id="sb-cloudsec">Cloud & Segurança</div>
+          <div class="nl" data-tag="Cloud" onclick="setF('Cloud',this)">Cloud<span class="nbadge">24</span></div>
+          <div class="nl" data-tag="Segurança" onclick="setF('Segurança',this)"><span id="sb-sec">Segurança</span><span class="nbadge">16</span></div>
+        </div>
+        <div class="nsec">
+          <div class="nsec-lbl" id="sb-spec">Especializado</div>
+          <div class="nl" data-tag="OT" onclick="setF('OT',this)">OT / IoT<span class="nbadge">11</span></div>
+          <div class="nl" data-tag="Dados" onclick="setF('Dados',this)"><span id="sb-data">Dados / IA</span><span class="nbadge">7</span></div>
+          <div class="nl" data-tag="Telecom" onclick="setF('Telecom',this)">Telecom<span class="nbadge">6</span></div>
+        </div>
+      </div>
+      <div class="sb-foot">
+        <button class="sact" id="btn-filled" onclick="toggleFilled(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+          <span id="sb-filled">SÓ PREENCHIDOS</span>
+        </button>
+        <button class="sact" onclick="resetAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span id="sb-reset">RESETAR</span>
+        </button>
+        <button class="sact primary" onclick="exportCSV()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span id="sb-export">EXPORTAR CSV</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- table -->
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="rs-th" style="min-width:175px"><span id="th-type">Tipo de evento</span><div class="cr"></div></th>
+            <th class="rs-th" style="min-width:185px"><span id="th-scope">Escopo / exemplos</span><div class="cr"></div></th>
+            <th class="r rs-th" style="min-width:68px"><span id="th-qty">Qtde</span><div class="cr"></div></th>
+            <th class="r rs-th" style="min-width:76px"><span id="th-epsa">EPS/ativo</span><div class="cr"></div></th>
+            <th class="r rs-th" style="min-width:76px"><span id="th-epst">EPS total</span><div class="cr"></div></th>
+            <th class="r rs-th" style="min-width:100px"><span id="th-evd">Eventos/dia</span><div class="cr"></div></th>
+            <th class="r rs-th" style="min-width:82px"><span id="th-bytes">Bytes/evt</span><div class="cr"></div></th>
+            <th class="r" style="min-width:80px">GB/dia</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL 2 ═══ -->
+<div class="panel" id="panel-2">
+  <div class="calc-wrap">
+    <div class="calc-card">
+      <div class="calc-card-hdr">
+        <div class="cc-title" id="cc-title">Calculadora Rápida</div>
+        <div class="cc-sub" id="cc-sub">Converta qualquer taxa de ingestão para TB/ano (decimal · 1 TB = 10¹² bytes)</div>
+      </div>
+      <div class="calc-body">
+        <div class="cg">
+
+          <div class="cf">
+            <label class="clbl" id="cc-lv">Valor de entrada</label>
+            <input class="ci" id="c-value" type="number" step="any" min="0" value="500" oninput="cCalc()">
+            <span class="chint" id="cc-hv">Ex.: 500 GB/dia, 1000 EPS…</span>
+          </div>
+
+          <div class="cf">
+            <label class="clbl" id="cc-lu">Unidade / Taxa</label>
+            <select class="cs" id="c-unit" onchange="toggleEPS();cCalc()">
+              <optgroup label="Por dia">
+                <option value="MB_per_day">MB / dia</option>
+                <option value="GB_per_day" selected>GB / dia</option>
+                <option value="TB_per_day">TB / dia</option>
+              </optgroup>
+              <optgroup label="Por hora">
+                <option value="MB_per_hour">MB / hora</option>
+                <option value="GB_per_hour">GB / hora</option>
+                <option value="TB_per_hour">TB / hora</option>
+              </optgroup>
+              <optgroup label="Por mês">
+                <option value="GB_per_month">GB / mês</option>
+                <option value="TB_per_month">TB / mês</option>
+              </optgroup>
+              <optgroup label="EPS">
+                <option value="EPS">EPS (events/s) — requer tamanho do evento</option>
+              </optgroup>
+            </select>
+            <span class="chint" id="cc-hu">Resultado sempre em <b style="color:var(--cyan2)">TB/ano</b></span>
+          </div>
+
+          <div class="cf">
+            <label class="clbl" id="cc-ld">Dias no ano</label>
+            <select class="cs" id="c-days" onchange="cCalc()">
+              <option value="365">365 dias</option>
+              <option value="366">366 dias (bissexto)</option>
+            </select>
+            <span class="chint" id="cc-hd">Para estimativa padrão, use 365.</span>
+          </div>
+
+          <div class="cf">
+            <label class="clbl" id="cc-lm">Dias por mês</label>
+            <select class="cs" id="c-monthdays" onchange="cCalc()">
+              <option value="30">30 dias / mês</option>
+              <option value="30.4375">30,4375 (média anual)</option>
+            </select>
+            <span class="chint" id="cc-hm">Relevante apenas para unidades mensais.</span>
+          </div>
+
+          <div class="eps-blk" id="eps-blk">
+            <div class="eps-inner">
+              <div class="cf">
+                <label class="clbl" id="cc-leb">Tamanho médio do evento (bytes)</label>
+                <input class="ci" id="c-evtbytes" type="number" step="any" min="1" value="600" oninput="cCalc()">
+                <span class="chint" id="cc-heb">Firewall ~400–800B · EDR ~1200–1800B</span>
+              </div>
+              <div class="cf">
+                <label class="clbl" id="cc-loh">Fator overhead</label>
+                <input class="ci" id="c-overhead" type="number" step="any" min="1" value="1.2" oninput="cCalc()">
+                <span class="chint" id="cc-hoh">Headers, metadata. 1.0 = sem overhead.</span>
+              </div>
+            </div>
+            <span class="chint warn" id="cc-warn">⚠ EPS é estimativa — o tamanho real varia por fonte.</span>
+          </div>
+
+          <div class="cdiv"></div>
+
+          <div class="cresult">
+            <div class="cr-lbl" id="cc-rlbl">Resultado</div>
+            <div class="cr-val" id="c-result">—</div>
+            <div class="cr-det" id="c-detail"></div>
+          </div>
+
+          <div class="cactions">
+            <button class="cbtn" onclick="cCopy(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="cc-copy">COPIAR RESULTADO</span>
+            </button>
+            <button class="cbtn" onclick="cReset()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              <span id="cc-reset">RESET</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft"><em>SecOps</em> · Ingestion Sizing Tool · <span class="au">Matheus Damacena</span></div>
+  <div class="ft" style="text-align:center" id="ft-note">Estimativas de referência · valide com dados reais · Volume = EPS × bytes × 86.400 s/dia</div>
+  <div class="ft" style="text-align:right">v1.0.0</div>
+</footer>
+
+<script>
+// ─── I18N ───────────────────────────────────────────
+const I18={
+  pt:{
+    'lbl-live':'LIVE CALC',
+    'lm-src':'Fontes ativas','lm-cfg':'configuradas','lm-eps':'EPS total','lm-eps2':'eventos / seg',
+    'lm-evd':'Eventos / dia','lm-evd2':'total diário','lm-gbm':'GB / mês','lm-est':'estimativa',
+    'lm-tby':'TB / ano','lm-base':'base de cotação',
+    't1lbl':'SIZING POR FONTE','t1badge':'110 fontes','t2lbl':'CALCULADORA RÁPIDA','t2badge':'GB · EPS · TB',
+    'sb-search-lbl':'Buscar fonte','search-ph':'fonte ou fabricante…',
+    'sb-overview':'Visão geral','sb-all':'Todas as fontes',
+    'sb-infra':'Infraestrutura','sb-srv':'Servidores','sb-net':'Rede',
+    'sb-idapps':'Identidade & Apps','sb-id':'Identidade','sb-apps':'Aplicações',
+    'sb-cloudsec':'Cloud & Segurança','sb-sec':'Segurança',
+    'sb-spec':'Especializado','sb-data':'Dados / IA',
+    'sb-filled':'SÓ PREENCHIDOS','sb-reset':'RESETAR','sb-export':'EXPORTAR CSV',
+    'tt-all':'Todas','tt-srv':'Servidores','tt-net':'Rede','tt-id':'Identidade','tt-app':'Aplicações','tt-sec':'Segurança','tt-data':'Dados / IA',
+    'th-type':'Tipo de evento','th-scope':'Escopo / exemplos','th-qty':'Qtde',
+    'th-epsa':'EPS/ativo','th-epst':'EPS total','th-evd':'Eventos/dia','th-bytes':'Bytes/evt',
+    'cc-title':'Calculadora Rápida','cc-sub':'Converta qualquer taxa de ingestão para TB/ano (decimal · 1 TB = 10¹² bytes)',
+    'cc-lv':'Valor de entrada','cc-hv':'Ex.: 500 GB/dia, 1000 EPS…',
+    'cc-lu':'Unidade / Taxa','cc-hu':'Resultado sempre em TB/ano',
+    'cc-ld':'Dias no ano','cc-hd':'Para estimativa padrão, use 365.',
+    'cc-lm':'Dias por mês','cc-hm':'Relevante apenas para unidades mensais.',
+    'cc-leb':'Tamanho médio do evento (bytes)','cc-heb':'Firewall ~400–800B · EDR ~1200–1800B',
+    'cc-loh':'Fator overhead','cc-hoh':'Headers, metadata. 1.0 = sem overhead.',
+    'cc-warn':'⚠ EPS é estimativa — o tamanho real varia por fonte.',
+    'cc-rlbl':'Resultado','cc-copy':'COPIAR RESULTADO','cc-reset':'RESET',
+    'ft-note':'Estimativas de referência · valide com dados reais · Volume = EPS × bytes × 86.400 s/dia',
+    'ano':'ano','dia':'dia',
+  },
+  en:{
+    'lbl-live':'LIVE CALC',
+    'lm-src':'Active sources','lm-cfg':'configured','lm-eps':'Total EPS','lm-eps2':'events / sec',
+    'lm-evd':'Events / day','lm-evd2':'daily total','lm-gbm':'GB / month','lm-est':'estimate',
+    'lm-tby':'TB / year','lm-base':'quote basis',
+    't1lbl':'SIZING BY SOURCE','t1badge':'110 sources','t2lbl':'QUICK CALCULATOR','t2badge':'GB · EPS · TB',
+    'sb-search-lbl':'Search source','search-ph':'source or vendor…',
+    'sb-overview':'Overview','sb-all':'All sources',
+    'sb-infra':'Infrastructure','sb-srv':'Servers','sb-net':'Network',
+    'sb-idapps':'Identity & Apps','sb-id':'Identity','sb-apps':'Applications',
+    'sb-cloudsec':'Cloud & Security','sb-sec':'Security',
+    'sb-spec':'Specialized','sb-data':'Data / AI',
+    'sb-filled':'FILLED ONLY','sb-reset':'RESET','sb-export':'EXPORT CSV',
+    'tt-all':'All','tt-srv':'Servers','tt-net':'Network','tt-id':'Identity','tt-app':'Applications','tt-sec':'Security','tt-data':'Data / AI',
+    'th-type':'Event type','th-scope':'Scope / examples','th-qty':'Qty',
+    'th-epsa':'EPS/asset','th-epst':'Total EPS','th-evd':'Events/day','th-bytes':'Bytes/evt',
+    'cc-title':'Quick Calculator','cc-sub':'Convert any ingestion rate to TB/year (decimal · 1 TB = 10¹² bytes)',
+    'cc-lv':'Input value','cc-hv':'e.g. 500 GB/day, 1000 EPS…',
+    'cc-lu':'Unit / Rate','cc-hu':'Result always in TB/year',
+    'cc-ld':'Days per year','cc-hd':'Use 365 for standard estimate.',
+    'cc-lm':'Days per month','cc-hm':'Relevant only for monthly units.',
+    'cc-leb':'Avg event size (bytes)','cc-heb':'Firewall ~400–800B · EDR ~1200–1800B',
+    'cc-loh':'Overhead factor','cc-hoh':'Headers, metadata. 1.0 = no overhead.',
+    'cc-warn':'⚠ EPS is an estimate — actual event size varies by source.',
+    'cc-rlbl':'Result','cc-copy':'COPY RESULT','cc-reset':'RESET',
+    'ft-note':'Reference estimates · validate with real environment data · Volume = EPS × bytes × 86,400 s/day',
+    'ano':'year','dia':'day',
+  },
+  es:{
+    'lbl-live':'CÁLCULO EN VIVO',
+    'lm-src':'Fuentes activas','lm-cfg':'configuradas','lm-eps':'EPS total','lm-eps2':'eventos / seg',
+    'lm-evd':'Eventos / día','lm-evd2':'total diario','lm-gbm':'GB / mes','lm-est':'estimación',
+    'lm-tby':'TB / año','lm-base':'base de cotización',
+    't1lbl':'SIZING POR FUENTE','t1badge':'110 fuentes','t2lbl':'CALCULADORA RÁPIDA','t2badge':'GB · EPS · TB',
+    'sb-search-lbl':'Buscar fuente','search-ph':'fuente o fabricante…',
+    'sb-overview':'Visión general','sb-all':'Todas las fuentes',
+    'sb-infra':'Infraestructura','sb-srv':'Servidores','sb-net':'Red',
+    'sb-idapps':'Identidad & Apps','sb-id':'Identidad','sb-apps':'Aplicaciones',
+    'sb-cloudsec':'Cloud & Seguridad','sb-sec':'Seguridad',
+    'sb-spec':'Especializado','sb-data':'Datos / IA',
+    'sb-filled':'SOLO COMPLETADOS','sb-reset':'RESETEAR','sb-export':'EXPORTAR CSV',
+    'tt-all':'Todas','tt-srv':'Servidores','tt-net':'Red','tt-id':'Identidad','tt-app':'Aplicaciones','tt-sec':'Seguridad','tt-data':'Datos / IA',
+    'th-type':'Tipo de evento','th-scope':'Alcance / ejemplos','th-qty':'Cant.',
+    'th-epsa':'EPS/activo','th-epst':'EPS total','th-evd':'Eventos/día','th-bytes':'Bytes/evt',
+    'cc-title':'Calculadora Rápida','cc-sub':'Convierta cualquier tasa de ingestión a TB/año (decimal · 1 TB = 10¹² bytes)',
+    'cc-lv':'Valor de entrada','cc-hv':'Ej.: 500 GB/día, 1000 EPS…',
+    'cc-lu':'Unidad / Tasa','cc-hu':'Resultado siempre en TB/año',
+    'cc-ld':'Días en el año','cc-hd':'Use 365 para estimación estándar.',
+    'cc-lm':'Días por mes','cc-hm':'Relevante solo para unidades mensuales.',
+    'cc-leb':'Tamaño medio del evento (bytes)','cc-heb':'Firewall ~400–800B · EDR ~1200–1800B',
+    'cc-loh':'Factor overhead','cc-hoh':'Headers, metadata. 1.0 = sin overhead.',
+    'cc-warn':'⚠ EPS es estimación — el tamaño real varía por fuente.',
+    'cc-rlbl':'Resultado','cc-copy':'COPIAR RESULTADO','cc-reset':'RESET',
+    'ft-note':'Estimaciones de referencia · valide con datos reales · Volumen = EPS × bytes × 86.400 s/día',
+    'ano':'año','dia':'día',
+  }
+};
+let lang='pt';
+function setLang(l){
+  lang=l;
+  const T=I18[l];
+  Object.keys(T).forEach(id=>{
+    if(id==='search-ph'){document.getElementById('search').placeholder=T[id];return}
+    if(id==='ano'||id==='dia')return;
+    const el=document.getElementById(id);
+    if(el)el.textContent=T[id];
+  });
+  document.getElementById('search').placeholder=T['search-ph']||'';
+  document.documentElement.lang=l==='pt'?'pt-BR':l;
+  cCalc();
+}
+
+// ─── THEME ───────────────────────────────────────────
+function toggleTheme(){
+  const t=document.body.dataset.theme==='dark'?'light':'dark';
+  document.body.dataset.theme=t;
+  try{localStorage.setItem('secops-theme',t)}catch(e){}
+}
+try{const s=localStorage.getItem('secops-theme');if(s)document.body.dataset.theme=s}catch(e){}
+
+// ─── TAB SWITCHER ────────────────────────────────────
+function switchTab(n,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+n).classList.add('active');
+  if(n===1)t1Totals(); else cCalc();
+}
+
+// ─── DATA ────────────────────────────────────────────
+const CATS=[
+  {label:"Servidores e sistemas operacionais",tag:"Servidores",rows:[
+    {n:"Windows Server",s:"Domain Controllers, file servers, app servers",eps:1.5,b:900},
+    {n:"Linux / Unix Server",s:"RHEL, Ubuntu, CentOS, Debian servers",eps:1.2,b:700},
+    {n:"Serverless / Functions",s:"AWS Lambda, GCP Functions, Azure Functions",eps:0.8,b:600},
+    {n:"Containers (runtime logs)",s:"Docker daemon, containerd, podman",eps:2.0,b:650},
+    {n:"Kubernetes (audit logs)",s:"API server audit, kubelet, scheduler",eps:10,b:800},
+    {n:"VMware ESXi / vCenter",s:"Hipervisores e gerência VMware",eps:0.5,b:500},
+    {n:"Hyper-V",s:"Hipervisor Microsoft",eps:0.4,b:450},
+    {n:"Proxmox / KVM",s:"Virtualização open-source",eps:0.3,b:400},
+    {n:"IBM AIX / HP-UX",s:"UNIX legado corporativo",eps:0.5,b:500},
+    {n:"Mainframe (IBM z/OS)",s:"Logs SMF, syslog de mainframe",eps:5.0,b:1200},
+    {n:"Windows Workstation",s:"Estações de trabalho Windows 10/11",eps:0.8,b:700},
+    {n:"macOS",s:"Estações Apple corporativas",eps:0.5,b:600},
+    {n:"ChromeOS",s:"Chromebooks corporativos",eps:0.3,b:400},
+    {n:"Linux Desktop",s:"Estações Linux (dev, engenharia)",eps:0.6,b:550},
+  ]},
+  {label:"Rede e infraestrutura de conectividade",tag:"Rede",rows:[
+    {n:"Firewall NGFW",s:"Palo Alto, Fortinet, CheckPoint, Cisco FTD",eps:300,b:800},
+    {n:"WAF (Web Application Firewall)",s:"F5 ASM, Imperva, AWS WAF, Cloudflare",eps:150,b:900},
+    {n:"IDS / IPS",s:"Suricata, Snort, Cisco Secure IPS",eps:100,b:950},
+    {n:"Switches L2/L3",s:"Cisco Catalyst, Juniper EX, Aruba",eps:1.5,b:450},
+    {n:"Roteadores",s:"Cisco ISR/ASR, Juniper MX",eps:2.0,b:500},
+    {n:"Access Points / Wi-Fi",s:"Aruba, Cisco Meraki, Ruckus",eps:0.5,b:400},
+    {n:"SD-WAN",s:"Cisco Viptela, VMware VeloCloud, Fortinet",eps:5.0,b:600},
+    {n:"VPN Gateway",s:"Cisco AnyConnect, Pulse, F5 APM",eps:20,b:600},
+    {n:"ZTNA Gateway",s:"Zscaler ZPA, Palo Alto Prisma Access",eps:15,b:650},
+    {n:"Proxy / Web Gateway",s:"Zscaler ZIA, Cisco Umbrella, Blue Coat",eps:100,b:900},
+    {n:"DNS (interno/externo)",s:"Windows DNS, BIND, Infoblox",eps:80,b:400},
+    {n:"DHCP",s:"Windows DHCP, ISC DHCP, Infoblox",eps:10,b:300},
+    {n:"Load Balancer",s:"F5 BIG-IP, HAProxy, AWS ALB, Nginx",eps:50,b:700},
+    {n:"NetFlow / IPFIX / sFlow",s:"Exportadores de fluxo de rede",eps:500,b:200},
+    {n:"NAC (Network Access Control)",s:"Cisco ISE, Forescout, Aruba ClearPass",eps:5,b:600},
+    {n:"SASE (plataforma unificada)",s:"Cato Networks, Netskope, Prisma SASE",eps:50,b:750},
+    {n:"DDoS Protection",s:"Cloudflare, Akamai Prolexic, Radware",eps:30,b:700},
+    {n:"BGP / OSPF / Roteamento",s:"Logs de protocolo de roteamento",eps:2.0,b:350},
+    {n:"Out-of-Band Management",s:"Console servers, IPMI, iDRAC, iLO",eps:0.2,b:300},
+    {n:"Wi-Fi Controller",s:"Cisco WLC, Aruba Mobility Controller",eps:2.0,b:450},
+    {n:"5G / LTE privado",s:"Core de rede móvel privada",eps:5.0,b:600},
+    {n:"Satellite / MPLS links",s:"Logs de links WAN especializados",eps:1.0,b:400},
+    {n:"SD-Access / DNA Center",s:"Cisco Catalyst Center, fabric logs",eps:3.0,b:550},
+    {n:"Network Packet Broker",s:"Ixia, Gigamon",eps:10,b:500},
+    {n:"Out-of-Band TAP",s:"Network TAPs passivos",eps:5.0,b:400},
+    {n:"IPv6 / Tunnel logs",s:"Logs de tunelamento e transição IPv6",eps:1.0,b:350},
+  ]},
+  {label:"Endpoint e proteção de dispositivos",tag:"Endpoint",rows:[
+    {n:"EDR / XDR",s:"CrowdStrike, SentinelOne, Defender, Carbon Black",eps:3.0,b:1500},
+    {n:"Antivírus / EPP",s:"Symantec, Trend Micro, McAfee, Kaspersky",eps:0.5,b:600},
+    {n:"DLP Endpoint",s:"Symantec DLP, Forcepoint, Digital Guardian",eps:2.0,b:800},
+    {n:"Application Control",s:"Logs de blocklist/allowlist de aplicações",eps:1.0,b:500},
+    {n:"USB / Device Control",s:"Controle de mídia removível",eps:0.3,b:400},
+    {n:"Full Disk Encryption",s:"BitLocker, FileVault, Sophos SafeGuard",eps:0.1,b:300},
+    {n:"Patch Management",s:"SCCM, Ivanti, Tanium, Qualys Patch",eps:0.2,b:350},
+    {n:"MDM / UEM",s:"Microsoft Intune, Jamf, VMware Workspace ONE",eps:0.5,b:500},
+    {n:"VDI / Citrix / RDS",s:"Citrix Virtual Apps, VMware Horizon, RDS",eps:1.0,b:700},
+    {n:"Browser Isolation",s:"Menlo Security, Zscaler Browser Isolation",eps:5.0,b:700},
+  ]},
+  {label:"Identidade e acesso",tag:"Identidade",rows:[
+    {n:"Active Directory / LDAP",s:"Domain Controllers, LDAP queries",eps:10,b:800},
+    {n:"Microsoft Entra ID (AAD)",s:"Sign-ins, Audit, MFA, Conditional Access",eps:5.0,b:900},
+    {n:"Okta",s:"SSO, MFA, lifecycle, API access",eps:3.0,b:700},
+    {n:"Ping Identity / ForgeRock",s:"SSO, federation, directory",eps:2.0,b:650},
+    {n:"CyberArk PAM",s:"Session recording, vault, PVWA",eps:3.0,b:800},
+    {n:"BeyondTrust PAM",s:"Privilege management, session logs",eps:2.0,b:700},
+    {n:"Saviynt / SailPoint IGA",s:"Governança de identidade, provisionamento",eps:1.0,b:600},
+    {n:"HashiCorp Vault",s:"Secrets management, PKI",eps:2.0,b:600},
+    {n:"PKI / Autoridade Certificadora",s:"Emissão e revogação de certificados",eps:1.0,b:400},
+    {n:"HSM (Hardware Security Module)",s:"Thales, Entrust, AWS CloudHSM",eps:0.5,b:350},
+    {n:"RADIUS / TACACS+",s:"Autenticação de rede e dispositivos",eps:3.0,b:450},
+    {n:"MFA / Passwordless",s:"Duo, Microsoft Authenticator, FIDO2",eps:2.0,b:500},
+  ]},
+  {label:"Aplicações e middleware",tag:"Aplicações",rows:[
+    {n:"Web Application Server",s:"IIS, Apache, Nginx, Tomcat, JBoss",eps:20,b:800},
+    {n:"API Gateway",s:"Kong, AWS API GW, Apigee, MuleSoft",eps:15,b:1000},
+    {n:"Message Broker / Queue",s:"Kafka, RabbitMQ, Azure Service Bus",eps:5.0,b:600},
+    {n:"ESB / Integration Platform",s:"MuleSoft, IBM MQ, WSO2",eps:3.0,b:650},
+    {n:"Banco de dados relacional",s:"Oracle, SQL Server, MySQL, PostgreSQL",eps:5.0,b:700},
+    {n:"Banco de dados NoSQL",s:"MongoDB, Cassandra, CouchDB",eps:3.0,b:600},
+    {n:"Data Warehouse / DW",s:"Snowflake, BigQuery, Redshift, Synapse",eps:2.0,b:800},
+    {n:"E-mail / Exchange / M365",s:"Exchange Online, SMTP Gateway, EOP",eps:3.0,b:800},
+    {n:"ERP / SAP",s:"SAP ERP, Oracle ERP, TOTVS",eps:2.0,b:700},
+    {n:"CRM / Salesforce",s:"Salesforce Event Monitoring, HubSpot",eps:2.0,b:700},
+    {n:"Colaboração (Teams/Slack)",s:"Microsoft Teams, Slack audit logs",eps:1.0,b:600},
+    {n:"Videoconferência",s:"Zoom, Webex admin logs",eps:0.5,b:500},
+    {n:"Aplicação customizada (syslog)",s:"Apps internas via syslog / CEF / JSON",eps:3.0,b:600},
+    {n:"Aplicação customizada (API)",s:"Apps internas via webhook / REST API",eps:5.0,b:800},
+    {n:"Backup / Recovery",s:"Veeam, Commvault, Veritas NetBackup",eps:0.5,b:500},
+    {n:"Service Desk / ITSM",s:"ServiceNow, Jira Service Mgmt, Remedy",eps:0.3,b:500},
+    {n:"DevOps / CI-CD",s:"Jenkins, GitHub Actions, GitLab CI, Azure DevOps",eps:2.0,b:700},
+    {n:"Code Repository",s:"GitHub, GitLab, Bitbucket audit logs",eps:1.0,b:600},
+    {n:"Artifact / Package Registry",s:"Nexus, JFrog Artifactory",eps:0.5,b:500},
+    {n:"SAST / Secret Scanning",s:"Snyk, Checkmarx, Veracode, SonarQube",eps:0.3,b:500},
+  ]},
+  {label:"Cloud pública e infraestrutura cloud",tag:"Cloud",rows:[
+    {n:"AWS CloudTrail",s:"Auditoria de API da AWS",eps:20,b:1200},
+    {n:"AWS VPC Flow Logs",s:"Fluxo de rede na VPC",eps:200,b:400},
+    {n:"AWS GuardDuty",s:"Threat detection gerenciado AWS",eps:5.0,b:900},
+    {n:"AWS Security Hub",s:"Consolidação de findings AWS",eps:3.0,b:800},
+    {n:"AWS Config",s:"Mudanças de configuração de recursos",eps:2.0,b:700},
+    {n:"AWS WAF",s:"Web Application Firewall AWS",eps:50,b:750},
+    {n:"AWS S3 Access Logs",s:"Acessos a buckets S3",eps:10,b:500},
+    {n:"AWS RDS / Aurora Logs",s:"Bancos de dados gerenciados AWS",eps:5.0,b:700},
+    {n:"AWS EKS Audit",s:"Kubernetes gerenciado AWS",eps:10,b:800},
+    {n:"Azure Monitor / Activity Log",s:"Logs de atividade Azure subscription",eps:15,b:1000},
+    {n:"Azure Defender / Sentinel",s:"CNAPP e SIEM nativo Azure",eps:8.0,b:900},
+    {n:"Azure Entra ID Logs",s:"Sign-ins, audit, Identity Protection",eps:5.0,b:900},
+    {n:"Azure NSG Flow Logs",s:"Fluxo de rede nos NSGs",eps:150,b:400},
+    {n:"Azure Key Vault",s:"Acesso a segredos e chaves",eps:2.0,b:600},
+    {n:"Azure Storage Logs",s:"Acessos a blobs e storage accounts",eps:5.0,b:500},
+    {n:"GCP Cloud Audit Logs",s:"Admin activity, data access, system events",eps:15,b:1100},
+    {n:"GCP VPC Flow Logs",s:"Fluxo de rede na VPC GCP",eps:100,b:400},
+    {n:"GCP Security Command Center",s:"Findings de segurança GCP",eps:3.0,b:800},
+    {n:"GCP Cloud Armor",s:"WAF e DDoS protection GCP",eps:30,b:700},
+    {n:"Google Workspace",s:"Gmail, Drive, Admin, Login, Meet",eps:5.0,b:800},
+    {n:"Cloudflare (logs)",s:"CDN, WAF, Access, DNS logs",eps:50,b:700},
+    {n:"Terraform / IaC Audit",s:"Terraform Cloud, Atlantis, Pulumi",eps:0.5,b:500},
+    {n:"CSPM / CIEM",s:"Prisma Cloud, Wiz, Lacework, Orca",eps:2.0,b:700},
+    {n:"CNAPP",s:"Aqua, Sysdig, Snyk Container",eps:3.0,b:750},
+  ]},
+  {label:"Segurança especializada",tag:"Segurança",rows:[
+    {n:"NDR (Network Detection & Response)",s:"Darktrace, ExtraHop, Vectra AI, Corelight",eps:50,b:1200},
+    {n:"CASB",s:"Netskope, McAfee MVISION, Zscaler CASB",eps:3.0,b:700},
+    {n:"DLP (rede / cloud)",s:"Symantec, Forcepoint, Nightfall",eps:5.0,b:800},
+    {n:"Email Security Gateway",s:"Proofpoint, Mimecast, Cisco SEG, Abnormal",eps:5.0,b:900},
+    {n:"Threat Intelligence Platform",s:"MISP, ThreatConnect, Anomali, Google GTI",eps:1.0,b:700},
+    {n:"Vulnerability Scanner",s:"Tenable, Qualys, Rapid7, OpenVAS",eps:2.0,b:1000},
+    {n:"Deception / Honeypot",s:"Attivo, Illusive, TrapX, Canarytokens",eps:1.0,b:500},
+    {n:"SOAR",s:"Cortex XSOAR, Splunk SOAR, Chronicle SOAR",eps:1.0,b:600},
+    {n:"Sandbox / Malware Analysis",s:"FireEye AX, Any.run, Cuckoo",eps:0.5,b:800},
+    {n:"Digital Risk Protection",s:"ZeroFox, Recorded Future, Digital Shadows",eps:0.5,b:600},
+    {n:"Attack Surface Management",s:"Censys, Shodan Enterprise, Tenable ASM",eps:0.5,b:600},
+    {n:"Data Security Posture (DSPM)",s:"BigID, Varonis, Cyera",eps:1.0,b:700},
+    {n:"Microsegmentação",s:"Illumio, Guardicore, Akamai Guardicore",eps:5.0,b:700},
+    {n:"Database Activity Monitor (DAM)",s:"Imperva DAM, IBM Guardium",eps:10,b:900},
+    {n:"API Security",s:"Salt Security, Noname, 42Crunch",eps:10,b:800},
+    {n:"Red Team / Pentest (controlado)",s:"Cobalt Strike logs, Metasploit",eps:0.5,b:500},
+  ]},
+  {label:"OT, IoT e ambientes industriais",tag:"OT",rows:[
+    {n:"SCADA / ICS",s:"Wonderware, iFIX, Ignition, Rockwell",eps:0.5,b:400},
+    {n:"PLCs / RTUs",s:"Siemens, Allen-Bradley, Schneider",eps:0.2,b:300},
+    {n:"Historian (PI System)",s:"OSIsoft PI, AVEVA Historian",eps:2.0,b:500},
+    {n:"OT Security (NDR industrial)",s:"Claroty, Nozomi, Dragos, Microsoft Defender IoT",eps:5.0,b:700},
+    {n:"IoT Corporativo",s:"Sensores, atuadores, dispositivos BMS",eps:0.2,b:300},
+    {n:"Building Management System",s:"HVAC, controle de acesso físico, CFTV IP",eps:0.5,b:400},
+    {n:"Controle de acesso físico",s:"Lenel, Software House, Genetec",eps:0.5,b:450},
+    {n:"CFTV / Câmeras IP (eventos)",s:"Hikvision, Axis, Milestone",eps:0.2,b:350},
+    {n:"Smart Meters / Utilities",s:"AMI, medidores inteligentes",eps:0.1,b:250},
+    {n:"Veículos conectados / Fleet",s:"Telemetria de frota corporativa",eps:0.3,b:400},
+    {n:"Robótica industrial",s:"Logs de braços robóticos, CNC",eps:0.3,b:350},
+  ]},
+  {label:"Dados, analytics e inteligência artificial",tag:"Dados",rows:[
+    {n:"Data Lake / Lakehouse",s:"AWS S3+Glue, Azure Data Lake, GCS",eps:2.0,b:600},
+    {n:"ETL / Pipeline de dados",s:"Airflow, dbt, Fivetran, Glue",eps:1.0,b:500},
+    {n:"BI / Analytics",s:"Power BI, Tableau, Looker (admin logs)",eps:0.3,b:400},
+    {n:"ML Platform",s:"Vertex AI, SageMaker, MLflow (audit)",eps:1.0,b:600},
+    {n:"LLM / GenAI (uso corporativo)",s:"Gemini Workspace, Copilot M365, ChatGPT Enterprise",eps:2.0,b:700},
+    {n:"Vector DB / Embedding Store",s:"Pinecone, Weaviate, pgvector",eps:0.5,b:500},
+    {n:"Data Catalog",s:"Collibra, Alation, Google Dataplex",eps:0.3,b:400},
+  ]},
+  {label:"Telecomunicações e comunicações corporativas",tag:"Telecom",rows:[
+    {n:"PABX / UCaaS",s:"Cisco CUCM, Avaya, RingCentral",eps:0.5,b:400},
+    {n:"SBC (Session Border Controller)",s:"AudioCodes, Oracle SBC",eps:2.0,b:500},
+    {n:"SD-WAN (logs de sessão)",s:"Viptela, VeloCloud, Fortinet SD-WAN",eps:5.0,b:600},
+    {n:"Contact Center / CCaaS",s:"Genesys, Twilio, Amazon Connect",eps:1.0,b:500},
+    {n:"Unified Communications",s:"Cisco Webex, Zoom Phone",eps:0.5,b:450},
+    {n:"Email Gateway / MTA",s:"Postfix, SendGrid, Mailgun (audit)",eps:2.0,b:500},
+  ]},
+];
+
+// ─── STATE ───────────────────────────────────────────
+let activeFilter='all', showFilled=false;
+const S={};
+CATS.forEach((cat,ci)=>cat.rows.forEach((row,ri)=>{S[`${ci}_${ri}`]={qty:0,eps:row.eps,b:row.b}}));
+
+// ─── TAB 1 ───────────────────────────────────────────
+function setF(tag,el){
+  activeFilter=tag;
+  document.querySelectorAll('.nl,.nvi').forEach(e=>e.classList.toggle('active',e.dataset.tag===tag));
+  render();
+}
+function toggleFilled(btn){showFilled=!showFilled;btn.classList.toggle('on',showFilled);render()}
+function render(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  let html='';
+  CATS.forEach((cat,ci)=>{
+    let ch='',has=false;
+    cat.rows.forEach((row,ri)=>{
+      const k=`${ci}_${ri}`,sv=S[k];
+      if(activeFilter!=='all'&&cat.tag!==activeFilter)return;
+      if(q&&!row.n.toLowerCase().includes(q)&&!row.s.toLowerCase().includes(q))return;
+      if(showFilled&&sv.qty===0)return;
+      has=true;
+      const et=sv.qty*sv.eps,evd=et*86400,gbd=(evd*sv.b)/1e9,hv=sv.qty>0;
+      ch+=`<tr class="dr${hv?' lit':''}">
+        <td class="rn">${row.n}</td>
+        <td class="rs" title="${row.s}">${row.s}</td>
+        <td style="text-align:right"><input class="ni${hv?' on':''}" type="number" min="0" value="${sv.qty}" data-k="${k}" data-f="qty" oninput="upd(this)"></td>
+        <td style="text-align:right"><input class="ni" type="number" min="0" step="0.1" value="${sv.eps}" data-k="${k}" data-f="eps" oninput="upd(this)"></td>
+        <td class="nc${hv?' a':''}" id="et_${k}">${f0(et)}</td>
+        <td class="nc${hv?' a':''}" id="ed_${k}">${f0(evd)}</td>
+        <td style="text-align:right"><input class="ni" type="number" min="0" value="${sv.b}" data-k="${k}" data-f="b" oninput="upd(this)"></td>
+        <td class="nc${hv?' h':''}" id="gd_${k}">${f2(gbd)}</td>
+      </tr>`;
+    });
+    if(has)html+=`<tr class="cat-row"><td colspan="8">${cat.label}</td></tr>`+ch;
+  });
+  document.getElementById('tbody').innerHTML=html||`<tr><td colspan="8" class="empty-row">Nenhuma fonte encontrada.</td></tr>`;
+  t1Totals();
+}
+function upd(el){
+  const k=el.dataset.k,f=el.dataset.f,sv=S[k];
+  sv[f]=parseFloat(el.value)||0;
+  const et=sv.qty*sv.eps,evd=et*86400,gbd=(evd*sv.b)/1e9,hv=sv.qty>0;
+  el.classList.toggle('on',hv&&f==='qty');
+  const e1=document.getElementById(`et_${k}`),e2=document.getElementById(`ed_${k}`),e3=document.getElementById(`gd_${k}`);
+  if(e1){e1.textContent=f0(et);e1.className=`nc${hv?' a':''}`}
+  if(e2){e2.textContent=f0(evd);e2.className=`nc${hv?' a':''}`}
+  if(e3){e3.textContent=f2(gbd);e3.className=`nc${hv?' h':''}`}
+  t1Totals();
+}
+function t1Totals(){
+  let tE=0,tD=0,tG=0,tS=0;
+  Object.keys(S).forEach(k=>{const sv=S[k];if(sv.qty>0){const e=sv.qty*sv.eps;tE+=e;tD+=e*86400;tG+=(e*86400*sv.b)/1e9;tS++}});
+  set('m-src',tS);set('m-eps',f0(tE));set('m-evd',f0(tD));
+  set('m-gbd',f2(tG));set('m-gbm',f0(tG*30));set('m-tby',f2((tG*365)/1000));
+}
+function resetAll(){Object.keys(S).forEach(k=>{S[k].qty=0});render()}
+function exportCSV(){
+  let c='\uFEFF'+'Categoria,Tipo,Escopo,Qtde,EPS/ativo,EPS total,Eventos/dia,Bytes,GB/dia\n';
+  CATS.forEach((cat,ci)=>cat.rows.forEach((row,ri)=>{
+    const k=`${ci}_${ri}`,sv=S[k],et=sv.qty*sv.eps,evd=et*86400,gbd=(evd*sv.b)/1e9;
+    c+=`"${cat.label}","${row.n}","${row.s}",${sv.qty},${sv.eps},${et.toFixed(0)},${evd.toFixed(0)},${sv.b},${gbd.toFixed(2)}\n`;
+  }));
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([c],{type:'text/csv;charset=utf-8'}));
+  a.download='secops_sizing.csv';a.click();
+}
+
+// ─── SIDEBAR COLLAPSE ────────────────────────────────
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const btn=document.getElementById('collapseBtn');
+  sb.classList.toggle('collapsed');
+  btn.classList.toggle('collapsed');
+}
+
+// ─── TAB 2 ───────────────────────────────────────────
+function toggleEPS(){
+  document.getElementById('eps-blk').classList.toggle('vis',document.getElementById('c-unit').value==='EPS');
+}
+function cBpd(v,u){
+  const md=parseFloat(document.getElementById('c-monthdays').value)||30;
+  const oh=parseFloat(document.getElementById('c-overhead').value)||1;
+  const eb=parseFloat(document.getElementById('c-evtbytes').value)||600;
+  const MB=1e6,GB=1e9,TB=1e12;
+  switch(u){
+    case'MB_per_day':  return v*MB;
+    case'GB_per_day':  return v*GB;
+    case'TB_per_day':  return v*TB;
+    case'MB_per_hour': return v*MB*24;
+    case'GB_per_hour': return v*GB*24;
+    case'TB_per_hour': return v*TB*24;
+    case'GB_per_month':return(v*GB)/md;
+    case'TB_per_month':return(v*TB)/md;
+    case'EPS':         return v*eb*oh*86400;
+    default:return NaN;
+  }
+}
+function cCalc(){
+  const v=parseFloat(document.getElementById('c-value').value)||0;
+  const u=document.getElementById('c-unit').value;
+  const d=parseInt(document.getElementById('c-days').value)||365;
+  const bpd=cBpd(v,u);
+  const tb=(bpd*d)/1e12,gb=(bpd*d)/1e9,gbday=bpd/1e9;
+  const T=I18[lang];
+  set('c-result',isFinite(tb)?`${f2(tb)} TB/${T.ano}`:'—');
+  let det=`${v} (${u}) · ${d} ${lang==='en'?'days':lang==='es'?'días':'dias'}`;
+  if(u==='EPS')det+=` · ${document.getElementById('c-evtbytes').value}B · ${document.getElementById('c-overhead').value}×`;
+  det+=`\n≈ ${f2(gb)} GB/${T.ano} · ${f2(gbday)} GB/${T.dia}`;
+  set('c-detail',det);
+  if(document.getElementById('panel-2').classList.contains('active')){
+    set('m-src','—');
+    set('m-eps',u==='EPS'?f0(v):'—');
+    set('m-evd',u==='EPS'?f0(v*86400):'—');
+    set('m-gbd',f2(gbday));
+    set('m-gbm',f2(gbday*30));
+    set('m-tby',isFinite(tb)?f2(tb):'—');
+  }
+}
+function cCopy(btn){
+  const txt=`${document.getElementById('c-result').textContent} | ${document.getElementById('c-detail').textContent}`;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const sp=btn.querySelector('span');
+    if(sp){const o=sp.textContent;sp.textContent=lang==='en'?'COPIED!':lang==='es'?'¡COPIADO!':'COPIADO!';setTimeout(()=>sp.textContent=o,1400)}
+  }).catch(()=>alert(txt));
+}
+function cReset(){
+  document.getElementById('c-value').value=500;
+  document.getElementById('c-unit').value='GB_per_day';
+  document.getElementById('c-days').value='365';
+  document.getElementById('c-monthdays').value='30';
+  document.getElementById('c-evtbytes').value=600;
+  document.getElementById('c-overhead').value='1.2';
+  toggleEPS();cCalc();
+}
+['c-value','c-days','c-monthdays'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',cCalc);
+  document.getElementById(id).addEventListener('change',cCalc);
+});
+
+// ─── COL RESIZE ──────────────────────────────────────
+(function(){
+  let drag=null,sx=0,sw=0;
+  document.addEventListener('mousedown',e=>{
+    const r=e.target.closest('.cr');if(!r)return;
+    e.preventDefault();drag={th:r.closest('th'),r};sx=e.clientX;sw=drag.th.offsetWidth;
+    r.classList.add('dragging');document.body.style.cssText+='cursor:col-resize;user-select:none';
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const nw=Math.max(40,sw+(e.clientX-sx));
+    drag.th.style.width=nw+'px';drag.th.style.minWidth=nw+'px';
+  });
+  document.addEventListener('mouseup',()=>{
+    if(!drag)return;
+    drag.r.classList.remove('dragging');document.body.style.cursor='';document.body.style.userSelect='';drag=null;
+  });
+})();
+
+// ─── HELPERS ─────────────────────────────────────────
+function set(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+function f0(n){return Math.round(n).toLocaleString('pt-BR')}
+function f2(n){return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+// ─── INIT ────────────────────────────────────────────
+toggleEPS();
+cCalc();
+render();
+</script>
+</body>
+</html>
