@@ -23,6 +23,8 @@ O **SecOps Ingestion Sizing Tool** resolve um problema crítico de pré-venda (N
 
 Esta ferramenta permite calcular o volume estimado de ingestão de logs a partir do inventário real de ativos do cliente, produzindo a métrica correta para cotação do Google SecOps.
 
+Acesse na web: https://matheusdamacena.github.io/secopsestimate/
+
 ---
 
 ## ✨ Funcionalidades
