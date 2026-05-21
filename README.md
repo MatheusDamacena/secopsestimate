@@ -17,7 +17,7 @@
 
 ## 📌 Sobre
 
-O **SecOps Ingestion Sizing Tool** resolve um problema crítico de pré-venda:
+O **SecOps Ingestion Sizing Tool** resolve um problema crítico de pré-venda (NÃO É UMA FERRAMENTA OFICIAL DO GOOGLE):
 
 > *Algumas ferramentas de mercado são dimensionadas utilizando **EPS** (eventos por segundo). O Google SecOps é licenciado por **TB/ano** (volume de dados ingeridos). Não existe conversão direta - e cotar sem entender o ambiente gera estimativas incorretas.*
 
