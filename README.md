@@ -21,39 +21,71 @@ O **SecOps Ingestion Sizing Tool** resolve um problema crítico de pré-venda:
 
 > *O QRadar é licenciado por **EPS** (eventos por segundo). O Google Chronicle SecOps é licenciado por **TB/ano** (volume de dados ingeridos). Não existe conversão direta — cotar sem entender o ambiente gera estimativas incorretas e perda de negócio.*
 
-Esta ferramenta permite calcular o volume estimado de ingestão a partir do inventário real do cliente, produzindo a métrica correta para cotação do Chronicle SecOps — com relatório exportável em PDF e XLSX.
+Esta ferramenta permite calcular o volume estimado de ingestão a partir do inventário real do cliente, produzindo a métrica correta para cotação do Chronicle SecOps — com relatório exportável em PDF e planilha XLSX.
 
 ---
 
 ## ✨ Funcionalidades
 
+### 🧮 Dimensionamento
+
 | # | Funcionalidade | Descrição |
 |---|---|---|
 | 1 | **146 tipos de evento catalogados** | 10 categorias: Servidores, Rede, Endpoint, Identidade, Apps, Cloud, Segurança, OT/IoT, Dados/IA, Telecom |
-| 2 | **Cálculo em tempo real** | EPS × bytes/evt × 86.400 s/dia → GB/dia → GB/mês → **TB/ano** |
-| 3 | **Barra de progresso** | Contador de tipos de evento configurados vs. total disponível |
-| 4 | **Badge TOP** | Identifica automaticamente os eventos com maior impacto no volume (>5% do total) |
-| 5 | **Tooltip de cálculo** | Hover sobre GB/dia mostra a conta completa por linha |
-| 6 | **Calculadora Rápida** | Converte MB/GB/TB por dia, hora, mês ou EPS direto para TB/ano |
-| 7 | **Evento Customizado** | Adiciona tipos de evento personalizados com fórmula padrão |
-| 8 | **Duplicar Evento** | Copia qualquer tipo de evento para usar com quantidades diferentes (ex: dois fabricantes de NGFW) |
-| 9 | **Coluna de Observação** | Campo de nota livre por linha, exportado no XLSX |
-| 10 | **Cenários A / B** | Compare dois sizing diferentes com delta de TB/ano |
-| 11 | **Gráfico de Composição** | Donut chart interativo com participação % por categoria |
-| 12 | **Relatório PDF** | Aba dedicada com layout A4: métricas, gráfico e tabela detalhada — exportável via print do browser |
-| 13 | **Export XLSX** | Planilha profissional com formatação, cores e totais |
-| 14 | **Nome do projeto** | Aparece no header, no PDF e no nome do arquivo XLSX |
-| 15 | **Persistência local** | Estado salvo automaticamente no `localStorage` — nenhum dado perdido ao fechar |
-| 16 | **Compartilhar link** | Codifica o sizing na URL (base64) para enviar para um colega |
-| 17 | **Tema claro / escuro** | Google Material Design — tipografia Google Sans + Roboto Mono |
-| 18 | **Multilíngue** | Português 🇧🇷 · English 🇺🇸 · Español 🇪🇸 |
-| 19 | **Zero dependências** | HTML único — SheetJS carregado só ao exportar XLSX |
+| 2 | **Cálculo em tempo real** | EPS × bytes/evt × 86.400 s/dia → GB/dia → GB/mês → **TB/ano** — atualiza a cada input |
+| 3 | **Barra de progresso** | Contador visual de tipos de evento configurados vs. total disponível |
+| 4 | **Badge TOP** | Identifica automaticamente eventos com impacto >5% no volume total |
+| 5 | **Tooltip de cálculo** | Hover sobre GB/dia mostra a conta completa: `Qtde × EPS × bytes × 86.400 = evt/dia → GB/dia → TB/ano` |
+| 6 | **Coluna de Observação** | Campo de nota livre por linha (ex: "cliente confirmou 250 instâncias") — exportado no XLSX |
+
+### 🔍 Navegação e filtros
+
+| # | Funcionalidade | Descrição |
+|---|---|---|
+| 7 | **Filtro por categoria** | Sidebar e barra de ícones lateral — clique em qualquer categoria para filtrar a tabela |
+| 8 | **Busca de tipo de evento** | Campo de pesquisa por nome ou fabricante em tempo real |
+| 9 | **Filtro "Só preenchidos"** | Exibe apenas os tipos de evento com quantidade > 0 |
+| 10 | **Sidebar retrátil** | Recolhe o painel de navegação para ampliar o espaço da tabela |
+| 11 | **Redimensionamento de colunas** | Arraste a borda de qualquer coluna do cabeçalho para ajustar a largura |
+
+### ➕ Eventos extras
+
+| # | Funcionalidade | Descrição |
+|---|---|---|
+| 12 | **Evento Customizado** | Adiciona uma linha totalmente editável: nome, escopo, qtde, EPS/ativo e bytes/evento |
+| 13 | **Duplicar Evento** | Modal com busca e checkboxes — duplica qualquer tipo existente com quantidade independente (ex: dois fabricantes de NGFW) |
+
+### 📊 Análise e comparação
+
+| # | Funcionalidade | Descrição |
+|---|---|---|
+| 14 | **Cenários A e B** | Salve dois sizings diferentes e compare com delta de TB/ano e percentual de variação |
+| 15 | **Gráfico de Composição** | Donut chart interativo com participação % de cada categoria no volume total |
+| 16 | **Calculadora Rápida** | Aba dedicada — converte MB/GB/TB por dia, hora ou mês e EPS diretamente para TB/ano |
+
+### 📄 Exportação
+
+| # | Funcionalidade | Descrição |
+|---|---|---|
+| 17 | **Relatório PDF** | Aba 3 com layout A4: cabeçalho com nome do projeto, 5 métricas, donut chart, tabela detalhada e totais — exportado via print nativo do browser (sem dependências) |
+| 18 | **Export XLSX** | Planilha profissional com formatação, cores por hierarquia, zebra striping, totais em verde e fórmulas — nome do projeto no título e no nome do arquivo |
+
+### ⚙️ Produtividade
+
+| # | Funcionalidade | Descrição |
+|---|---|---|
+| 19 | **Nome do projeto** | Campo no header — aparece no relatório PDF, no título do XLSX e no nome do arquivo exportado |
+| 20 | **Persistência local** | Estado salvo automaticamente no `localStorage` — dados, notas, tema, idioma e cenários preservados ao fechar o browser |
+| 21 | **Compartilhar link** | Botão "Compartilhar" codifica o sizing completo na URL (base64) — abra em outro browser e o estado é restaurado |
+| 22 | **Tema claro / escuro** | Paleta Google Material Design — tipografia Google Sans + Roboto Mono (mesmas fontes do Chronicle SecOps) |
+| 23 | **Multilíngue** | Interface completa em Português 🇧🇷, English 🇺🇸 e Español 🇪🇸 — incluindo labels, hints, placeholders e categorias |
+| 24 | **Zero instalação** | Arquivo HTML único — roda localmente ou em qualquer hospedagem estática |
 
 ---
 
 ## 🚀 Como usar
 
-### Opção 1 — Direto no browser (sem instalação)
+### Opção 1 — Direto no browser (recomendado)
 
 Baixe `secops_calculator.html` e abra em qualquer browser moderno. Funciona completamente offline.
 
@@ -74,21 +106,28 @@ Qualquer servidor web estático funciona: Netlify, Vercel, S3, Azure Static Web 
 ```
 1. Digite o nome do projeto / cliente no campo do header
         ↓
-2. Aba "Sizing por Fonte" → navegue pelas categorias na sidebar
-   → preencha a coluna "Qtde" com o número de ativos do ambiente
+2. Aba "Sizing por Fonte"
+   → Navegue pelas categorias na sidebar ou barra de ícones
+   → Preencha a coluna "Qtde" com o número de ativos do ambiente
+   → Ajuste EPS/ativo e bytes/evento se tiver dados reais
+   → Use a coluna Observação para anotar contexto de cada linha
         ↓
-3. Métricas atualizam em tempo real (EPS total, GB/dia, TB/ano)
-   Badges TOP identificam os eventos de maior impacto
+3. Métricas atualizam em tempo real
+   ✓ Badges TOP identificam os eventos de maior impacto
+   ✓ Hover sobre GB/dia mostra o cálculo detalhado
         ↓
 4. Se necessário:
-   · Adicionar tipos de evento não listados → "+ Evento Customizado"
-   · Cliente com múltiplos fabricantes → "Duplicar Evento"
-   · Comparar dois escopos → Cenário A vs B
+   · Tipos de evento não listados  → "+ Evento Customizado" na sidebar
+   · Múltiplos fabricantes         → "Duplicar Evento" na sidebar
+   · Comparar dois escopos         → alterne Cenário A / B
+   · Ver composição visual         → botão "Composição"
         ↓
-5. Aba "Relatório" → revise o PDF com gráfico e tabela completa
-   → botão "Imprimir / Salvar PDF" para exportar
+5. Aba "Relatório"
+   → Revise o layout A4 com gráfico e tabela completa
+   → Clique "Imprimir / Salvar PDF" para exportar
         ↓
-6. Botão "Exportar XLSX" na sidebar → planilha formatada para proposta
+6. "Exportar XLSX" na sidebar
+   → Planilha formatada pronta para a proposta
 ```
 
 ---
@@ -96,15 +135,15 @@ Qualquer servidor web estático funciona: Netlify, Vercel, S3, Azure Static Web 
 ## 📐 Fórmula de cálculo
 
 ```
-Volume diário = Qtde × EPS/ativo × bytes/evento × 86.400 s/dia
+Volume diário (bytes) = Qtde × EPS/ativo × bytes/evento × 86.400 s/dia
 
-GB/dia  = Volume diário ÷ 10⁹
+GB/dia  = Volume diário ÷ 1.000.000.000  (10⁹)
 GB/mês  = GB/dia × 30
 TB/ano  = GB/dia × 365 ÷ 1.000
 ```
 
 > **Padrão decimal:** 1 TB = 1.000 GB = 10¹² bytes  
-> **EPS/ativo** e **bytes/evento** são referências de mercado — ajuste conforme o ambiente real do cliente.
+> **EPS/ativo** e **bytes/evento** são referências de mercado editáveis — ajuste conforme o ambiente real do cliente.
 
 ---
 
@@ -114,14 +153,14 @@ TB/ano  = GB/dia × 365 ÷ 1.000
 |---|---|
 | Servidores e SO | Windows Server, Linux, Kubernetes, VMware, Mainframe |
 | Rede e conectividade | NGFW, WAF, IDS/IPS, SD-WAN, ZTNA, NetFlow, NAC, SASE |
-| Endpoint | EDR/XDR, DLP, MDM/UEM, Patch Management, VDI |
-| Identidade e acesso | Active Directory, Entra ID, Okta, CyberArk PAM, RADIUS |
-| Aplicações e middleware | Web Servers, API Gateway, BD relacional/NoSQL, ERP, SAP, DevOps |
+| Endpoint | EDR/XDR, DLP, MDM/UEM, Patch Management, VDI, Browser Isolation |
+| Identidade e acesso | Active Directory, Entra ID, Okta, CyberArk PAM, RADIUS, MFA |
+| Aplicações e middleware | Web Servers, API Gateway, BD relacional/NoSQL, ERP, SAP, DevOps, ITSM |
 | Cloud pública | AWS CloudTrail/VPC/GuardDuty, Azure Monitor/Sentinel, GCP Audit, Workspace |
-| Segurança especializada | NDR, CASB, SOAR, Sandbox, DSPM, DAM, API Security |
-| OT / IoT | SCADA, PLCs, Historian, Claroty, Nozomi, BMS, CFTV |
-| Dados / IA | Data Lake, ETL, ML Platform, GenAI/Copilot, Vector DB |
-| Telecomunicações | PABX, SBC, Contact Center, Unified Communications |
+| Segurança especializada | NDR, CASB, SOAR, Sandbox, DSPM, DAM, API Security, Microsegmentação |
+| OT / IoT | SCADA, PLCs, Historian, Claroty, Nozomi, BMS, CFTV, Smart Meters |
+| Dados / IA | Data Lake, ETL, ML Platform, GenAI/Copilot, Vector DB, Data Catalog |
+| Telecomunicações | PABX, SBC, Contact Center, Unified Communications, Email Gateway |
 
 ---
 
@@ -132,28 +171,30 @@ TB/ano  = GB/dia × 365 ÷ 1.000
 - Comparação de modelos de licenciamento (EPS vs TB/ano) com clientes
 - Discovery técnico — identificar quais fontes de log existem no ambiente
 - Geração de evidências documentadas em PDF para propostas comerciais
+- Apresentações executivas com gráfico de composição por categoria
 
 ### ⚠️ Atenção:
 - EPS/ativo são **médias de mercado** — variam por fabricante, versão e configuração de logging
 - O cálculo representa **volume bruto ingerido** — sem compressão, filtros ou deduplicação
 - Fontes com ingestão **gratuita** no Chronicle (Google Workspace, GCP Audit Logs, Chrome Enterprise) devem ser separadas do volume faturável
-- Para propostas formais, valide com dados reais (relatórios do SIEM atual do cliente)
+- Para propostas formais, valide sempre com dados reais do ambiente (relatórios do SIEM atual)
 
 ### ❌ Não use para:
-- Cotações definitivas sem validação com dados reais
+- Cotações definitivas sem validação com dados reais do cliente
 - Substituir o processo de sizing oficial do Google Cloud / parceiro autorizado
 
 ---
 
 ## 📦 Dependências
 
-A ferramenta é um HTML standalone. Dependência externa carregada **apenas ao exportar XLSX**:
+A ferramenta é um HTML standalone. A única dependência externa é o SheetJS, carregado **somente ao exportar XLSX**:
 
 | Biblioteca | Versão | Uso | Carregamento |
 |---|---|---|---|
 | [SheetJS](https://sheetjs.com/) | 0.18.5 | Geração do XLSX | Sob demanda via CDN |
 
-O **relatório PDF** usa `window.print()` nativo — zero dependências, funciona 100% offline.
+O **relatório PDF** usa `window.print()` nativo — zero dependências, 100% offline.  
+Para uso completamente offline no XLSX, baixe o SheetJS e ajuste o `src` no código.
 
 ---
 
@@ -161,7 +202,7 @@ O **relatório PDF** usa `window.print()` nativo — zero dependências, funcion
 
 MIT — veja [LICENSE](./LICENSE).
 
-Os valores de EPS/ativo e bytes/evento são referências técnicas de mercado compiladas de documentação pública de fabricantes e benchmarks da indústria. Não representam dados proprietários de nenhum fabricante.
+Os valores de EPS/ativo e bytes/evento são referências técnicas compiladas de documentação pública de fabricantes e benchmarks da indústria. Não representam dados proprietários de nenhum fabricante.
 
 ---
 
