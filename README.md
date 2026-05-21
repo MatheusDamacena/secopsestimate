@@ -44,7 +44,7 @@ Acesse na web: https://matheusdamacena.github.io/secopsestimate/
 
 | # | Funcionalidade | Descrição |
 |---|---|---|
-| 7 | **Filtro por categoria** | Sidebar e barra de ícones lateral — clique em qualquer categoria para filtrar a tabela |
+| 7 | **Filtro por categoria** | Sidebar e barra de ícones lateral, clique em qualquer categoria para filtrar a tabela |
 | 8 | **Busca de tipo de evento** | Campo de pesquisa por nome ou fabricante em tempo real |
 | 9 | **Filtro "Só preenchidos"** | Exibe apenas os tipos de evento com quantidade > 0 |
 | 10 | **Sidebar retrátil** | Recolhe o painel de navegação para ampliar o espaço da tabela |
@@ -55,7 +55,7 @@ Acesse na web: https://matheusdamacena.github.io/secopsestimate/
 | # | Funcionalidade | Descrição |
 |---|---|---|
 | 12 | **Evento Customizado** | Adiciona uma linha totalmente editável: nome, escopo, qtde, EPS/ativo e bytes/evento |
-| 13 | **Duplicar Evento** | Modal com busca e checkboxes — duplica qualquer tipo existente com quantidade independente (ex: dois fabricantes de NGFW) |
+| 13 | **Duplicar Evento** | Modal com busca e checkboxes duplica qualquer tipo existente com quantidade independente (ex: dois fabricantes de NGFW) |
 
 ### 📊 Análise e comparação
 
@@ -69,16 +69,16 @@ Acesse na web: https://matheusdamacena.github.io/secopsestimate/
 
 | # | Funcionalidade | Descrição |
 |---|---|---|
-| 17 | **Relatório PDF** | Aba 3 com layout A4: cabeçalho com nome do projeto, 5 métricas, donut chart, tabela detalhada e totais — exportado via print nativo do browser (sem dependências) |
-| 18 | **Export XLSX** | Planilha profissional com formatação, cores por hierarquia, zebra striping, totais em verde e fórmulas — nome do projeto no título e no nome do arquivo |
+| 17 | **Relatório PDF** | Aba 3 com layout A4: cabeçalho com nome do projeto, 5 métricas, donut chart, tabela detalhada e totais  exportado via print nativo do browser (sem dependências) |
+| 18 | **Export XLSX** | Planilha profissional com formatação, cores por hierarquia, zebra striping, totais em verde e fórmulas, nome do projeto no título e no nome do arquivo |
 
 ### ⚙️ Produtividade
 
 | # | Funcionalidade | Descrição |
 |---|---|---|
 | 19 | **Nome do projeto** | Campo no header — aparece no relatório PDF, no título do XLSX e no nome do arquivo exportado |
-| 20 | **Persistência local** | Estado salvo automaticamente no `localStorage` — dados, notas, tema, idioma e cenários preservados ao fechar o browser |
-| 21 | **Compartilhar link** | Botão "Compartilhar" codifica o sizing completo na URL (base64) — abra em outro browser e o estado é restaurado |
+| 20 | **Persistência local** | Estado salvo automaticamente no `localStorage` dados, notas, tema, idioma e cenários preservados ao fechar o browser |
+| 21 | **Compartilhar link** | Botão "Compartilhar" codifica o sizing completo na URL (base64), abra em outro browser e o estado é restaurado |
 | 22 | **Tema claro / escuro** | Paleta Google Material Design — tipografia Google Sans + Roboto Mono (mesmas fontes do Chronicle SecOps) |
 | 23 | **Multilíngue** | Interface completa em Português 🇧🇷, English 🇺🇸 e Español 🇪🇸 — incluindo labels, hints, placeholders e categorias |
 | 24 | **Zero instalação** | Arquivo HTML único — roda localmente ou em qualquer hospedagem estática |
@@ -145,7 +145,7 @@ TB/ano  = GB/dia × 365 ÷ 1.000
 ```
 
 > **Padrão decimal:** 1 TB = 1.000 GB = 10¹² bytes  
-> **EPS/ativo** e **bytes/evento** são referências de mercado editáveis — ajuste conforme o ambiente real do cliente.
+> **EPS/ativo** e **bytes/evento** são referências de mercado editáveis, ajuste conforme o ambiente real do cliente.
 
 ---
 
