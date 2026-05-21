@@ -19,3 +19,17 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+THIRD-PARTY NOTICES
+
+This software optionally loads SheetJS (xlsx) version 0.18.5 from
+cdnjs.cloudflare.com at runtime, solely when the user requests an XLSX export.
+SheetJS is licensed under the Apache License 2.0.
+Source: https://sheetjs.com
+
+The reference values for EPS/asset and bytes/event included in this software
+are compiled from publicly available vendor documentation, industry benchmarks,
+and market references. They do not represent proprietary data of any vendor and
+are provided solely as estimation guidelines.
