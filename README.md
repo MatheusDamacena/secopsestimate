@@ -19,7 +19,7 @@
 
 O **SecOps Ingestion Sizing Tool** resolve um problema crítico de pré-venda (NÃO É UMA FERRAMENTA OFICIAL DO GOOGLE):
 
-> *Algumas ferramentas de mercado são dimensionadas utilizando **EPS** (eventos por segundo). O Google SecOps é licenciado por **TB/ano** (volume de dados ingeridos). Não existe conversão direta - e cotar sem entender o ambiente gera estimativas incorretas.*
+> *Algumas ferramentas de mercado são dimensionadas utilizando **EPS** (eventos por segundo). O Google SecOps é licenciado por **TB/ano** (volume de dados ingeridos). Não existe conversão direta e cotar sem entender o ambiente gera estimativas incorretas.*
 
 Esta ferramenta permite calcular o volume estimado de ingestão de logs a partir do inventário real de ativos do cliente, produzindo a métrica correta para cotação do Google SecOps.
 
@@ -93,7 +93,7 @@ TB/ano  = GB/dia × 365 ÷ 1.000
 ```
 
 > **Padrão decimal:** 1 TB = 1.000 GB = 10¹² bytes  
-> Os valores de **EPS/ativo** e **bytes/evento** são referências de mercado editáveis — ajuste conforme os dados reais do ambiente do cliente.
+> Os valores de **EPS/ativo** e **bytes/evento** são referências de mercado editáveis, ajuste conforme os dados reais do ambiente do cliente.
 
 ---
 
@@ -123,7 +123,7 @@ TB/ano  = GB/dia × 365 ÷ 1.000
 - Geração de evidências documentadas para propostas comerciais
 
 ### ⚠️ Atenção:
-- Os valores de **EPS/ativo** são **médias de mercado** — variam por fabricante, versão e configuração
+- Os valores de **EPS/ativo** são **médias de mercado** variam por fabricante, versão e configuração
 - O cálculo representa o **volume bruto ingerido**, sem considerar compressão, filtros de descarte ou deduplicação
 - Fontes com ingestão **gratuita** no Chronicle SecOps (Google Workspace, GCP Audit Logs, Chrome Enterprise) devem ser separadas do volume faturável na cotação final
 - Para propostas formais, valide sempre com dados reais do ambiente (relatórios de ingestão do SIEM atual)
@@ -141,7 +141,7 @@ A ferramenta é um HTML standalone. A única dependência externa é carregada *
 |---|---|---|---|
 | [SheetJS (xlsx)](https://sheetjs.com/) | 0.18.5 | Geração do arquivo XLSX | cdnjs.cloudflare.com |
 
-> A ferramenta funciona **completamente offline** — a biblioteca SheetJS só é necessária ao clicar em "Exportar XLSX".  
+> A ferramenta funciona **completamente offline** a biblioteca SheetJS só é necessária ao clicar em "Exportar XLSX".  
 > Para uso 100% offline, baixe o SheetJS e ajuste o `src` no código.
 
 ---
