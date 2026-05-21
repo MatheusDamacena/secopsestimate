@@ -19,7 +19,7 @@
 
 O **SecOps Ingestion Sizing Tool** resolve um problema crítico de pré-venda:
 
-> *O QRadar é licenciado por **EPS** (eventos por segundo). O Google Chronicle SecOps é licenciado por **TB/ano** (volume de dados ingeridos). Não existe conversão direta — e cotar sem entender o ambiente gera estimativas incorretas.*
+> *Algumas ferramentas de mercado são dimensionadas utilizando **EPS** (eventos por segundo). O Google Chronicle SecOps é licenciado por **TB/ano** (volume de dados ingeridos). Não existe conversão direta - e cotar sem entender o ambiente gera estimativas incorretas.*
 
 Esta ferramenta permite calcular o volume estimado de ingestão de logs a partir do inventário real de ativos do cliente, produzindo a métrica correta para cotação do Chronicle SecOps.
 
