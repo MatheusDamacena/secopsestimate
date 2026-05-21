@@ -9,22 +9,23 @@
 <style>
 /* ── DARK (default) ── */
 :root{
-  --bg:#080b12; --surface:#0d1118; --surface2:#111620; --surface3:#161c28;
-  --border:rgba(255,255,255,0.055); --border2:rgba(255,255,255,0.10);
-  --text:#e4e8f0; --text2:#8892a4; --text3:#4a5568;
-  --cyan:#00f5d4; --cyan2:#00c4a8;
-  --cg:rgba(0,245,212,0.10); --cg2:rgba(0,245,212,0.05);
-  --hbg:rgba(8,11,18,0.96);
+  /* DARK MODE — refined */
+  --bg:#07090f; --surface:#0e1117; --surface2:#12161f; --surface3:#181d28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#dde3ef; --text2:#7e8fa8; --text3:#3e4d62;
+  --cyan:#00e8c8; --cyan2:#00b8a0;
+  --cg:rgba(0,232,200,0.11); --cg2:rgba(0,232,200,0.055);
+  --hbg:rgba(7,9,15,0.96);
   --sans:'Outfit',sans-serif; --mono:'DM Mono',monospace;
 }
-/* ── LIGHT ── */
+/* ── LIGHT MODE — easy on the eyes ── */
 [data-theme="light"]{
-  --bg:#f0f4f8; --surface:#ffffff; --surface2:#f5f7fa; --surface3:#eaeff5;
-  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
-  --text:#0f1923; --text2:#44556e; --text3:#8a9bb0;
-  --cyan:#007a68; --cyan2:#009a84;
-  --cg:rgba(0,122,104,0.10); --cg2:rgba(0,122,104,0.05);
-  --hbg:rgba(240,244,248,0.97);
+  --bg:#f6f7f9; --surface:#ffffff; --surface2:#eef0f4; --surface3:#e4e7ed;
+  --border:rgba(0,0,0,0.09); --border2:rgba(0,0,0,0.16);
+  --text:#1a202c; --text2:#3a4a5e; --text3:#6b7a90;
+  --cyan:#0069b4; --cyan2:#0080d8;
+  --cg:rgba(0,105,180,0.10); --cg2:rgba(0,105,180,0.05);
+  --hbg:rgba(246,247,249,0.97);
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -43,8 +44,8 @@ body::before{
   mask-image:radial-gradient(ellipse 80% 50% at 50% 0%,black 40%,transparent 100%);
 }
 [data-theme="light"] body::before{
-  background-image:linear-gradient(rgba(0,122,104,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,122,104,0.04) 1px,transparent 1px);
+  background-image:linear-gradient(rgba(0,105,180,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,105,180,0.04) 1px,transparent 1px);
 }
 
 /* ── HEADER ── */
@@ -236,6 +237,74 @@ tr.dr.lit:hover td{background:var(--cg)}
 .nc{font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;white-space:nowrap}
 .nc.a{color:var(--text2)}.nc.h{color:var(--cyan);font-weight:500}
 .empty-row{padding:48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.06em}
+/* light mode explicit text fixes */
+[data-theme="light"] .rn{color:#1a202c}
+[data-theme="light"] .rs{color:#4a5a6e}
+[data-theme="light"] .nc{color:#5a6a80}
+[data-theme="light"] .nc.a{color:#2a3a50}
+[data-theme="light"] .nc.h{color:#0069b4;font-weight:600}
+[data-theme="light"] .cat-row td{color:#0069b4;background:#eef2f8}
+[data-theme="light"] .dr:hover td{background:rgba(0,105,180,0.05)}
+[data-theme="light"] .dr.lit td{background:rgba(0,105,180,0.06)}
+[data-theme="light"] .dr.lit:hover td{background:rgba(0,105,180,0.10)}
+[data-theme="light"] .ni{color:#1a202c;border-bottom-color:rgba(0,0,0,0.18)}
+[data-theme="light"] .ni.on{color:#0069b4;border-bottom-color:#0069b4}
+[data-theme="light"] .ni:focus{border-bottom-color:#0080d8}
+[data-theme="light"] thead th{color:#4a5a6e;background:#eef0f4;border-bottom-color:rgba(0,0,0,0.14)}
+[data-theme="light"] .mlbl{color:#4a5a6e}
+[data-theme="light"] .mval{color:#1a202c}
+[data-theme="light"] .munit{color:#6b7a90}
+[data-theme="light"] .metric.feat .mval{color:#0069b4}
+[data-theme="light"] .metric.feat .mlbl{color:#0080d8}
+[data-theme="light"] .metric.feat .mlbl::before{background:#0069b4;box-shadow:0 0 5px rgba(0,105,180,0.4)}
+[data-theme="light"] .logo-name{color:#1a202c}
+[data-theme="light"] .hpill{color:#6b7a90;border-color:rgba(0,0,0,0.12)}
+[data-theme="light"] .hstatus{color:#0069b4}
+[data-theme="light"] .dot{background:#0069b4;box-shadow:0 0 7px rgba(0,105,180,0.6)}
+[data-theme="light"] .tab{color:#6b7a90}
+[data-theme="light"] .tab:hover{color:#3a4a5e}
+[data-theme="light"] .tab.active{color:#0069b4;border-bottom-color:#0069b4}
+[data-theme="light"] .tab.active .tbadge{background:rgba(0,105,180,0.08);color:#0080d8}
+[data-theme="light"] .nvi svg{color:#6b7a90}
+[data-theme="light"] .nvi:hover svg{color:#3a4a5e}
+[data-theme="light"] .nvi.active svg{color:#0069b4}
+[data-theme="light"] .nvi.active::after{background:#0069b4;box-shadow:0 0 6px rgba(0,105,180,0.5)}
+[data-theme="light"] .nl{color:#4a5a6e}
+[data-theme="light"] .nl:hover{color:#1a202c}
+[data-theme="light"] .nl.active{color:#0069b4;background:rgba(0,105,180,0.07);border-color:rgba(0,105,180,0.18)}
+[data-theme="light"] .nbadge{color:#6b7a90;background:#e4e7ed}
+[data-theme="light"] .nl.active .nbadge{background:rgba(0,105,180,0.12);color:#0080d8}
+[data-theme="light"] .nsec-lbl{color:#8a9bb0}
+[data-theme="light"] .sact{color:#3a4a5e;border-color:rgba(0,0,0,0.12)}
+[data-theme="light"] .sact:hover{color:#1a202c;background:#e4e7ed}
+[data-theme="light"] .sact.on{color:#0069b4;background:rgba(0,105,180,0.07);border-color:rgba(0,105,180,0.22)}
+[data-theme="light"] .sact.primary{color:#0069b4;background:rgba(0,105,180,0.07);border-color:rgba(0,105,180,0.22)}
+[data-theme="light"] .sact.primary:hover{background:rgba(0,105,180,0.14);border-color:#0069b4}
+[data-theme="light"] .srch-inp{color:#1a202c;background:#ffffff;border-color:rgba(0,0,0,0.14)}
+[data-theme="light"] .srch-inp:focus{border-color:#0069b4}
+[data-theme="light"] .cc-title{color:#0080d8}
+[data-theme="light"] .cc-sub{color:#3a4a5e}
+[data-theme="light"] .clbl{color:#5a6a80}
+[data-theme="light"] .ci,.cs{color:#1a202c;background:#ffffff;border-color:rgba(0,0,0,0.14)}
+[data-theme="light"] .ci:focus,[data-theme="light"] .cs:focus{border-color:#0069b4}
+[data-theme="light"] .chint{color:#6b7a90}
+[data-theme="light"] .cr-lbl{color:#0080d8}
+[data-theme="light"] .cr-val{color:#0069b4}
+[data-theme="light"] .cr-det{color:#5a6a80}
+[data-theme="light"] .cresult{border-color:rgba(0,105,180,0.22);background:linear-gradient(135deg,rgba(0,105,180,0.07) 0%,transparent 70%)}
+[data-theme="light"] .cbtn{color:#3a4a5e;border-color:rgba(0,0,0,0.12)}
+[data-theme="light"] .cbtn:hover{color:#1a202c;background:#e4e7ed}
+[data-theme="light"] .ncollapse svg{color:#6b7a90}
+[data-theme="light"] .ncollapse:hover svg{color:#3a4a5e}
+[data-theme="light"] .ft{color:#8a9bb0}
+[data-theme="light"] .ft em{color:#0080d8}
+[data-theme="light"] .ft .au{color:#4a5a6e}
+[data-theme="light"] .lang-sel{color:#3a4a5e;background:#ffffff;border-color:rgba(0,0,0,0.14)}
+[data-theme="light"] .lang-sel:hover,[data-theme="light"] .lang-sel:focus{border-color:#0069b4;color:#1a202c}
+[data-theme="light"] .theme-btn{color:#6b7a90;border-color:rgba(0,0,0,0.12)}
+[data-theme="light"] .theme-btn:hover{color:#3a4a5e;background:#e4e7ed}
+[data-theme="light"] .sb-title{color:#8a9bb0}
+[data-theme="light"] .sb-search-lbl{color:#8a9bb0}
 /* col resize */
 th.rs-th{position:relative;user-select:none}
 .cr{position:absolute;right:0;top:0;bottom:0;width:5px;cursor:col-resize;z-index:20;background:transparent;transition:background .12s}
@@ -303,6 +372,18 @@ footer{
 .ft{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.04em;line-height:1.8}
 .ft em{color:var(--cyan2);font-style:normal}
 .ft .au{color:var(--text2)}
+/* project name */
+.proj-input{
+  font-family:var(--mono);font-size:11px;letter-spacing:.03em;
+  background:transparent;border:none;border-bottom:1px solid var(--border2);
+  color:var(--text2);padding:2px 6px;outline:none;width:220px;
+  transition:border-color .15s,color .15s,width .2s;
+}
+.proj-input:focus{border-bottom-color:var(--cyan);color:var(--text);width:300px}
+.proj-input::placeholder{color:var(--text3);font-style:italic}
+[data-theme="light"] .proj-input{color:var(--text2);border-bottom-color:rgba(0,0,0,0.18)}
+[data-theme="light"] .proj-input:focus{color:var(--text);border-bottom-color:var(--cyan)}
+[data-theme="light"] .proj-input::placeholder{color:var(--text3)}
 
 @media(max-width:880px){
   .leftnav{display:none}
@@ -336,6 +417,7 @@ header,.metrics,.tabs{animation:fi .3s ease both}
     </div>
     <div class="logo-name">SECOPS <b>SIZING</b></div>
   </div>
+  <input class="proj-input" id="proj-name" type="text" maxlength="80" placeholder="Nome do projeto / cliente…" oninput="updateProjName()">
   <div class="hdr-r">
     <div class="hpill">110 LOG SOURCES</div>
     <div class="hpill">EPS → TB/ANO</div>
@@ -446,9 +528,9 @@ header,.metrics,.tabs{animation:fi .3s ease both}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           <span id="sb-reset">RESETAR</span>
         </button>
-        <button class="sact primary" onclick="exportCSV()">
+        <button class="sact primary" onclick="exportXLSX()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span id="sb-export">EXPORTAR CSV</span>
+          <span id="sb-export">EXPORTAR XLSX</span>
         </button>
       </div>
     </aside>
@@ -494,22 +576,22 @@ header,.metrics,.tabs{animation:fi .3s ease both}
           <div class="cf">
             <label class="clbl" id="cc-lu">Unidade / Taxa</label>
             <select class="cs" id="c-unit" onchange="toggleEPS();cCalc()">
-              <optgroup label="Por dia">
-                <option value="MB_per_day">MB / dia</option>
-                <option value="GB_per_day" selected>GB / dia</option>
-                <option value="TB_per_day">TB / dia</option>
+              <optgroup id="og-day" label="Por dia">
+                <option value="MB_per_day" id="opt-mb-day">MB / dia</option>
+                <option value="GB_per_day" id="opt-gb-day" selected>GB / dia</option>
+                <option value="TB_per_day" id="opt-tb-day">TB / dia</option>
               </optgroup>
-              <optgroup label="Por hora">
-                <option value="MB_per_hour">MB / hora</option>
-                <option value="GB_per_hour">GB / hora</option>
-                <option value="TB_per_hour">TB / hora</option>
+              <optgroup id="og-hour" label="Por hora">
+                <option value="MB_per_hour" id="opt-mb-hour">MB / hora</option>
+                <option value="GB_per_hour" id="opt-gb-hour">GB / hora</option>
+                <option value="TB_per_hour" id="opt-tb-hour">TB / hora</option>
               </optgroup>
-              <optgroup label="Por mês">
-                <option value="GB_per_month">GB / mês</option>
-                <option value="TB_per_month">TB / mês</option>
+              <optgroup id="og-month" label="Por mês">
+                <option value="GB_per_month" id="opt-gb-month">GB / mês</option>
+                <option value="TB_per_month" id="opt-tb-month">TB / mês</option>
               </optgroup>
-              <optgroup label="EPS">
-                <option value="EPS">EPS (events/s) — requer tamanho do evento</option>
+              <optgroup id="og-eps" label="EPS">
+                <option value="EPS" id="opt-eps">EPS (events/s) — requer tamanho do evento</option>
               </optgroup>
             </select>
             <span class="chint" id="cc-hu">Resultado sempre em <b style="color:var(--cyan2)">TB/ano</b></span>
@@ -518,8 +600,8 @@ header,.metrics,.tabs{animation:fi .3s ease both}
           <div class="cf">
             <label class="clbl" id="cc-ld">Dias no ano</label>
             <select class="cs" id="c-days" onchange="cCalc()">
-              <option value="365">365 dias</option>
-              <option value="366">366 dias (bissexto)</option>
+              <option value="365" id="opt-365">365 dias</option>
+              <option value="366" id="opt-366">366 dias (bissexto)</option>
             </select>
             <span class="chint" id="cc-hd">Para estimativa padrão, use 365.</span>
           </div>
@@ -527,8 +609,8 @@ header,.metrics,.tabs{animation:fi .3s ease both}
           <div class="cf">
             <label class="clbl" id="cc-lm">Dias por mês</label>
             <select class="cs" id="c-monthdays" onchange="cCalc()">
-              <option value="30">30 dias / mês</option>
-              <option value="30.4375">30,4375 (média anual)</option>
+              <option value="30" id="opt-30">30 dias / mês</option>
+              <option value="30.4375" id="opt-30a">30,4375 (média anual)</option>
             </select>
             <span class="chint" id="cc-hm">Relevante apenas para unidades mensais.</span>
           </div>
@@ -596,7 +678,7 @@ const I18={
     'sb-idapps':'Identidade & Apps','sb-id':'Identidade','sb-apps':'Aplicações',
     'sb-cloudsec':'Cloud & Segurança','sb-sec':'Segurança',
     'sb-spec':'Especializado','sb-data':'Dados / IA',
-    'sb-filled':'SÓ PREENCHIDOS','sb-reset':'RESETAR','sb-export':'EXPORTAR CSV',
+    'sb-filled':'SÓ PREENCHIDOS','sb-reset':'RESETAR','sb-export':'EXPORTAR XLSX',
     'tt-all':'Todas','tt-srv':'Servidores','tt-net':'Rede','tt-id':'Identidade','tt-app':'Aplicações','tt-sec':'Segurança','tt-data':'Dados / IA',
     'th-type':'Tipo de evento','th-scope':'Escopo / exemplos','th-qty':'Qtde',
     'th-epsa':'EPS/ativo','th-epst':'EPS total','th-evd':'Eventos/dia','th-bytes':'Bytes/evt',
@@ -611,6 +693,16 @@ const I18={
     'cc-rlbl':'Resultado','cc-copy':'COPIAR RESULTADO','cc-reset':'RESET',
     'ft-note':'Estimativas de referência · valide com dados reais · Volume = EPS × bytes × 86.400 s/dia',
     'ano':'ano','dia':'dia',
+    // optgroups
+    'og-day':'Por dia','og-hour':'Por hora','og-month':'Por mês','og-eps':'EPS',
+    // options unit
+    'opt-mb-day':'MB / dia','opt-gb-day':'GB / dia','opt-tb-day':'TB / dia',
+    'opt-mb-hour':'MB / hora','opt-gb-hour':'GB / hora','opt-tb-hour':'TB / hora',
+    'opt-gb-month':'GB / mês','opt-tb-month':'TB / mês',
+    'opt-eps':'EPS (events/s) — requer tamanho do evento',
+    // options days
+    'opt-365':'365 dias','opt-366':'366 dias (bissexto)',
+    'opt-30':'30 dias / mês','opt-30a':'30,4375 (média anual)',
   },
   en:{
     'lbl-live':'LIVE CALC',
@@ -624,7 +716,7 @@ const I18={
     'sb-idapps':'Identity & Apps','sb-id':'Identity','sb-apps':'Applications',
     'sb-cloudsec':'Cloud & Security','sb-sec':'Security',
     'sb-spec':'Specialized','sb-data':'Data / AI',
-    'sb-filled':'FILLED ONLY','sb-reset':'RESET','sb-export':'EXPORT CSV',
+    'sb-filled':'FILLED ONLY','sb-reset':'RESET','sb-export':'EXPORT XLSX',
     'tt-all':'All','tt-srv':'Servers','tt-net':'Network','tt-id':'Identity','tt-app':'Applications','tt-sec':'Security','tt-data':'Data / AI',
     'th-type':'Event type','th-scope':'Scope / examples','th-qty':'Qty',
     'th-epsa':'EPS/asset','th-epst':'Total EPS','th-evd':'Events/day','th-bytes':'Bytes/evt',
@@ -639,6 +731,16 @@ const I18={
     'cc-rlbl':'Result','cc-copy':'COPY RESULT','cc-reset':'RESET',
     'ft-note':'Reference estimates · validate with real environment data · Volume = EPS × bytes × 86,400 s/day',
     'ano':'year','dia':'day',
+    // optgroups
+    'og-day':'Per day','og-hour':'Per hour','og-month':'Per month','og-eps':'EPS',
+    // options unit
+    'opt-mb-day':'MB / day','opt-gb-day':'GB / day','opt-tb-day':'TB / day',
+    'opt-mb-hour':'MB / hour','opt-gb-hour':'GB / hour','opt-tb-hour':'TB / hour',
+    'opt-gb-month':'GB / month','opt-tb-month':'TB / month',
+    'opt-eps':'EPS (events/s) — requires event size',
+    // options days
+    'opt-365':'365 days','opt-366':'366 days (leap year)',
+    'opt-30':'30 days / month','opt-30a':'30.4375 (annual avg)',
   },
   es:{
     'lbl-live':'CÁLCULO EN VIVO',
@@ -652,7 +754,7 @@ const I18={
     'sb-idapps':'Identidad & Apps','sb-id':'Identidad','sb-apps':'Aplicaciones',
     'sb-cloudsec':'Cloud & Seguridad','sb-sec':'Seguridad',
     'sb-spec':'Especializado','sb-data':'Datos / IA',
-    'sb-filled':'SOLO COMPLETADOS','sb-reset':'RESETEAR','sb-export':'EXPORTAR CSV',
+    'sb-filled':'SOLO COMPLETADOS','sb-reset':'RESETEAR','sb-export':'EXPORTAR XLSX',
     'tt-all':'Todas','tt-srv':'Servidores','tt-net':'Red','tt-id':'Identidad','tt-app':'Aplicaciones','tt-sec':'Seguridad','tt-data':'Datos / IA',
     'th-type':'Tipo de evento','th-scope':'Alcance / ejemplos','th-qty':'Cant.',
     'th-epsa':'EPS/activo','th-epst':'EPS total','th-evd':'Eventos/día','th-bytes':'Bytes/evt',
@@ -667,21 +769,54 @@ const I18={
     'cc-rlbl':'Resultado','cc-copy':'COPIAR RESULTADO','cc-reset':'RESET',
     'ft-note':'Estimaciones de referencia · valide con datos reales · Volumen = EPS × bytes × 86.400 s/día',
     'ano':'año','dia':'día',
+    // optgroups
+    'og-day':'Por día','og-hour':'Por hora','og-month':'Por mes','og-eps':'EPS',
+    // options unit
+    'opt-mb-day':'MB / día','opt-gb-day':'GB / día','opt-tb-day':'TB / día',
+    'opt-mb-hour':'MB / hora','opt-gb-hour':'GB / hora','opt-tb-hour':'TB / hora',
+    'opt-gb-month':'GB / mes','opt-tb-month':'TB / mes',
+    'opt-eps':'EPS (events/s) — requiere tamaño del evento',
+    // options days
+    'opt-365':'365 días','opt-366':'366 días (bisiesto)',
+    'opt-30':'30 días / mes','opt-30a':'30,4375 (media anual)',
   }
 };
 let lang='pt';
 function setLang(l){
   lang=l;
   const T=I18[l];
+  // translate all elements by id
   Object.keys(T).forEach(id=>{
-    if(id==='search-ph'){document.getElementById('search').placeholder=T[id];return}
-    if(id==='ano'||id==='dia')return;
+    if(id==='search-ph'||id==='ano'||id==='dia'||id.startsWith('og-')||id.startsWith('opt-')||id.startsWith('cats-'))return;
     const el=document.getElementById(id);
     if(el)el.textContent=T[id];
   });
+  // placeholder
   document.getElementById('search').placeholder=T['search-ph']||'';
+  // optgroup labels (attribute, not textContent)
+  ['og-day','og-hour','og-month','og-eps'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&T[id])el.label=T[id];
+  });
+  // option texts
+  const optIds=['opt-mb-day','opt-gb-day','opt-tb-day','opt-mb-hour','opt-gb-hour','opt-tb-hour',
+    'opt-gb-month','opt-tb-month','opt-eps','opt-365','opt-366','opt-30','opt-30a'];
+  optIds.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&T[id])el.textContent=T[id];
+  });
   document.documentElement.lang=l==='pt'?'pt-BR':l;
+  // re-render table (translates category headers)
+  render();
   cCalc();
+}
+
+// ─── PROJECT NAME ─────────────────────────────────────
+function updateProjName(){
+  // nothing needed — value read at export time
+}
+function getProjName(){
+  return (document.getElementById('proj-name').value||'').trim();
 }
 
 // ─── THEME ───────────────────────────────────────────
@@ -690,7 +825,7 @@ function toggleTheme(){
   document.body.dataset.theme=t;
   try{localStorage.setItem('secops-theme',t)}catch(e){}
 }
-try{const s=localStorage.getItem('secops-theme');if(s)document.body.dataset.theme=s}catch(e){}
+try{const s=localStorage.getItem('secops-theme');if(s)document.body.dataset.theme=s;}catch(e){}
 
 // ─── TAB SWITCHER ────────────────────────────────────
 function switchTab(n,el){
@@ -701,7 +836,35 @@ function switchTab(n,el){
   if(n===1)t1Totals(); else cCalc();
 }
 
-// ─── DATA ────────────────────────────────────────────
+// ─── LANG ────────────────────────────────────────────
+function setLang(l){
+  lang=l;
+  const T=I18[l];
+  Object.keys(T).forEach(id=>{
+    if(id==='search-ph'||id==='ano'||id==='dia'||id.startsWith('og-')||id.startsWith('opt-'))return;
+    const el=document.getElementById(id);
+    if(el)el.textContent=T[id];
+  });
+  document.getElementById('search').placeholder=T['search-ph']||'';
+  ['og-day','og-hour','og-month','og-eps'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&T[id])el.label=T[id];
+  });
+  const optIds=['opt-mb-day','opt-gb-day','opt-tb-day','opt-mb-hour','opt-gb-hour','opt-tb-hour',
+    'opt-gb-month','opt-tb-month','opt-eps','opt-365','opt-366','opt-30','opt-30a'];
+  optIds.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&T[id])el.textContent=T[id];
+  });
+  document.documentElement.lang=l==='pt'?'pt-BR':l;
+  render();
+  cCalc();
+}
+const CATS_LABELS={
+  pt:["Servidores e sistemas operacionais", "Rede e infraestrutura de conectividade", "Endpoint e proteção de dispositivos", "Identidade e acesso", "Aplicações e middleware", "Cloud pública e infraestrutura cloud", "Segurança especializada", "OT, IoT e ambientes industriais", "Dados, analytics e inteligência artificial", "Telecomunicações e comunicações corporativas"],
+  en:["Servers and operating systems", "Network and connectivity infrastructure", "Endpoint and device protection", "Identity and access", "Applications and middleware", "Public cloud and cloud infrastructure", "Specialized security", "OT, IoT and industrial environments", "Data, analytics and artificial intelligence", "Telecommunications and corporate communications"],
+  es:["Servidores y sistemas operativos", "Red e infraestructura de conectividad", "Endpoint y protección de dispositivos", "Identidad y acceso", "Aplicaciones y middleware", "Cloud pública e infraestructura cloud", "Seguridad especializada", "OT, IoT y entornos industriales", "Datos, analytics e inteligencia artificial", "Telecomunicaciones y comunicaciones corporativas"]
+};
 const CATS=[
   {label:"Servidores e sistemas operacionais",tag:"Servidores",rows:[
     {n:"Windows Server",s:"Domain Controllers, file servers, app servers",eps:1.5,b:900},
@@ -875,6 +1038,7 @@ const CATS=[
 let activeFilter='all', showFilled=false;
 const S={};
 CATS.forEach((cat,ci)=>cat.rows.forEach((row,ri)=>{S[`${ci}_${ri}`]={qty:0,eps:row.eps,b:row.b}}));
+const _S=S; // alias for export function
 
 // ─── TAB 1 ───────────────────────────────────────────
 function setF(tag,el){
@@ -906,7 +1070,7 @@ function render(){
         <td class="nc${hv?' h':''}" id="gd_${k}">${f2(gbd)}</td>
       </tr>`;
     });
-    if(has)html+=`<tr class="cat-row"><td colspan="8">${cat.label}</td></tr>`+ch;
+    if(has)html+=`<tr class="cat-row"><td colspan="8">${(CATS_LABELS[lang]||CATS_LABELS.pt)[ci]||cat.label}</td></tr>`+ch;
   });
   document.getElementById('tbody').innerHTML=html||`<tr><td colspan="8" class="empty-row">Nenhuma fonte encontrada.</td></tr>`;
   t1Totals();
@@ -929,16 +1093,191 @@ function t1Totals(){
   set('m-gbd',f2(tG));set('m-gbm',f0(tG*30));set('m-tby',f2((tG*365)/1000));
 }
 function resetAll(){Object.keys(S).forEach(k=>{S[k].qty=0});render()}
-function exportCSV(){
-  let c='\uFEFF'+'Categoria,Tipo,Escopo,Qtde,EPS/ativo,EPS total,Eventos/dia,Bytes,GB/dia\n';
-  CATS.forEach((cat,ci)=>cat.rows.forEach((row,ri)=>{
-    const k=`${ci}_${ri}`,sv=S[k],et=sv.qty*sv.eps,evd=et*86400,gbd=(evd*sv.b)/1e9;
-    c+=`"${cat.label}","${row.n}","${row.s}",${sv.qty},${sv.eps},${et.toFixed(0)},${evd.toFixed(0)},${sv.b},${gbd.toFixed(2)}\n`;
-  }));
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([c],{type:'text/csv;charset=utf-8'}));
-  a.download='secops_sizing.csv';a.click();
+function exportXLSX(){
+  if(typeof XLSX==='undefined'){
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload=_doExport;
+    document.head.appendChild(s);
+  } else { _doExport(); }
 }
+
+function _doExport(){
+  const wb  = XLSX.utils.book_new();
+  const CL  = CATS_LABELS[lang] || CATS_LABELS.pt;
+  const proj = getProjName();
+
+  // ── Palette ──────────────────────────────────────────────────
+  const C = {
+    navyDark : '0D1827', navy:'1A3A5C', navyMid:'2E5F8A',
+    teal:'0B7B8C', tealLight:'D6EEF2',
+    green:'1A6B3C', blue:'0069B4', blueBg:'D6E8F7',
+    gray1:'F4F6F9', gray2:'E8ECF2', gray3:'D0D6E0',
+    white:'FFFFFF', text:'111827', textMid:'4B5563', textLight:'9CA3AF',
+  };
+
+  // ── Style factories ───────────────────────────────────────────
+  const fnt=(color,sz,bold,italic)=>({name:'Calibri',sz:sz||10,bold:!!bold,italic:!!italic,color:{rgb:color||C.text}});
+  const bg=(color)=>({patternType:'solid',fgColor:{rgb:color}});
+  const al=(h,v,wrap)=>({horizontal:h||'left',vertical:v||'center',wrapText:!!wrap});
+  const bdr=(s,c)=>{const sd={style:s||'thin',color:{rgb:c||C.gray3}};return{top:sd,bottom:sd,left:sd,right:sd}};
+  const bdrB=(c)=>{const t={style:'thin',color:{rgb:c||C.gray3}},m={style:'medium',color:{rgb:c||C.navy}};return{top:m,bottom:m,left:t,right:t}};
+  const st=(font,fill,alignment,border,numFmt)=>{
+    const s={};
+    if(font)s.font=font; if(fill)s.fill=fill;
+    if(alignment)s.alignment=alignment; if(border)s.border=border;
+    if(numFmt)s.numFmt=numFmt; return s;
+  };
+
+  // Predefined styles
+  const ST = {
+    title : st(fnt(C.white,15,true),  bg(C.navyDark), al('left','center')),
+    sub   : st(fnt(C.white,10),       bg(C.navy),     al('left','center')),
+    date  : st(fnt(C.textLight,9,false,true), bg(C.gray1), al('left','center')),
+    hdr   : st(fnt(C.white,10,true),  bg(C.navyMid),  al('center','center'), bdr('thin',C.navy)),
+    hdrL  : st(fnt(C.white,10,true),  bg(C.navyMid),  al('left','center'),   bdr('thin',C.navy)),
+    cat   : st(fnt(C.navy,10,true),   bg(C.tealLight),al('left','center'),   bdr('thin',C.gray3)),
+    d0L   : st(fnt(C.text,10),        bg(C.white),    al('left','center',true),  bdr('thin',C.gray3)),
+    d1L   : st(fnt(C.text,10),        bg(C.gray1),    al('left','center',true),  bdr('thin',C.gray3)),
+    d0sc  : st(fnt(C.textLight,9,false,true), bg(C.white), al('left','center',true), bdr('thin',C.gray3)),
+    d1sc  : st(fnt(C.textLight,9,false,true), bg(C.gray1), al('left','center',true), bdr('thin',C.gray3)),
+    d0R   : st(fnt(C.text,10),        bg(C.white),    al('right','center'),  bdr('thin',C.gray3)),
+    d1R   : st(fnt(C.text,10),        bg(C.gray1),    al('right','center'),  bdr('thin',C.gray3)),
+    d0EPS : st(fnt(C.navyMid,10,true),bg(C.white),    al('right','center'),  bdr('thin',C.gray3)),
+    d1EPS : st(fnt(C.navyMid,10,true),bg(C.gray1),    al('right','center'),  bdr('thin',C.gray3)),
+    d0GB  : st(fnt(C.teal,10),        bg(C.white),    al('right','center'),  bdr('thin',C.gray3)),
+    d1GB  : st(fnt(C.teal,10),        bg(C.gray1),    al('right','center'),  bdr('thin',C.gray3)),
+    d0TB  : st(fnt(C.blue,10,true),   bg(C.blueBg),   al('right','center'),  bdrB(C.navyMid), '#,##0.0000'),
+    d1TB  : st(fnt(C.blue,10,true),   bg(C.blueBg),   al('right','center'),  bdrB(C.navyMid), '#,##0.0000'),
+    totLbl: st(fnt(C.white,11,true),  bg(C.navy),     al('left','center'),   bdrB(C.navyDark)),
+    totNum: st(fnt(C.white,10,true),  bg(C.navy),     al('right','center'),  bdrB(C.navyDark)),
+    totGB : st(fnt(C.white,11,true),  bg(C.teal),     al('right','center'),  bdrB(C.navyDark)),
+    totTB : st(fnt(C.white,14,true),  bg(C.green),    al('right','center'),  bdrB(C.green),   '#,##0.0000'),
+    note  : st(fnt(C.textLight,8,false,true), null, al('left','center')),
+  };
+
+  // ── Collect filled rows only ──────────────────────────────────
+  let tEPS=0,tEvD=0,tGBD=0,tSrc=0;
+  const rows=[];
+  CATS.forEach((cat,ci)=>{
+    let catAdded=false;
+    cat.rows.forEach((row,ri)=>{
+      const k=`${ci}_${ri}`;
+      const state=_S[k];
+      if(!state||state.qty===0) return;
+      const et=state.qty*state.eps, evd=et*86400, gbd=(evd*state.b)/1e9;
+      if(!catAdded){ rows.push({type:'cat', label:CL[ci]||cat.label}); catAdded=true; }
+      rows.push({type:'data', cat:CL[ci]||cat.label, name:row.n, scope:row.s,
+        qty:state.qty, eps:state.eps, epsT:et, evd, bytes:state.b,
+        gbD:gbd, gbM:gbd*30, tbY:(gbd*365)/1000});
+      tEPS+=et; tEvD+=evd; tGBD+=gbd; tSrc++;
+    });
+  });
+  const tTBY=(tGBD*365)/1000, tGBM=tGBD*30;
+
+  // ── Build worksheet ───────────────────────────────────────────
+  const ws={};
+  const NCOLS=10; // A–J (no separate Categoria col in data rows)
+
+  const sc=(r,c,v,s,nf)=>{
+    const addr=XLSX.utils.encode_cell({r,c});
+    ws[addr]={v, t:typeof v==='number'?'n':'s', s:s||{}};
+    if(nf)ws[addr].z=nf;
+  };
+  const fillRow=(r,s)=>{ for(let c=0;c<NCOLS;c++){ const a=XLSX.utils.encode_cell({r,c}); if(!ws[a])ws[a]={v:'',t:'s',s:s||{}}; }};
+
+  let r=0;
+  const merges=[];
+
+  // Title
+  const titleTxt=proj?`SecOps Ingestion Sizing  ·  ${proj}`:'SecOps Ingestion Sizing — Dimensionamento de Ingestão';
+  sc(r,0,titleTxt,ST.title); fillRow(r,ST.title);
+  merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
+
+  // Sub
+  sc(r,0,'Google Chronicle SecOps  ·  Estimativa de Volume de Ingestão para Cotação',ST.sub);
+  fillRow(r,ST.sub); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
+
+  // Date
+  const dt=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  sc(r,0,`Gerado em ${dt}   ·   SecOps Sizing Tool v1.0.0`,ST.date);
+  fillRow(r,ST.date); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
+
+  r++; // spacer
+
+  // Headers — 10 cols: Fonte | Escopo | Qtde | EPS/ativo | EPS total | Eventos/dia | Bytes/evt | GB/dia | GB/mês | TB/ano
+  const heads=[
+    {l:'Fonte de log',al:'left'},{l:'Escopo / exemplos',al:'left'},
+    {l:'Qtde',al:'center'},{l:'EPS / ativo',al:'center'},
+    {l:'EPS total',al:'center'},{l:'Eventos / dia',al:'center'},
+    {l:'Bytes / evt',al:'center'},{l:'GB / dia',al:'center'},
+    {l:'GB / mês',al:'center'},{l:'TB / ano  ★',al:'center'},
+  ];
+  const HDR_ROW=r;
+  heads.forEach((h,c)=>sc(r,c,h.l,h.al==='left'?ST.hdrL:ST.hdr));
+  r++;
+
+  // Data rows
+  let alt=false;
+  rows.forEach(d=>{
+    if(d.type==='cat'){
+      sc(r,0,d.label,ST.cat); fillRow(r,ST.cat);
+      merges.push({s:{r,c:0},e:{r,c:NCOLS-1}});
+      r++; alt=false; return;
+    }
+    const L=alt?ST.d1L:ST.d0L, SC=alt?ST.d1sc:ST.d0sc,
+          R=alt?ST.d1R:ST.d0R, E=alt?ST.d1EPS:ST.d0EPS,
+          G=alt?ST.d1GB:ST.d0GB, TB=alt?ST.d1TB:ST.d0TB;
+
+    sc(r,0,d.name,  L);
+    sc(r,1,d.scope, SC);
+    sc(r,2,d.qty,   R,  '#,##0');
+    sc(r,3,d.eps,   R,  '#,##0.00');
+    sc(r,4,parseFloat(d.epsT.toFixed(2)),  E, '#,##0.00');
+    sc(r,5,parseFloat(d.evd.toFixed(0)),   R, '#,##0');
+    sc(r,6,d.bytes, R,  '#,##0');
+    sc(r,7,parseFloat(d.gbD.toFixed(4)),   G, '#,##0.00');
+    sc(r,8,parseFloat(d.gbM.toFixed(4)),   G, '#,##0.00');
+    sc(r,9,parseFloat(d.tbY.toFixed(4)),   TB);
+    r++; alt=!alt;
+  });
+
+  r++; // spacer before totals
+
+  // Totals
+  sc(r,0,`TOTAL GERAL  ·  ${tSrc} fonte${tSrc!==1?'s':''} ativas`,ST.totLbl);
+  sc(r,1,'',ST.totLbl);
+  sc(r,2,'',ST.totNum);
+  sc(r,3,'',ST.totNum);
+  sc(r,4,parseFloat(tEPS.toFixed(2)), ST.totNum,'#,##0.00');
+  sc(r,5,parseFloat(tEvD.toFixed(0)), ST.totNum,'#,##0');
+  sc(r,6,'',ST.totNum);
+  sc(r,7,parseFloat(tGBD.toFixed(2)), ST.totGB,'#,##0.00');
+  sc(r,8,parseFloat(tGBM.toFixed(2)), ST.totGB,'#,##0.00');
+  sc(r,9,parseFloat(tTBY.toFixed(4)), ST.totTB);
+  merges.push({s:{r,c:0},e:{r,c:1}});
+  const TOT_ROW=r; r+=2;
+
+  // Note
+  sc(r,0,'★  TB/ano = EPS × bytes/evt × 86.400 s/dia × 365 ÷ 10¹²    ·    1 TB = 1.000 GB (decimal)    ·    Valores são estimativas de referência de mercado.',ST.note);
+  fillRow(r,ST.note); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}});
+
+  // Sheet config
+  ws['!ref']    = XLSX.utils.encode_range({s:{r:0,c:0},e:{r,c:NCOLS-1}});
+  ws['!cols']   = [{wch:30},{wch:36},{wch:7},{wch:11},{wch:13},{wch:14},{wch:10},{wch:11},{wch:11},{wch:14}];
+  ws['!merges'] = merges;
+  ws['!rows']   = Array.from({length:r+1},(_,i)=>
+    i===0?{hpt:26}:i===1?{hpt:18}:i===2?{hpt:14}:i===HDR_ROW?{hpt:28}:i===TOT_ROW?{hpt:24}:{hpt:17});
+  ws['!freeze'] = {xSplit:0,ySplit:HDR_ROW+1,topLeftCell:`A${HDR_ROW+2}`,activePane:'bottomLeft',state:'frozen'};
+
+  XLSX.utils.book_append_sheet(wb,ws,'Dimensionamento');
+
+  // Download
+  const dateStr=new Date().toISOString().slice(0,10);
+  const slug=proj.replace(/[^a-zA-Z0-9\xC0-\xFF]/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'').slice(0,40);
+  XLSX.writeFile(wb,`secops_sizing${slug?'_'+slug:''}_${dateStr}.xlsx`);
+}
+
 
 // ─── SIDEBAR COLLAPSE ────────────────────────────────
 function toggleSidebar(){
@@ -948,9 +1287,10 @@ function toggleSidebar(){
   btn.classList.toggle('collapsed');
 }
 
-// ─── TAB 2 ───────────────────────────────────────────
+// ─── TAB 2 — CALCULADORA RÁPIDA ─────────────────────
 function toggleEPS(){
-  document.getElementById('eps-blk').classList.toggle('vis',document.getElementById('c-unit').value==='EPS');
+  document.getElementById('eps-blk').classList.toggle('vis',
+    document.getElementById('c-unit').value==='EPS');
 }
 function cBpd(v,u){
   const md=parseFloat(document.getElementById('c-monthdays').value)||30;
@@ -980,7 +1320,8 @@ function cCalc(){
   set('c-result',isFinite(tb)?`${f2(tb)} TB/${T.ano}`:'—');
   let det=`${v} (${u}) · ${d} ${lang==='en'?'days':lang==='es'?'días':'dias'}`;
   if(u==='EPS')det+=` · ${document.getElementById('c-evtbytes').value}B · ${document.getElementById('c-overhead').value}×`;
-  det+=`\n≈ ${f2(gb)} GB/${T.ano} · ${f2(gbday)} GB/${T.dia}`;
+  det+=`
+≈ ${f2(gb)} GB/${T.ano} · ${f2(gbday)} GB/${T.dia}`;
   set('c-detail',det);
   if(document.getElementById('panel-2').classList.contains('active')){
     set('m-src','—');
@@ -995,7 +1336,7 @@ function cCopy(btn){
   const txt=`${document.getElementById('c-result').textContent} | ${document.getElementById('c-detail').textContent}`;
   navigator.clipboard.writeText(txt).then(()=>{
     const sp=btn.querySelector('span');
-    if(sp){const o=sp.textContent;sp.textContent=lang==='en'?'COPIED!':lang==='es'?'¡COPIADO!':'COPIADO!';setTimeout(()=>sp.textContent=o,1400)}
+    if(sp){const o=sp.textContent;sp.textContent=lang==='en'?'COPIED!':lang==='es'?'¡COPIADO!':'COPIADO!';setTimeout(()=>sp.textContent=o,1400);}
   }).catch(()=>alert(txt));
 }
 function cReset(){
@@ -1012,7 +1353,7 @@ function cReset(){
   document.getElementById(id).addEventListener('change',cCalc);
 });
 
-// ─── COL RESIZE ──────────────────────────────────────
+// ─── COLUMN RESIZE ───────────────────────────────────
 (function(){
   let drag=null,sx=0,sw=0;
   document.addEventListener('mousedown',e=>{
@@ -1031,10 +1372,16 @@ function cReset(){
   });
 })();
 
+// ─── PROJECT NAME ─────────────────────────────────────
+function updateProjName(){}
+function getProjName(){
+  return (document.getElementById('proj-name').value||'').trim();
+}
+
 // ─── HELPERS ─────────────────────────────────────────
-function set(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
-function f0(n){return Math.round(n).toLocaleString('pt-BR')}
-function f2(n){return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function set(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+function f0(n){return Math.round(n).toLocaleString('pt-BR');}
+function f2(n){return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 // ─── INIT ────────────────────────────────────────────
 toggleEPS();
