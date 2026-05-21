@@ -97,7 +97,7 @@ Baixe `secops_calculator.html` e abra em qualquer browser moderno. Funciona comp
 2. **Settings → Pages** → branch `main` → pasta `/root`
 3. Acesse `https://seu-usuario.github.io/nome-do-repo`
 
-### Opção 3 — Hospedagem estática
+### Opção 3 - Hospedagem estática
 
 Qualquer servidor web estático funciona: Netlify, Vercel, S3, Azure Static Web Apps, etc.
 
@@ -177,7 +177,7 @@ TB/ano  = GB/dia × 365 ÷ 1.000
 
 ### ⚠️ Atenção:
 - EPS/ativo são **médias de mercado** — variam por fabricante, versão e configuração de logging
-- O cálculo representa **volume bruto ingerido** — sem compressão, filtros ou deduplicação
+- O cálculo representa **volume bruto ingerido** sem compressão, filtros ou deduplicação
 - Fontes com ingestão **gratuita** no Chronicle (Google Workspace, GCP Audit Logs, Chrome Enterprise) devem ser separadas do volume faturável
 - Para propostas formais, valide sempre com dados reais do ambiente (relatórios do SIEM atual)
 
