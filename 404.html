@@ -6,62 +6,72 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SecOps · Ingestion Sizing v1.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600&family=Roboto+Mono:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── DARK (default) ── */
 :root{
-  /* DARK — Google Material Design 3 / Chronicle SecOps */
-  --bg:#1c1f2e;
-  --surface:#21263a;
-  --surface2:#272c42;
-  --surface3:#2e344e;
-  --border:rgba(255,255,255,0.08);
-  --border2:rgba(255,255,255,0.14);
-  --text:#e3e4e8;
-  --text2:#9aa0b4;
-  --text3:#666d87;
-  /* Google Blue */
-  --g-blue:#4285f4;
-  --g-blue2:#669df6;
-  --g-blue-bg:rgba(66,133,244,0.12);
-  /* Google Teal / SecOps accent */
-  --cyan:#4db6ac;
-  --cyan2:#26a69a;
-  --cg:rgba(77,182,172,0.12);
-  --cg2:rgba(77,182,172,0.06);
-  /* Google Red */
+  /* DARK — SecMath palette + UX-safe data colors */
+  --bg:#0a0b0c;
+  --surface:#1c1e21;
+  --surface2:#15171a;
+  --surface3:#101113;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --text:#f0f0f1;
+  --text2:#c6c6c7;
+  --text3:#90a2aa;
+  /* Data numbers — NOT pink, high readability */
+  --data-hi:#e8e9ec;
+  --data-mid:#b6b6b7;
+  /* Accent — pink, used ONLY for interactive elements (tabs, borders, CTAs) */
+  --accent:#ff1a75;
+  --accent2:#e6006a;
+  --accent-bg:rgba(255,26,117,0.10);
+  --accent-border:rgba(255,26,117,0.25);
+  /* Cyan — secondary accent, used for category headers and teal elements */
+  --cyan:#00c4cc;
+  --cyan2:#00adb5;
+  --cg:rgba(255,26,117,0.10);
+  --cg2:rgba(255,26,117,0.05);
+  /* Keep --g-blue alias for compatibility */
+  --g-blue:#ff1a75;
+  --g-blue2:#ff6ba8;
+  --g-blue-bg:rgba(255,26,117,0.10);
   --g-red:#ea4335;
-  /* Google Green */
   --g-green:#34a853;
-  /* Google Yellow */
   --g-yellow:#fbbc04;
-  --hbg:rgba(28,31,46,0.97);
-  --sans:'Google Sans','Roboto',sans-serif;
+  --hbg:rgba(28,30,33,0.97);
+  --sans:'Inter',Arial,sans-serif;
   --mono:'Roboto Mono',monospace;
 }
 /* ── LIGHT MODE — easy on the eyes ── */
 [data-theme="light"]{
-  /* LIGHT — Google Material Design 3 */
-  --bg:#f8f9fa;
+  --bg:#f6f6f7;
   --surface:#ffffff;
-  --surface2:#f1f3f4;
-  --surface3:#e8eaed;
-  --border:rgba(0,0,0,0.08);
-  --border2:rgba(0,0,0,0.14);
-  --text:#202124;
-  --text2:#5f6368;
-  --text3:#80868b;
-  --g-blue:#1a73e8;
-  --g-blue2:#1967d2;
-  --g-blue-bg:rgba(26,115,232,0.10);
-  --cyan:#00796b;
-  --cyan2:#00897b;
-  --cg:rgba(0,121,107,0.10);
-  --cg2:rgba(0,121,107,0.05);
+  --surface2:#f6f6f7;
+  --surface3:rgba(155,155,155,0.08);
+  --border:rgba(155,155,155,0.12);
+  --border2:rgba(155,155,155,0.22);
+  --text:#15171a;
+  --text2:#4a4a5a;
+  --text3:#90a2aa;
+  --data-hi:#15171a;
+  --data-mid:#4a4a5a;
+  --accent:#e6006a;
+  --accent2:#c4005a;
+  --accent-bg:rgba(230,0,106,0.07);
+  --accent-border:rgba(230,0,106,0.20);
+  --cyan:#00adb5;
+  --cyan2:#009aa2;
+  --cg:rgba(230,0,106,0.08);
+  --cg2:rgba(230,0,106,0.04);
+  --g-blue:#e6006a;
+  --g-blue2:#c4005a;
+  --g-blue-bg:rgba(230,0,106,0.07);
   --g-red:#d93025;
   --g-green:#188038;
   --g-yellow:#f9ab00;
-  --hbg:rgba(248,249,250,0.97);
+  --hbg:rgba(246,246,247,0.97);
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -74,8 +84,8 @@ body{
 /* grid bg */
 body::before{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-  background-image:linear-gradient(rgba(77,182,172,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(77,182,172,0.03) 1px,transparent 1px);
+  background-image:linear-gradient(rgba(255,26,117,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,26,117,0.025) 1px,transparent 1px);
   background-size:48px 48px;
   mask-image:radial-gradient(ellipse 80% 50% at 50% 0%,black 40%,transparent 100%);
 }
@@ -141,11 +151,7 @@ header{
   background:var(--surface2);
   border-color:var(--border2);
 }
-.metric.feat{
-  background:linear-gradient(135deg,var(--g-blue-bg) 0%,var(--surface) 70%);
-  border-color:rgba(66,133,244,0.35);
-  box-shadow:0 0 0 1px rgba(66,133,244,0.15), 0 4px 16px rgba(66,133,244,0.08);
-}
+
 .metric.feat::before{
   content:'';position:absolute;
   top:0;left:16px;right:16px;height:1px;
@@ -158,10 +164,7 @@ header{
   margin-bottom:8px;display:flex;align-items:center;gap:5px;
 }
 .mlbl::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--text2);display:inline-block}
-.metric.feat .mlbl{color:var(--g-blue2)}
-.metric.feat .mlbl::before{background:var(--g-blue);box-shadow:0 0 8px rgba(66,133,244,0.5)}
 .mval{font-family:var(--mono);font-size:22px;font-weight:400;color:var(--text);letter-spacing:-.02em;line-height:1}
-.metric.feat .mval{color:var(--g-blue2)}
 .munit{font-family:var(--mono);font-size:8px;color:var(--text2);margin-top:4px;letter-spacing:.06em}
 
 /* ── TABS ── */
@@ -175,7 +178,7 @@ header{
   transition:all .15s;user-select:none;display:flex;align-items:center;gap:7px;margin-bottom:-1px;
 }
 .tab:hover{color:var(--text2)}
-.tab.active{color:var(--g-blue2);border-bottom-color:var(--g-blue)}
+.tab.active{color:var(--text);border-bottom-color:var(--accent)}
 .tab svg{width:13px;height:13px;flex-shrink:0}
 .tbadge{font-size:8px;background:var(--surface3);color:var(--text3);padding:1px 6px;border-radius:100px}
 .tab.active .tbadge{background:var(--g-blue-bg);color:var(--g-blue2)}
@@ -202,8 +205,8 @@ header{
 .nvi svg{width:15px;height:15px;color:var(--text3);transition:color .15s}
 .nvi:hover{background:var(--surface3);border-color:var(--border)}
 .nvi:hover svg{color:var(--text2)}
-.nvi.active{background:var(--cg);border-color:rgba(77,182,172,0.20)}
-.nvi.active svg{color:var(--g-blue2)}
+.nvi.active{background:var(--cg);border-color:rgba(255,26,117,0.20)}
+.nvi.active svg{color:var(--text)}
 .nvi.active::after{content:'';position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:2px;height:18px;border-radius:2px;background:var(--g-blue);box-shadow:0 0 8px rgba(66,133,244,0.6)}
 .ndiv{width:24px;height:1px;background:var(--border);margin:3px 0;flex-shrink:0}
 .ntt{
@@ -256,7 +259,7 @@ header{
   border:1px solid transparent;margin-bottom:1px;
 }
 .nl:hover{background:var(--surface3);color:var(--text)}
-.nl.active{background:var(--cg2);color:var(--cyan);border-color:rgba(77,182,172,0.12)}
+.nl.active{background:rgba(255,26,117,0.10);color:var(--text);border-color:rgba(255,26,117,0.25)}
 .nbadge{font-family:var(--mono);font-size:8.5px;color:var(--text3);background:var(--surface3);padding:1px 5px;border-radius:100px;min-width:20px;text-align:center}
 .nl.active .nbadge{background:rgba(66,133,244,0.2);color:var(--g-blue2)}
 .sb-foot{padding:10px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:5px}
@@ -267,8 +270,8 @@ header{
 }
 .sact:hover{background:var(--surface3);border-color:var(--border2);color:var(--text)}
 .sact svg{width:11px;height:11px;flex-shrink:0}
-.sact.on{background:var(--cg2);border-color:rgba(78,201,176,0.22);color:var(--cyan)}
-.sact.primary{background:var(--cg2);border-color:rgba(78,201,176,0.22);color:var(--cyan)}
+.sact.on{background:var(--cg2);border-color:rgba(255,26,117,0.20);color:var(--cyan)}
+.sact.primary{background:var(--cg2);border-color:rgba(255,26,117,0.20);color:var(--cyan)}
 .sact.primary:hover{background:rgba(66,133,244,0.2);border-color:var(--g-blue)}
 
 /* table wrapper */
@@ -300,9 +303,9 @@ tr.dr.lit:hover td{background:rgba(66,133,244,0.10)}
 }
 .ni::-webkit-outer-spin-button,.ni::-webkit-inner-spin-button{-webkit-appearance:none}
 .ni:focus{border-bottom-color:var(--g-blue)}
-.ni.on{color:var(--g-blue2);border-bottom-color:var(--g-blue)}
+.ni.on{color:var(--data-hi);border-bottom-color:var(--accent);font-weight:600}
 .nc{font-family:var(--mono);font-size:11px;color:var(--text2);text-align:right;white-space:nowrap}
-.nc.a{color:var(--text2)}.nc.h{color:var(--g-blue2);font-weight:500}
+.nc.a{color:var(--text2)}.nc.h{color:var(--data-hi);font-weight:600}
 .empty-row{padding:48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.06em}
 [data-theme="light"] body::before{
   background-image:linear-gradient(rgba(0,121,107,0.04) 1px,transparent 1px),
@@ -366,11 +369,6 @@ header{
   background:var(--surface2);
   border-color:var(--border2);
 }
-.metric.feat{
-  background:linear-gradient(135deg,var(--g-blue-bg) 0%,var(--surface) 70%);
-  border-color:rgba(66,133,244,0.35);
-  box-shadow:0 0 0 1px rgba(66,133,244,0.15), 0 4px 16px rgba(66,133,244,0.08);
-}
 .metric.feat::before{
   content:'';position:absolute;
   top:0;left:16px;right:16px;height:1px;
@@ -383,10 +381,7 @@ header{
   margin-bottom:8px;display:flex;align-items:center;gap:5px;
 }
 .mlbl::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--text2);display:inline-block}
-.metric.feat .mlbl{color:var(--g-blue2)}
-.metric.feat .mlbl::before{background:var(--g-blue);box-shadow:0 0 8px rgba(66,133,244,0.5)}
 .mval{font-family:var(--mono);font-size:22px;font-weight:400;color:var(--text);letter-spacing:-.02em;line-height:1}
-.metric.feat .mval{color:var(--g-blue2)}
 .munit{font-family:var(--mono);font-size:8px;color:var(--text2);margin-top:4px;letter-spacing:.06em}
 
 /* ── TABS ── */
@@ -400,7 +395,7 @@ header{
   transition:all .15s;user-select:none;display:flex;align-items:center;gap:7px;margin-bottom:-1px;
 }
 .tab:hover{color:var(--text2)}
-.tab.active{color:var(--g-blue2);border-bottom-color:var(--g-blue)}
+.tab.active{color:var(--text);border-bottom-color:var(--accent)}
 .tab svg{width:13px;height:13px;flex-shrink:0}
 .tbadge{font-size:8px;background:var(--surface3);color:var(--text3);padding:1px 6px;border-radius:100px}
 .tab.active .tbadge{background:var(--g-blue-bg);color:var(--g-blue2)}
@@ -427,8 +422,8 @@ header{
 .nvi svg{width:15px;height:15px;color:var(--text3);transition:color .15s}
 .nvi:hover{background:var(--surface3);border-color:var(--border)}
 .nvi:hover svg{color:var(--text2)}
-.nvi.active{background:var(--cg);border-color:rgba(77,182,172,0.20)}
-.nvi.active svg{color:var(--g-blue2)}
+.nvi.active{background:var(--cg);border-color:rgba(255,26,117,0.20)}
+.nvi.active svg{color:var(--text)}
 .nvi.active::after{content:'';position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:2px;height:18px;border-radius:2px;background:var(--g-blue);box-shadow:0 0 8px rgba(66,133,244,0.6)}
 .ndiv{width:24px;height:1px;background:var(--border);margin:3px 0;flex-shrink:0}
 .ntt{
@@ -481,7 +476,7 @@ header{
   border:1px solid transparent;margin-bottom:1px;
 }
 .nl:hover{background:var(--surface3);color:var(--text)}
-.nl.active{background:var(--cg2);color:var(--cyan);border-color:rgba(77,182,172,0.12)}
+.nl.active{background:rgba(255,26,117,0.10);color:var(--text);border-color:rgba(255,26,117,0.25)}
 .nbadge{font-family:var(--mono);font-size:8.5px;color:var(--text3);background:var(--surface3);padding:1px 5px;border-radius:100px;min-width:20px;text-align:center}
 .nl.active .nbadge{background:rgba(66,133,244,0.2);color:var(--g-blue2)}
 .sb-foot{padding:10px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:5px}
@@ -492,8 +487,8 @@ header{
 }
 .sact:hover{background:var(--surface3);border-color:var(--border2);color:var(--text)}
 .sact svg{width:11px;height:11px;flex-shrink:0}
-.sact.on{background:var(--cg2);border-color:rgba(78,201,176,0.22);color:var(--cyan)}
-.sact.primary{background:var(--cg2);border-color:rgba(78,201,176,0.22);color:var(--cyan)}
+.sact.on{background:var(--cg2);border-color:rgba(255,26,117,0.20);color:var(--cyan)}
+.sact.primary{background:var(--cg2);border-color:rgba(255,26,117,0.20);color:var(--cyan)}
 .sact.primary:hover{background:rgba(66,133,244,0.2);border-color:var(--g-blue)}
 
 /* table wrapper */
@@ -525,9 +520,9 @@ tr.dr.lit:hover td{background:rgba(66,133,244,0.10)}
 }
 .ni::-webkit-outer-spin-button,.ni::-webkit-inner-spin-button{-webkit-appearance:none}
 .ni:focus{border-bottom-color:var(--g-blue)}
-.ni.on{color:var(--g-blue2);border-bottom-color:var(--g-blue)}
+.ni.on{color:var(--data-hi);border-bottom-color:var(--accent);font-weight:600}
 .nc{font-family:var(--mono);font-size:11px;color:var(--text2);text-align:right;white-space:nowrap}
-.nc.a{color:var(--text2)}.nc.h{color:var(--g-blue2);font-weight:500}
+.nc.a{color:var(--text2)}.nc.h{color:var(--data-hi);font-weight:600}
 .empty-row{padding:48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.06em}
 /* light mode explicit text fixes */
 [data-theme="light"] .rn{color:#1a202c}
@@ -546,20 +541,17 @@ tr.dr.lit:hover td{background:rgba(66,133,244,0.10)}
 [data-theme="light"] .mlbl{color:#1e3048}
 [data-theme="light"] .mval{color:#1a202c}
 [data-theme="light"] .munit{color:#2a4060}
-[data-theme="light"] .metric.feat .mval{color:var(--g-blue2)}
-[data-theme="light"] .metric.feat .mlbl{color:var(--g-blue2)}
-[data-theme="light"] .metric.feat .mlbl::before{background:var(--cyan);box-shadow:0 0 5px rgba(0,121,107,0.4)}
 [data-theme="light"] .logo-name{color:#1a202c}
 [data-theme="light"] .hpill{color:#2a4060;border-color:rgba(0,0,0,0.15)}
 [data-theme="light"] .hstatus{color:var(--cyan)}
 [data-theme="light"] .dot{background:var(--cyan);box-shadow:0 0 7px rgba(0,121,107,0.6)}
 [data-theme="light"] .tab{color:#3a5068}
 [data-theme="light"] .tab:hover{color:#1e3048}
-[data-theme="light"] .tab.active{color:var(--g-blue2);border-bottom-color:var(--g-blue)}
+[data-theme="light"] .tab.active{color:var(--text);border-bottom-color:var(--accent)}
 [data-theme="light"] .tab.active .tbadge{background:var(--g-blue-bg);color:var(--g-blue2)}
 [data-theme="light"] .nvi svg{color:#2a4060}
 [data-theme="light"] .nvi:hover svg{color:#1e3048}
-[data-theme="light"] .nvi.active svg{color:var(--g-blue2)}
+[data-theme="light"] .nvi.active svg{color:var(--text)}
 [data-theme="light"] .nvi.active::after{background:var(--cyan);box-shadow:0 0 6px rgba(0,121,107,0.5)}
 [data-theme="light"] .nl{color:#1e3048}
 [data-theme="light"] .nl:hover{color:#1a202c}
@@ -638,13 +630,13 @@ th.rs-th{position:relative;user-select:none}
 .cresult{
   grid-column:1/-1;
   background:linear-gradient(135deg,var(--cg) 0%,transparent 70%);
-  border:1px solid rgba(78,201,176,0.22);border-radius:12px;
+  border:1px solid rgba(255,26,117,0.20);border-radius:12px;
   padding:20px 24px;position:relative;overflow:hidden;
 }
 .cresult::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--g-blue),transparent)}
 .cr-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--g-blue2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .cr-lbl::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--g-blue);box-shadow:0 0 6px rgba(66,133,244,0.6);display:inline-block}
-.cr-val{font-family:var(--mono);font-size:34px;font-weight:400;color:var(--g-blue2);letter-spacing:-.02em;line-height:1;margin-bottom:6px}
+.cr-val{font-family:var(--mono);font-size:34px;font-weight:400;color:var(--text);letter-spacing:-.02em;line-height:1;margin-bottom:6px}
 .cr-det{font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.8;white-space:pre-line}
 .cactions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .cbtn{
@@ -697,16 +689,10 @@ header,.metrics,.tabs{animation:fi .3s ease both}
 [data-theme="light"] .icon-moon{display:none}
 [data-theme="light"] .dot{background:var(--cyan);box-shadow:0 0 7px rgba(26,107,94,0.5)}
 [data-theme="light"] .nvi.active::after{background:var(--cyan);box-shadow:0 0 6px rgba(26,107,94,0.4)}
-[data-theme="light"] .metric.feat .mlbl::before{background:var(--cyan);box-shadow:0 0 5px rgba(26,107,94,0.3)}
-[data-theme="light"] .ni.on{color:var(--g-blue2);border-bottom-color:var(--g-blue)}
+[data-theme="light"] .ni.on{color:var(--data-hi);border-bottom-color:var(--accent);font-weight:600}
 [data-theme="light"] .chint.warn{color:#8c4a00}
 [data-theme="light"] .metric{background:var(--surface);border-color:var(--border)}
 [data-theme="light"] .metric:hover{background:var(--surface2);border-color:var(--border2)}
-[data-theme="light"] .metric.feat{
-  background:linear-gradient(135deg,var(--g-blue-bg) 0%,var(--surface) 70%);
-  border-color:rgba(26,115,232,0.3);
-  box-shadow:0 0 0 1px rgba(26,115,232,0.12), 0 4px 16px rgba(26,115,232,0.06);
-}
 
 /* ── USABILITY ADDITIONS ─────────────────────────────────────── */
 
@@ -729,7 +715,7 @@ header,.metrics,.tabs{animation:fi .3s ease both}
 .progress-label{
   font-family:var(--mono);font-size:10px;color:var(--text2);white-space:nowrap;
 }
-.progress-label b{color:var(--g-blue2);font-weight:500;}
+.progress-label b{color:var(--text);font-weight:600;}
 
 /* Row tooltip on hover */
 .nc-wrap{position:relative;display:inline-block;width:100%;}
@@ -1066,8 +1052,8 @@ tr.dr:hover td.td-note{background:rgba(255,255,255,0.022);}
   font-size:20px;font-weight:400;color:#202124;
   font-family:'Roboto Mono',monospace;letter-spacing:-.02em;line-height:1;
 }
-.rpt-metric-featured .rpt-metric-lbl{color:#4285f4;}
-.rpt-metric-featured .rpt-metric-val{color:#4285f4;}
+.rpt-metric-featured .rpt-metric-lbl{color:rgba(255,26,117,0.8);}
+.rpt-metric-featured .rpt-metric-val{color:#ff1a75;}
 
 /* Chart section */
 .rpt-chart-section{margin-bottom:20px;}
@@ -1158,6 +1144,169 @@ tr.dr:hover td.td-note{background:rgba(255,255,255,0.022);}
   .rpt-donut-val{font-size:13pt;}
 }
 
+
+/* SecMath light mode — gradient header */
+[data-theme="light"] header{
+  background:linear-gradient(135deg,#ff1a75 0%,#7d2ae8 40%,#00c4cc 95%) !important;
+  border-bottom:none;
+}
+[data-theme="light"] .logo-name{color:#ffffff !important;}
+[data-theme="light"] .logo-name b{color:#ffffff !important;}
+[data-theme="light"] .hpill{color:rgba(255,255,255,0.8);border-color:rgba(255,255,255,0.3);}
+[data-theme="light"] .hstatus{color:#ffffff;}
+[data-theme="light"] .dot{background:#ffffff;box-shadow:0 0 7px rgba(255,255,255,0.8);}
+[data-theme="light"] .lang-sel{color:#ffffff;background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);}
+[data-theme="light"] .lang-sel:hover,[data-theme="light"] .lang-sel:focus{background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.6);color:#ffffff;}
+[data-theme="light"] .theme-btn{color:#ffffff;border-color:rgba(255,255,255,0.3);}
+[data-theme="light"] .theme-btn:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.5);color:#ffffff;}
+[data-theme="light"] .proj-input{color:rgba(255,255,255,0.9);border-bottom-color:rgba(255,255,255,0.4);}
+[data-theme="light"] .proj-input::placeholder{color:rgba(255,255,255,0.5);}
+[data-theme="light"] .proj-input:focus{border-bottom-color:#ffffff;color:#ffffff;}
+
+/* SecMath dark mode — grid bg teal tint */
+body::before{
+  background-image:linear-gradient(rgba(255,26,117,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,26,117,0.025) 1px,transparent 1px);
+}
+[data-theme="light"] body::before{
+  background-image:linear-gradient(rgba(255,26,117,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,26,117,0.025) 1px,transparent 1px);
+}
+
+/* SecMath logo mark in teal */
+
+/* ── TABLE DATA COLORS ── */
+/* nc.h in dark = bright white (not pink) */
+.nc.h{color:var(--data-hi) !important;font-weight:600;}
+/* Impact rows */
+tr.dr.impact td .nc.h{color:var(--text) !important;}
+
+/* ── FEATURED METRIC card ── */
+
+/* ── LIGHT MODE data colors ── */
+[data-theme="light"] .nc.h{color:var(--g-blue) !important;font-weight:600;}
+[data-theme="light"] 
+/* ── INPUTS filled — readable not pink ── */
+.ni.on{color:var(--text) !important;border-bottom-color:var(--accent);font-weight:600;}
+[data-theme="light"] .ni.on{color:var(--text) !important;border-bottom-color:var(--accent);}
+
+/* ── Cat row — cyan accent ── */
+tr.cat-row td{color:var(--cyan);background:var(--surface2);}
+[data-theme="light"] tr.cat-row td{color:var(--accent);background:var(--surface2);}
+
+/* ── Calc result — white text ── */
+.cr-val{color:var(--text) !important;}
+[data-theme="light"] .cr-val{color:var(--accent) !important;}
+.cr-lbl{color:var(--text2) !important;}
+
+/* ── Scenario button active ── */
+.scenario-btn.active{background:rgba(255,26,117,0.12);color:var(--text);border-color:rgba(255,26,117,0.30);}
+
+/* ── Tab active — border only, text stays readable ── */
+.tab.active{color:var(--text);border-bottom-color:var(--accent);}
+.tab:hover{color:var(--text2);}
+.tab.active .tbadge{background:rgba(255,26,117,0.12);color:var(--text2);}
+
+/* ── Progress bar label ── */
+.progress-label{color:var(--text2);}
+.progress-label b{color:var(--text);font-weight:600;}
+
+/* ── sidebar nav active — readable ── */
+.nl.active{background:rgba(255,26,117,0.10);color:var(--text);border-color:rgba(255,26,117,0.25);}
+.nl.active .nbadge{background:rgba(255,26,117,0.15);color:var(--text2);}
+.nvi.active svg{color:var(--text);}
+
+
+/* ════════════════════════════════════════════════════
+   LOGO — adaptive (dark/light/gradient-header)
+   ════════════════════════════════════════════════════ */
+/* Dark mode default */
+.lgo{stroke:#ff1a75;fill:none;opacity:0.7;}
+.lgi{stroke:#ff1a75;fill:none;opacity:0.9;}
+.lgc{fill:#ff1a75;}
+.lgd{fill:#ff1a75;opacity:0.45;}
+
+/* Light mode body — darker strokes, visible on white */
+[data-theme="light"] .lgo{stroke:#ff1a75;opacity:0.5;}
+[data-theme="light"] .lgi{stroke:#ff1a75;opacity:0.75;}
+[data-theme="light"] .lgc{fill:#ff1a75;}
+[data-theme="light"] .lgd{fill:#ff1a75;opacity:0.4;}
+
+/* Light mode inside gradient header — all white */
+[data-theme="light"] header .lgo{stroke:#ffffff;opacity:0.55;}
+[data-theme="light"] header .lgi{stroke:#ffffff;opacity:0.80;}
+[data-theme="light"] header .lgc{fill:#ffffff;}
+[data-theme="light"] header .lgd{fill:#ffffff;opacity:0.55;}
+
+
+
+/* ════════════════════════════════════════════════════
+   OTHER METRIC CARDS — subtle, not competing with feat
+   ════════════════════════════════════════════════════ */
+.metric:not(.feat){
+  background:var(--surface);
+  border:1px solid var(--border);
+}
+.metric:not(.feat):hover{
+  background:var(--surface2);
+  border-color:var(--border2);
+}
+[data-theme="light"] .metric:not(.feat){
+  background:var(--surface);
+  border-color:var(--border);
+}
+
+/* ════════════════════════════════════════════════════
+   METRIC CARD — TB/ANO  (same style as cresult box)
+   Dark:  dark surface + pink border + white text
+   Light: white surface + pink border + dark text
+   ════════════════════════════════════════════════════ */
+
+/* DARK — copia exata do cresult */
+.metric.feat{
+  background:linear-gradient(135deg,rgba(255,26,117,0.08) 0%,transparent 70%);
+  border:1px solid rgba(255,26,117,0.35) !important;
+  box-shadow:0 0 0 1px rgba(255,26,117,0.10);
+  position:relative;
+  overflow:hidden;
+}
+.metric.feat::before{
+  content:'';position:absolute;
+  top:0;left:16px;right:16px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,26,117,0.7),transparent);
+  border-radius:1px;
+}
+.metric.feat .mlbl{
+  color:rgba(255,26,117,0.75) !important;
+  letter-spacing:.14em;
+}
+.metric.feat .mlbl::before{
+  background:#ff1a75 !important;
+  box-shadow:0 0 6px rgba(255,26,117,0.5) !important;
+}
+.metric.feat .mval{
+  color:#ffffff !important;
+  font-size:24px !important;
+}
+.metric.feat .munit{
+  color:var(--text3) !important;
+}
+
+/* LIGHT — fundo branco, borda rosa, texto escuro */
+[data-theme="light"] .metric.feat{
+  background:linear-gradient(135deg,rgba(255,26,117,0.06) 0%,transparent 70%);
+  border:1px solid rgba(255,26,117,0.30) !important;
+  box-shadow:0 2px 12px rgba(255,26,117,0.08);
+}
+[data-theme="light"] .metric.feat .mval{
+  color:#15171a !important;
+}
+[data-theme="light"] .metric.feat .mlbl{
+  color:rgba(255,26,117,0.70) !important;
+}
+[data-theme="light"] .metric.feat .munit{
+  color:var(--text3) !important;
+}
 </style>
 </head>
 <body data-theme="dark">
@@ -1166,16 +1315,16 @@ tr.dr:hover td.td-note{background:rgba(255,255,255,0.022);}
 <header>
   <div class="logo">
     <div class="logo-mark">
-      <svg viewBox="0 0 28 28" fill="none">
-        <polygon points="14,1.5 26.5,8.5 26.5,19.5 14,26.5 1.5,19.5 1.5,8.5" stroke="rgba(66,133,244,0.35)" stroke-width="1"/>
-        <polygon points="14,6.5 22,11 22,17 14,21.5 6,17 6,11" stroke="rgba(77,182,172,0.7)" stroke-width="1"/>
-        <circle cx="14" cy="14" r="2.8" fill="#4db6ac"/>
-        <circle cx="14" cy="1.5" r="1" fill="rgba(66,133,244,0.5)"/>
-        <circle cx="26.5" cy="8.5" r="1" fill="rgba(66,133,244,0.5)"/>
-        <circle cx="26.5" cy="19.5" r="1" fill="rgba(66,133,244,0.5)"/>
-        <circle cx="14" cy="26.5" r="1" fill="rgba(66,133,244,0.5)"/>
-        <circle cx="1.5" cy="19.5" r="1" fill="rgba(66,133,244,0.5)"/>
-        <circle cx="1.5" cy="8.5" r="1" fill="rgba(66,133,244,0.5)"/>
+      <svg viewBox="0 0 28 28" fill="none" class="logo-svg">
+        <polygon class="lgo" points="14,1.5 26.5,8.5 26.5,19.5 14,26.5 1.5,19.5 1.5,8.5" stroke-width="1.2"/>
+        <polygon class="lgi" points="14,6.5 22,11 22,17 14,21.5 6,17 6,11" stroke-width="1.2"/>
+        <circle class="lgc" cx="14" cy="14" r="3"/>
+        <circle class="lgd" cx="14" cy="1.5" r="1.1"/>
+        <circle class="lgd" cx="26.5" cy="8.5" r="1.1"/>
+        <circle class="lgd" cx="26.5" cy="19.5" r="1.1"/>
+        <circle class="lgd" cx="14" cy="26.5" r="1.1"/>
+        <circle class="lgd" cx="1.5" cy="19.5" r="1.1"/>
+        <circle class="lgd" cx="1.5" cy="8.5" r="1.1"/>
       </svg>
     </div>
     <div class="logo-name">SECOPS <b>SIZING</b></div>
@@ -1649,6 +1798,42 @@ const I18={
     // options days
     'opt-365':'365 dias','opt-366':'366 dias (bissexto)',
     'opt-30':'30 dias / mês','opt-30a':'30,4375 (média anual)',
+    'progress-lbl':'fontes configuradas',
+    'proj-ph':'Nome do projeto / cliente…',
+    'scen-lbl':'Cenário:',
+    'scen-a-lbl':'Cenário A',
+    'scen-b-lbl':'Cenário B',
+    'scen-compare-lbl':'Δ vs Cenário A:',
+    'share-lbl':'Compartilhar',
+    'chart-lbl':'Composição',
+    'chart-modal-lbl':'Composição do Volume por Categoria',
+    'th-notes':'Observação',
+    'sb-custom':'+ EVENTO CUSTOMIZADO',
+    'sb-clone':'DUPLICAR EVENTO',
+    't3lbl':'RELATÓRIO',
+    't3badge':'PDF',
+    'rpt-hint':'Pré-visualização do relatório — clique em Imprimir para exportar como PDF',
+    'rpt-print':'Imprimir / Salvar PDF',
+    'rpt-lbl-summary':'Resumo Executivo',
+    'rpt-lbl-sources':'Fontes configuradas',
+    'rpt-lbl-eps':'EPS total',
+    'rpt-lbl-gbday':'GB / dia',
+    'rpt-lbl-gbmon':'GB / mês',
+    'rpt-lbl-tbyear':'TB / ano (cotação)',
+    'rpt-lbl-composition':'Composição por Categoria',
+    'rpt-lbl-detail':'Detalhamento por Tipo de Evento',
+    'rpt-th-name':'Tipo de Evento',
+    'rpt-th-qty':'Qtde',
+    'rpt-th-eps':'EPS/ativo',
+    'rpt-th-epst':'EPS total',
+    'rpt-th-gbday':'GB/dia',
+    'rpt-th-tbyear':'TB/ano',
+    'rpt-footer-note':'Estimativas de referência de mercado · Volume = EPS × bytes/evt × 86.400 s/dia · 1 TB = 1.000 GB',
+    'clone-title':'Selecionar tipo de evento para duplicar',
+    'clone-cancel-lbl':'Cancelar',
+    'clone-confirm-lbl':'Duplicar selecionados',
+    'clone-search-ph':'Buscar tipo de evento...',
+    'tb-hint':'Qtde editável em cada linha',
   },
   en:{
     'lbl-live':'LIVE CALC',
@@ -1687,6 +1872,42 @@ const I18={
     // options days
     'opt-365':'365 days','opt-366':'366 days (leap year)',
     'opt-30':'30 days / month','opt-30a':'30.4375 (annual avg)',
+    'progress-lbl':'sources configured',
+    'proj-ph':'Project / client name…',
+    'scen-lbl':'Scenario:',
+    'scen-a-lbl':'Scenario A',
+    'scen-b-lbl':'Scenario B',
+    'scen-compare-lbl':'Δ vs Scenario A:',
+    'share-lbl':'Share',
+    'chart-lbl':'Composition',
+    'chart-modal-lbl':'Volume Composition by Category',
+    'th-notes':'Notes',
+    'sb-custom':'+ CUSTOM EVENT',
+    'sb-clone':'DUPLICATE EVENT',
+    't3lbl':'REPORT',
+    't3badge':'PDF',
+    'rpt-hint':'Report preview — click Print to export as PDF',
+    'rpt-print':'Print / Save PDF',
+    'rpt-lbl-summary':'Executive Summary',
+    'rpt-lbl-sources':'Configured sources',
+    'rpt-lbl-eps':'Total EPS',
+    'rpt-lbl-gbday':'GB / day',
+    'rpt-lbl-gbmon':'GB / month',
+    'rpt-lbl-tbyear':'TB / year (quote)',
+    'rpt-lbl-composition':'Composition by Category',
+    'rpt-lbl-detail':'Event Type Breakdown',
+    'rpt-th-name':'Event Type',
+    'rpt-th-qty':'Qty',
+    'rpt-th-eps':'EPS/asset',
+    'rpt-th-epst':'Total EPS',
+    'rpt-th-gbday':'GB/day',
+    'rpt-th-tbyear':'TB/year',
+    'rpt-footer-note':'Market reference estimates · Volume = EPS × bytes/evt × 86,400 s/day · 1 TB = 1,000 GB',
+    'clone-title':'Select event type to duplicate',
+    'clone-cancel-lbl':'Cancel',
+    'clone-confirm-lbl':'Duplicate selected',
+    'clone-search-ph':'Search event type...',
+    'tb-hint':'Qty editable in each row',
   },
   es:{
     'lbl-live':'CÁLCULO EN VIVO',
@@ -1725,34 +1946,94 @@ const I18={
     // options days
     'opt-365':'365 días','opt-366':'366 días (bisiesto)',
     'opt-30':'30 días / mes','opt-30a':'30,4375 (media anual)',
+    'progress-lbl':'fuentes configuradas',
+    'proj-ph':'Nombre del proyecto / cliente…',
+    'scen-lbl':'Escenario:',
+    'scen-a-lbl':'Escenario A',
+    'scen-b-lbl':'Escenario B',
+    'scen-compare-lbl':'Δ vs Escenario A:',
+    'share-lbl':'Compartir',
+    'chart-lbl':'Composición',
+    'chart-modal-lbl':'Composición del Volumen por Categoría',
+    'th-notes':'Observación',
+    'sb-custom':'+ EVENTO PERSONALIZADO',
+    'sb-clone':'DUPLICAR EVENTO',
+    't3lbl':'INFORME',
+    't3badge':'PDF',
+    'rpt-hint':'Vista previa del informe — haga clic en Imprimir para exportar como PDF',
+    'rpt-print':'Imprimir / Guardar PDF',
+    'rpt-lbl-summary':'Resumen Ejecutivo',
+    'rpt-lbl-sources':'Fuentes configuradas',
+    'rpt-lbl-eps':'EPS total',
+    'rpt-lbl-gbday':'GB / día',
+    'rpt-lbl-gbmon':'GB / mes',
+    'rpt-lbl-tbyear':'TB / año (cotización)',
+    'rpt-lbl-composition':'Composición por Categoría',
+    'rpt-lbl-detail':'Detalle por Tipo de Evento',
+    'rpt-th-name':'Tipo de Evento',
+    'rpt-th-qty':'Cant.',
+    'rpt-th-eps':'EPS/activo',
+    'rpt-th-epst':'EPS total',
+    'rpt-th-gbday':'GB/día',
+    'rpt-th-tbyear':'TB/año',
+    'rpt-footer-note':'Estimaciones de referencia de mercado · Volumen = EPS × bytes/evt × 86.400 s/día · 1 TB = 1.000 GB',
+    'clone-title':'Seleccionar tipo de evento para duplicar',
+    'clone-cancel-lbl':'Cancelar',
+    'clone-confirm-lbl':'Duplicar seleccionados',
+    'clone-search-ph':'Buscar tipo de evento...',
+    'tb-hint':'Cant. editable en cada fila'
   }
 };
 let lang='pt';
 function setLang(l){
   lang=l;
   const T=I18[l];
-  // translate all elements by id
+
+  // Update all standard text elements by id
+  const skip=new Set(['search-ph','ano','dia','proj-ph','clone-search-ph',
+    'og-day','og-hour','og-month','og-eps',
+    'opt-mb-day','opt-gb-day','opt-tb-day','opt-mb-hour','opt-gb-hour',
+    'opt-tb-hour','opt-gb-month','opt-tb-month','opt-eps',
+    'opt-365','opt-366','opt-30','opt-30a']);
+
   Object.keys(T).forEach(id=>{
-    if(id==='search-ph'||id==='ano'||id==='dia'||id.startsWith('og-')||id.startsWith('opt-')||id.startsWith('cats-'))return;
+    if(skip.has(id))return;
     const el=document.getElementById(id);
     if(el)el.textContent=T[id];
   });
-  // placeholder
-  document.getElementById('search').placeholder=T['search-ph']||'';
-  // optgroup labels (attribute, not textContent)
+
+  // Placeholders
+  const srch=document.getElementById('search');
+  if(srch)srch.placeholder=T['search-ph']||'';
+  const pn=document.getElementById('proj-name');
+  if(pn)pn.placeholder=T['proj-ph']||'';
+  const cs=document.getElementById('clone-search');
+  if(cs)cs.placeholder=T['clone-search-ph']||'';
+
+  // Optgroup labels
   ['og-day','og-hour','og-month','og-eps'].forEach(id=>{
     const el=document.getElementById(id);
     if(el&&T[id])el.label=T[id];
   });
-  // option texts
-  const optIds=['opt-mb-day','opt-gb-day','opt-tb-day','opt-mb-hour','opt-gb-hour','opt-tb-hour',
-    'opt-gb-month','opt-tb-month','opt-eps','opt-365','opt-366','opt-30','opt-30a'];
-  optIds.forEach(id=>{
+
+  // Select option texts
+  ['opt-mb-day','opt-gb-day','opt-tb-day','opt-mb-hour','opt-gb-hour',
+   'opt-tb-hour','opt-gb-month','opt-tb-month','opt-eps',
+   'opt-365','opt-366','opt-30','opt-30a'].forEach(id=>{
     const el=document.getElementById(id);
     if(el&&T[id])el.textContent=T[id];
   });
+
+  // Clone modal buttons
+  const ccb=document.getElementById('clone-confirm-btn');
+  if(ccb&&T['clone-confirm-lbl'])ccb.textContent=T['clone-confirm-lbl'];
+  const ccl=document.getElementById('clone-cancel-btn');
+  if(ccl&&T['clone-cancel-lbl'])ccl.textContent=T['clone-cancel-lbl'];
+
+  // HTML lang attribute
   document.documentElement.lang=l==='pt'?'pt-BR':l;
-  // re-render table (translates category headers)
+
+  // Re-render table (translates category headers)
   render();
   cCalc();
 }
@@ -2164,11 +2445,16 @@ function _doExport(){
 
   // Headers — 10 cols: Fonte | Escopo | Qtde | EPS/ativo | EPS total | Eventos/dia | Bytes/evt | GB/dia | GB/mês | TB/ano
   const heads=[
-    {l:'Fonte de log',al:'left'},{l:'Escopo / exemplos',al:'left'},
-    {l:'Qtde',al:'center'},{l:'EPS / ativo',al:'center'},
-    {l:'EPS total',al:'center'},{l:'Eventos / dia',al:'center'},
-    {l:'Bytes / evt',al:'center'},{l:'GB / dia',al:'center'},
-    {l:'GB / mês',al:'center'},{l:'TB / ano  ★',al:'center'},
+    {l:T['th-type']||'Fonte de log',al:'left'},
+    {l:T['th-scope']||'Escopo / exemplos',al:'left'},
+    {l:T['th-qty']||'Qtde',al:'center'},
+    {l:T['th-epsa']||'EPS / ativo',al:'center'},
+    {l:T['th-epst']||'EPS total',al:'center'},
+    {l:T['th-evd']||'Eventos / dia',al:'center'},
+    {l:T['th-bytes']||'Bytes / evt',al:'center'},
+    {l:T['lm-gbd']||'GB / dia',al:'center'},
+    {l:T['lm-gbm']||'GB / mês',al:'center'},
+    {l:'TB / ano  ★',al:'center'},
   ];
   const HDR_ROW=r;
   heads.forEach((h,c)=>sc(r,c,h.l,h.al==='left'?ST.hdrL:ST.hdr));
@@ -2202,7 +2488,8 @@ function _doExport(){
   r++; // spacer before totals
 
   // Totals
-  sc(r,0,`TOTAL GERAL  ·  ${tSrc} fonte${tSrc!==1?'s':''} ativas`,ST.totLbl);
+  const totLbl=lang==='en'?`GRAND TOTAL  ·  ${tSrc} active source${tSrc!==1?'s':''}`:lang==='es'?`TOTAL GENERAL  ·  ${tSrc} fuente${tSrc!==1?'s':''} activas`:`TOTAL GERAL  ·  ${tSrc} fonte${tSrc!==1?'s':''} ativas`;
+  sc(r,0,totLbl,ST.totLbl);
   sc(r,1,'',ST.totLbl);
   sc(r,2,'',ST.totNum);
   sc(r,3,'',ST.totNum);
@@ -2216,7 +2503,8 @@ function _doExport(){
   const TOT_ROW=r; r+=2;
 
   // Note
-  sc(r,0,'★  TB/ano = EPS × bytes/evt × 86.400 s/dia × 365 ÷ 10¹²    ·    1 TB = 1.000 GB (decimal)    ·    Valores são estimativas de referência de mercado.',ST.note);
+  const xlsxNote=T['rpt-footer-note']?T['rpt-footer-note']+' (decimal)':'★  TB/ano = EPS × bytes/evt × 86.400 s/dia × 365 ÷ 10¹²    ·    1 TB = 1.000 GB (decimal)';
+  sc(r,0,xlsxNote,ST.note);
   fillRow(r,ST.note); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}});
 
   // Sheet config
@@ -2494,8 +2782,8 @@ function showToast(msg){
 }
 
 // --- DONUT CHART -------------------------------------------------
-const CHART_COLORS=['#4285f4','#34a853','#fbbc04','#ea4335','#9c27b0',
-  '#00bcd4','#ff7043','#8bc34a','#3f51b5','#f06292'];
+const CHART_COLORS=['#ff1a75','#7d2ae8','#00c4cc','#fbbc04','#34a853',
+  '#ff7043','#3f51b5','#f06292','#00bcd4','#8bc34a'];
 
 function toggleChart(){
   const m=document.getElementById('chart-modal');
@@ -2904,18 +3192,17 @@ loadLocal=function(){
   }catch(e){return false;}
 };
 
-
 // ── REPORT (Tab 3) ───────────────────────────────────────────────
 const CHART_COLORS_RPT=[
-  '#4285f4','#34a853','#fbbc04','#ea4335','#9c27b0',
-  '#00bcd4','#ff7043','#8bc34a','#3f51b5','#f06292'
+  '#ff1a75','#7d2ae8','#00c4cc','#fbbc04','#34a853',
+  '#ff7043','#3f51b5','#f06292','#00bcd4','#8bc34a'
 ];
 
 function renderReport(){
   // Project name + date
   const proj=getProjName();
   const rptProj=document.getElementById('rpt-proj-name');
-  if(rptProj) rptProj.textContent=proj||'Sem nome de projeto';
+  if(rptProj) rptProj.textContent=proj||(lang==='en'?'No project name':lang==='es'?'Sin nombre de proyecto':'Sem nome de projeto');
   const rptDate=document.getElementById('rpt-date');
   if(rptDate) rptDate.textContent=new Date().toLocaleDateString('pt-BR',{
     day:'2-digit',month:'long',year:'numeric'
@@ -2949,6 +3236,16 @@ function renderReport(){
   }
 
   const tTBY=(tGBD*365)/1000,tGBM=tGBD*30;
+
+  // Update report labels from i18n
+  const T=I18[lang]||I18.pt;
+  ['rpt-lbl-summary','rpt-lbl-sources','rpt-lbl-eps','rpt-lbl-gbday',
+   'rpt-lbl-gbmon','rpt-lbl-tbyear','rpt-lbl-composition','rpt-lbl-detail',
+   'rpt-th-name','rpt-th-qty','rpt-th-eps','rpt-th-epst','rpt-th-gbday',
+   'rpt-th-tbyear','rpt-hint','rpt-print','rpt-footer-note'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&T[id])el.textContent=T[id];
+  });
 
   // Metrics
   const setR=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
@@ -3046,7 +3343,7 @@ function renderReport(){
   const totTr=document.createElement('tr');
   totTr.className='rpt-total-row';
   totTr.innerHTML=`
-    <td>TOTAL &mdash; ${tSrc} fonte${tSrc!==1?'s':''}</td>
+    <td>${lang==='en'?'TOTAL':lang==='es'?'TOTAL':'TOTAL'} &mdash; ${tSrc} ${lang==='en'?'source'+(tSrc!==1?'s':''):lang==='es'?'fuente'+(tSrc!==1?'s':''):'fonte'+(tSrc!==1?'s':'')}</td>
     <td></td><td></td>
     <td class="rpt-td-right">${f0(tEPS)}</td>
     <td class="rpt-td-right">${f2(tGBD)}</td>
