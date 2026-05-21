@@ -4,7 +4,7 @@
 
 # SecOps Ingestion Sizing Tool
 
-**Ferramenta de pré-venda técnica para dimensionamento de volume de ingestão do Google Chronicle SecOps**
+**Ferramenta de pré-venda técnica para dimensionamento de volume de ingestão do Google SecOps**
 
 [![Version](https://img.shields.io/badge/versão-1.0.0-blue?style=flat-square)](https://github.com/)
 [![Lang](https://img.shields.io/badge/idiomas-PT%20%7C%20EN%20%7C%20ES-green?style=flat-square)](https://github.com/)
