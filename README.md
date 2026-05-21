@@ -38,7 +38,7 @@ Acesse na web: https://matheusdamacena.github.io/secopsestimate/
 | 3 | **Barra de progresso** | Contador visual de tipos de evento configurados vs. total disponível |
 | 4 | **Badge TOP** | Identifica automaticamente eventos com impacto >5% no volume total |
 | 5 | **Tooltip de cálculo** | Hover sobre GB/dia mostra a conta completa: `Qtde × EPS × bytes × 86.400 = evt/dia → GB/dia → TB/ano` |
-| 6 | **Coluna de Observação** | Campo de nota livre por linha (ex: "cliente confirmou 250 instâncias") — exportado no XLSX |
+| 6 | **Coluna de Observação** | Campo de nota livre por linha (ex: "cliente confirmou 250 instâncias") - exportado no XLSX |
 
 ### 🔍 Navegação e filtros
 
