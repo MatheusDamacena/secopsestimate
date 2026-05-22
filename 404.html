@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecOps · Ingestion Sizing v1.1</title>
+<title>SecOps · Ingestion Sizing v2.0.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -1123,25 +1123,50 @@ tr.dr:hover td.td-note{background:rgba(255,255,255,0.022);}
 @media print{
   @page{
     size:A4 portrait;
-    margin:0;
+    margin:12mm 14mm;
   }
-  body *{visibility:hidden;}
-  .report-page,.report-page *{visibility:visible!important;}
+
+  /* Esconde TUDO exceto o relatório */
+  header, footer,
+  .tabs, .metrics, .progress-bar-wrap,
+  .scenarios-bar, .panel, .no-print,
+  .report-toolbar, .share-toast,
+  .clone-modal, #chart-modal{
+    display:none !important;
+  }
+
+  /* Mostra apenas o painel 3 e a página */
+  #panel-3{
+    display:block !important;
+  }
+  .report-wrap{
+    padding:0 !important;
+    background:#ffffff !important;
+  }
   .report-page{
-    position:fixed!important;
-    top:0!important;left:0!important;
-    width:210mm!important;
-    min-height:297mm;
-    margin:0!important;
-    padding:16mm 18mm!important;
-    box-shadow:none!important;
-    border-radius:0!important;
+    width:100% !important;
+    box-shadow:none !important;
+    border-radius:0 !important;
+    padding:0 !important;
+    margin:0 !important;
     font-size:10pt;
+    color:#000000;
+    background:#ffffff;
   }
-  .no-print{display:none!important;}
+
+  /* Tipografia e tabela */
   .rpt-table{font-size:8pt;}
   .rpt-metric-val{font-size:16pt;}
   .rpt-donut-val{font-size:13pt;}
+  .rpt-section-title{color:#ff1a75 !important;}
+  .rpt-table thead tr{background:#1a1a2e !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .rpt-table tbody tr.rpt-cat-row td{background:#e8e0f0 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .rpt-table tbody tr.rpt-total-row td{background:#1a1a2e !important;color:#ffffff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .rpt-metric.feat, .rpt-metric-featured{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+
+  /* Evita quebra de página dentro de elementos importantes */
+  .rpt-metrics, .rpt-chart-section{page-break-inside:avoid;}
+  .rpt-table tbody tr{page-break-inside:avoid;}
 }
 
 
@@ -1360,7 +1385,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
 <!-- PROGRESS BAR -->
 <div class="progress-bar-wrap" id="progress-wrap">
   <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-  <div class="progress-label"><b id="progress-count">0</b> / 110 <span id="progress-lbl">fontes configuradas</span></div>
+  <div class="progress-label"><b id="progress-count">0</b> / 146 <span id="progress-lbl">fontes configuradas</span></div>
 </div>
 
 <!-- TABS -->
@@ -1395,7 +1420,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
     <span id="scen-b-lbl">Cenário B</span>
   </button>
   <div class="scenario-compare" id="scen-compare">
-    <span id="scen-compare-lbl">Δ vs Cenário A:</span>
+    <span id="scen-compare-lbl">Cenário B vs Cenário A:</span>
     <span class="scenario-diff" id="scen-diff">—</span>
   </div>
   <div style="margin-left:auto;display:flex;gap:6px;">
@@ -1670,15 +1695,15 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
               <circle cx="14" cy="14" r="3" fill="#4285f4"/>
             </svg>
             <div>
-              <div class="rpt-logo-title">SecOps Ingestion Sizing</div>
-              <div class="rpt-logo-sub">Google Chronicle SecOps</div>
+              <div class="rpt-logo-title">SecOps Sizing Tool</div>
+              <div class="rpt-logo-sub">SecOps Sizing Tool</div>
             </div>
           </div>
         </div>
         <div class="rpt-header-right">
           <div class="rpt-proj" id="rpt-proj-name">—</div>
           <div class="rpt-date" id="rpt-date">—</div>
-          <div class="rpt-version">SecOps Sizing Tool v1.1</div>
+          <div class="rpt-version">SecOps Sizing Tool v2.0.0</div>
         </div>
       </div>
 
@@ -1745,7 +1770,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
       <!-- PAGE FOOTER -->
       <div class="rpt-page-footer">
         <span id="rpt-footer-note">Estimativas de referência de mercado · Volume = EPS × bytes/evt × 86.400 s/dia · 1 TB = 1.000 GB (decimal)</span>
-        <span id="rpt-footer-tool">SecOps Sizing Tool v1.1</span>
+        <span id="rpt-footer-tool">SecOps Sizing Tool v2.0.0</span>
       </div>
 
     </div><!-- /report-page -->
@@ -1755,7 +1780,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
 <footer>
   <div class="ft"><em>SecOps</em> · Ingestion Sizing Tool · <span class="au">Matheus Damacena</span></div>
   <div class="ft" style="text-align:center" id="ft-note">Estimativas de referência · valide com dados reais · Volume = EPS × bytes × 86.400 s/dia</div>
-  <div class="ft" style="text-align:right">v1.0.0</div>
+  <div class="ft" style="text-align:right">v2.0.0</div>
 </footer>
 
 <script>
@@ -1803,7 +1828,7 @@ const I18={
     'scen-lbl':'Cenário:',
     'scen-a-lbl':'Cenário A',
     'scen-b-lbl':'Cenário B',
-    'scen-compare-lbl':'Δ vs Cenário A:',
+    'scen-compare-lbl':'Cenário B vs Cenário A:',
     'share-lbl':'Compartilhar',
     'chart-lbl':'Composição',
     'chart-modal-lbl':'Composição do Volume por Categoria',
@@ -1877,7 +1902,7 @@ const I18={
     'scen-lbl':'Scenario:',
     'scen-a-lbl':'Scenario A',
     'scen-b-lbl':'Scenario B',
-    'scen-compare-lbl':'Δ vs Scenario A:',
+    'scen-compare-lbl':'Scenario B vs Scenario A:',
     'share-lbl':'Share',
     'chart-lbl':'Composition',
     'chart-modal-lbl':'Volume Composition by Category',
@@ -1951,7 +1976,7 @@ const I18={
     'scen-lbl':'Escenario:',
     'scen-a-lbl':'Escenario A',
     'scen-b-lbl':'Escenario B',
-    'scen-compare-lbl':'Δ vs Escenario A:',
+    'scen-compare-lbl':'Escenario B vs Escenario A:',
     'share-lbl':'Compartir',
     'chart-lbl':'Composición',
     'chart-modal-lbl':'Composición del Volumen por Categoría',
@@ -2428,17 +2453,17 @@ function _doExport(){
   const merges=[];
 
   // Title
-  const titleTxt=proj?`SecOps Ingestion Sizing  ·  ${proj}`:'SecOps Ingestion Sizing — Dimensionamento de Ingestão';
+  const titleTxt=proj?`SecOps Sizing Tool  ·  ${proj}`:'SecOps Sizing Tool — Dimensionamento de Ingestão';
   sc(r,0,titleTxt,ST.title); fillRow(r,ST.title);
   merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
 
   // Sub
-  sc(r,0,'Google Chronicle SecOps  ·  Estimativa de Volume de Ingestão para Cotação',ST.sub);
+  sc(r,0,'Estimativa de Volume de Ingestão para Cotação',ST.sub);
   fillRow(r,ST.sub); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
 
   // Date
   const dt=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  sc(r,0,`Gerado em ${dt}   ·   SecOps Sizing Tool v1.0.0`,ST.date);
+  sc(r,0,`Gerado em ${dt}   ·   SecOps Sizing Tool v2.0.0`,ST.date);
   fillRow(r,ST.date); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
 
   r++; // spacer
@@ -2927,13 +2952,13 @@ let extraCounter = 0;
 
 
 function addCustomSource(){
-  const name =prompt('Nome do tipo de evento customizado:\n(ex: SIEM legado, sistema proprio, etc.)');
+  const name=prompt(lang==='en'?'Custom event type name:\n(e.g. legacy SIEM, custom system)':lang==='es'?'Nombre del tipo de evento personalizado:\n(ej: SIEM legado, sistema propio)':'Nome do tipo de evento customizado:\n(ex: SIEM legado, sistema proprio, etc.)');
   if(!name||!name.trim())return;
-  const scope=prompt('Descricao / fabricante (opcional):')||'Evento customizado';
-  const qty  =parseInt(prompt('Quantidade de ativos/instancias:')||'0')||0;
+  const scope=prompt(lang==='en'?'Description / vendor (optional):':lang==='es'?'Descripción / fabricante (opcional):':'Descricao / fabricante (opcional):')||(lang==='en'?'Custom event':lang==='es'?'Evento personalizado':'Evento customizado');
+  const qty=parseInt(prompt(lang==='en'?'Number of assets / instances:':lang==='es'?'Cantidad de activos / instancias:':'Quantidade de ativos/instancias:')||'0')||0;
   if(qty<=0)return;
-  const eps  =parseFloat(prompt('EPS por ativo (eventos por segundo — ex: 2.5):')||'1')||1;
-  const bytes=parseInt(prompt('Tamanho medio do evento em bytes (ex: 700):')||'700')||700;
+  const eps=parseFloat(prompt(lang==='en'?'EPS per asset (events/sec — e.g. 2.5):':lang==='es'?'EPS por activo (eventos/seg — ej: 2.5):':'EPS por ativo (eventos por segundo — ex: 2.5):')||'1')||1;
+  const bytes=parseInt(prompt(lang==='en'?'Avg event size in bytes (e.g. 700):':lang==='es'?'Tamaño medio del evento en bytes (ej: 700):':'Tamanho medio do evento em bytes (ex: 700):')||'700')||700;
   const key='extra_'+(++extraCounter);
   EXTRA.push({type:'custom',name:name.trim(),scope,qty,eps,b:bytes,note:'',key});
   renderExtra();t1Totals();updateProgress();saveLocal();
@@ -3055,7 +3080,7 @@ function renderExtra(){
     noteInp.oninput=function(){ e.note=this.value; saveLocal(); };
     const rmBtn=document.createElement('button');
     rmBtn.style.cssText='background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;flex-shrink:0;padding:0 2px;line-height:1;';
-    rmBtn.title='Remover'; rmBtn.textContent='✕';
+    rmBtn.title=lang==='en'?'Remove':lang==='es'?'Eliminar':'Remover'; rmBtn.textContent='✕';
     rmBtn.onclick=function(){ removeExtra(e.key); };
     wrap.appendChild(noteInp); wrap.appendChild(rmBtn);
     td8.appendChild(wrap); tr.appendChild(td8);
@@ -3229,7 +3254,7 @@ function renderReport(){
     EXTRA.forEach(e=>{
       if(e.qty===0)return;
       const et=e.qty*e.eps,evd=et*86400,gbd=(evd*e.b)/1e9;
-      filled.push({cat:'Customizado',name:e.name,qty:e.qty,
+      filled.push({cat:(lang==='en'?'Custom':lang==='es'?'Personalizado':'Customizado'),name:e.name,qty:e.qty,
         eps:e.eps,epsT:et,evd,gbD:gbd,tbY:(gbd*365)/1000});
       tEPS+=et;tEvD+=evd;tGBD+=gbd;tSrc++;
     });
@@ -3364,6 +3389,8 @@ toggleEPS();
 cCalc();
 // Load from URL first, then localStorage
 if(!loadFromURL()) loadLocal();
+// Apply translations from the start
+setLang(lang);
 render();
 renderExtra();
 t1Totals();
