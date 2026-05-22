@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecOps · Ingestion Sizing v2.0.0</title>
+<title>SecOps Sizing Tool v2.0.0</title>
+<meta name="description" content="Ferramenta de pré-venda para dimensionamento de volume de ingestão do SecOps. Calcule EPS, GB/dia e TB/ano a partir do inventário real do cliente.">
+<meta property="og:title" content="SecOps Sizing Tool v2.0.0">
+<meta property="og:description" content="Dimensione o volume de ingestão do SecOps em TB/ano a partir do inventário real de fontes de log do cliente.">
+<meta property="og:type" content="website">
+<meta name="author" content="Matheus Damacena — secmath.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -1135,10 +1140,18 @@ tr.dr:hover td.td-note{background:rgba(255,255,255,0.022);}
     display:none !important;
   }
 
-  /* Mostra apenas o painel 3 e a página */
-  #panel-3{
+  /* Mostra apenas o painel ativo */
+  #panel-3.active, #panel-4.active{
     display:block !important;
   }
+
+  /* Estilos para impressão da aba Como Funciona */
+  #panel-4.active .guide-wrap{padding:0 !important;}
+  #panel-4.active .guide-hero{margin-bottom:24px !important;}
+  #panel-4.active .guide-formula-box{background:#f8f8f8 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  #panel-4.active .guide-callout{background:#f8f8f8 !important;border-left-color:#ff1a75 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  #panel-4.active .gf-var{background:#ffe4ef !important;color:#c4005a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  #panel-4.active .gf-result{background:#ff1a75 !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .report-wrap{
     padding:0 !important;
     background:#ffffff !important;
@@ -1332,6 +1345,179 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
 [data-theme="light"] .metric.feat .munit{
   color:var(--text3) !important;
 }
+
+/* ════════════════════════════════════════════════════
+   PANEL 4 — COMO FUNCIONA (Guide)
+   ════════════════════════════════════════════════════ */
+.guide-wrap{
+  max-width:860px;margin:0 auto;padding:40px 28px 80px;
+  position:relative;z-index:1;
+}
+
+/* Hero */
+.guide-hero{
+  display:flex;align-items:center;gap:28px;
+  margin-bottom:48px;padding-bottom:36px;
+  border-bottom:1px solid var(--border);
+}
+.guide-hero-icon{flex-shrink:0;width:72px;height:72px;}
+.guide-hero-title{
+  font-size:26px;font-weight:600;color:var(--text);
+  letter-spacing:-.02em;margin-bottom:10px;
+}
+.guide-hero-sub{font-size:14px;color:var(--text2);line-height:1.7;margin:0;}
+
+/* Section */
+.guide-section{
+  display:grid;grid-template-columns:48px 1fr;gap:24px;
+  margin-bottom:56px;
+}
+.guide-section-num{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--accent);letter-spacing:.1em;
+  padding-top:4px;text-align:right;
+}
+.guide-section-title{
+  font-size:18px;font-weight:600;color:var(--text);
+  margin-bottom:14px;letter-spacing:-.01em;
+}
+.guide-text{
+  font-size:14px;color:var(--text2);line-height:1.75;
+  margin-bottom:14px;
+}
+.guide-text strong{color:var(--text);font-weight:600;}
+
+/* Callout boxes */
+.guide-callout{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-left:3px solid var(--accent);
+  border-radius:8px;padding:14px 16px;
+  margin-top:18px;font-size:13px;color:var(--text2);line-height:1.65;
+}
+.guide-callout-warn{border-left-color:#fbbc04;}
+.guide-callout-tip{border-left-color:var(--g-green);}
+.guide-callout-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+
+/* Formula box */
+.guide-formula-box{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:12px;padding:18px 20px;margin:20px 0;
+  overflow-x:auto;
+}
+.guide-formula{
+  display:flex;align-items:center;flex-wrap:nowrap;gap:5px;
+  font-family:var(--mono);font-size:12px;
+  white-space:nowrap;
+}
+.gf-var{
+  background:rgba(255,26,117,0.12);color:var(--accent);
+  border:1px solid rgba(255,26,117,0.25);
+  border-radius:5px;padding:3px 7px;font-weight:500;
+  font-size:12px;white-space:nowrap;
+}
+.gf-var sub{font-size:9px;opacity:0.8;}
+.gf-const{
+  background:var(--surface2);color:var(--text2);
+  border:1px solid var(--border);
+  border-radius:5px;padding:3px 7px;
+  font-size:12px;
+}
+.gf-op{color:var(--text3);font-size:14px;padding:0 1px;flex-shrink:0;}
+.gf-result{
+  background:linear-gradient(135deg,var(--accent) 0%,#7d2ae8 100%);
+  color:#fff;border-radius:5px;padding:3px 10px;
+  font-weight:600;font-size:13px;white-space:nowrap;
+}
+
+/* Steps */
+.guide-steps{margin-top:20px;display:flex;flex-direction:column;gap:0;}
+.guide-step{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:16px 0;border-bottom:1px solid var(--border);
+}
+.guide-step:last-child{border-bottom:none;}
+.guide-step-num{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,26,117,0.12);border:1px solid rgba(255,26,117,0.25);
+  color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;margin-top:2px;
+}
+.guide-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.guide-step-desc{font-size:13px;color:var(--text2);line-height:1.65;}
+
+/* Compare cards */
+.guide-compare{
+  display:flex;align-items:center;gap:16px;margin:20px 0;
+}
+.guide-compare-card{
+  flex:1;background:var(--surface);border:1px solid var(--border2);
+  border-radius:12px;padding:18px;
+}
+.guide-compare-label{
+  font-size:12px;font-weight:600;color:var(--accent);
+  font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.guide-compare-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text2);padding:5px 0;
+  border-bottom:1px solid var(--border);
+}
+.guide-compare-row strong{color:var(--text);font-family:var(--mono);}
+.guide-compare-result{
+  font-family:var(--mono);font-size:18px;font-weight:600;
+  color:var(--text);margin-top:14px;text-align:center;
+}
+.guide-compare-vs{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  color:var(--text3);letter-spacing:.1em;flex-shrink:0;
+}
+
+/* Free sources */
+.guide-free-sources{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:12px;overflow:hidden;margin:18px 0;
+}
+.guide-free-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 18px;border-bottom:1px solid var(--border);
+}
+.guide-free-item:last-child{border-bottom:none;}
+.guide-free-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--g-green);flex-shrink:0;margin-top:5px;
+}
+.guide-free-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.guide-free-desc{font-size:12px;color:var(--text2);}
+
+/* Factors */
+.guide-factors{display:flex;flex-direction:column;gap:12px;margin:18px 0;}
+.guide-factor{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;
+}
+.guide-factor-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center;}
+.guide-factor-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.guide-factor-desc{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* Light mode adjustments */
+[data-theme="light"] .guide-callout{background:var(--surface2);}
+[data-theme="light"] .guide-formula-box{background:var(--surface2);}
+[data-theme="light"] .guide-compare-card{background:var(--surface2);}
+[data-theme="light"] .guide-free-sources{background:var(--surface2);}
+[data-theme="light"] .guide-factor{background:var(--surface2);}
+
+@media(max-width:600px){
+  .guide-hero{flex-direction:column;gap:16px;}
+  .guide-section{grid-template-columns:1fr;gap:8px;}
+  .guide-section-num{text-align:left;}
+  .guide-compare{flex-direction:column;}
+  .guide-compare-vs{align-self:center;}
+  .guide-formula{font-size:12px;}
+}
+
 </style>
 </head>
 <body data-theme="dark">
@@ -1393,7 +1579,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
   <div class="tab active" onclick="switchTab(1,this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
     <span id="t1lbl">SIZING POR FONTE</span>
-    <span class="tbadge" id="t1badge">110 fontes</span>
+    <span class="tbadge" id="t1badge">146 fontes</span>
   </div>
   <div class="tab" onclick="switchTab(2,this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-3"/><path d="M9 15h3l8.5-8.5a2.12 2.12 0 0 0-3-3L9 12v3z"/></svg>
@@ -1404,6 +1590,11 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
     <span id="t3lbl">RELATÓRIO</span>
     <span class="tbadge" id="t3badge">PDF</span>
+  </div>
+  <div class="tab" onclick="switchTab(4,this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <span id="t4lbl">COMO FUNCIONA?</span>
+    <span class="tbadge" id="t4badge">guia</span>
   </div>
 </div>
 
@@ -1424,11 +1615,11 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
     <span class="scenario-diff" id="scen-diff">—</span>
   </div>
   <div style="margin-left:auto;display:flex;gap:6px;">
-    <button class="scenario-btn" onclick="shareURL()" title="Compartilhar link">
+    <button class="scenario-btn" onclick="shareURL()" aria-label="Compartilhar link" title="Compartilhar link">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       <span id="share-lbl">Compartilhar</span>
     </button>
-    <button class="scenario-btn" onclick="toggleChart()" id="chart-btn" title="Gráfico de composição">
+    <button class="scenario-btn" onclick="toggleChart()" aria-label="Ver composição por categoria" id="chart-btn" title="Gráfico de composição">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
       <span id="chart-lbl">Composição</span>
     </button>
@@ -1440,7 +1631,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
   <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;width:380px;max-width:95vw;overflow:hidden;">
     <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
       <span style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text2)" id="chart-modal-lbl">Composição do Volume por Categoria</span>
-      <button onclick="toggleChart()" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:18px;padding:0 4px;">✕</button>
+      <button onclick="toggleChart()" aria-label="Ver composição por categoria" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:18px;padding:0 4px;">✕</button>
     </div>
     <div class="chart-panel">
       <div class="donut-wrap">
@@ -1527,7 +1718,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           <span id="sb-reset">RESETAR</span>
         </button>
-        <button class="sact primary" onclick="exportXLSX()">
+        <button class="sact primary" onclick="exportXLSX()" aria-label="Exportar XLSX">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span id="sb-export">EXPORTAR XLSX</span>
         </button>
@@ -1676,7 +1867,7 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
       <div style="display:flex;align-items:center;gap:12px;">
         <span style="font-family:var(--mono);font-size:10px;color:var(--text2);" id="rpt-hint">Pré-visualização do relatório — clique em Imprimir para exportar como PDF</span>
       </div>
-      <button class="report-print-btn" onclick="window.print()">
+      <button class="report-print-btn" onclick="window.print()" aria-label="Imprimir / Salvar PDF">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         <span id="rpt-print">Imprimir / Salvar PDF</span>
       </button>
@@ -1777,8 +1968,191 @@ tr.cat-row td{color:var(--cyan);background:var(--surface2);}
   </div><!-- /report-wrap -->
 </div><!-- /panel-3 -->
 
+
+<!-- ═══ PANEL 4: COMO FUNCIONA ═══ -->
+<div class="panel" id="panel-4">
+<div class="guide-wrap">
+
+  <!-- HERO -->
+  <div class="guide-hero">
+    <div class="guide-hero-icon">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="24" cy="24" r="20" stroke="var(--accent)" stroke-opacity=".3"/>
+        <circle cx="24" cy="24" r="13" stroke="var(--accent)" stroke-opacity=".6"/>
+        <circle cx="24" cy="24" r="4" fill="var(--accent)"/>
+        <line x1="24" y1="4" x2="24" y2="11" stroke="var(--accent)" stroke-opacity=".5"/>
+        <line x1="44" y1="24" x2="37" y2="24" stroke="var(--accent)" stroke-opacity=".5"/>
+        <line x1="24" y1="44" x2="24" y2="37" stroke="var(--accent)" stroke-opacity=".5"/>
+        <line x1="4" y1="24" x2="11" y2="24" stroke="var(--accent)" stroke-opacity=".5"/>
+      </svg>
+    </div>
+    <div>
+      <h1 class="guide-hero-title" id="g-hero-title">Como o dimensionamento funciona?</h1>
+      <p class="guide-hero-sub" id="g-hero-sub">Entenda a lógica por trás dos cálculos e por que cada variável importa para uma cotação precisa do SecOps.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1: Por que TB/ano -->
+  <div class="guide-section">
+    <div class="guide-section-num">01</div>
+    <div class="guide-section-body">
+      <h2 class="guide-section-title" id="g-s1-title">Por que volume e não velocidade?</h2>
+      <p class="guide-text" id="g-s1-p1">Plataformas de operações de segurança podem ser licenciadas por métricas diferentes. Algumas medem <strong>velocidade</strong> — quantos eventos chegam por segundo (EPS). O SecOps mede <strong>volume</strong> — quantos dados são ingeridos por ano (TB/ano).</p>
+      <p class="guide-text" id="g-s1-p2">Isso não é apenas uma diferença de unidade. É uma mudança de perspectiva: em vez de pensar na taxa de chegada dos logs, pensa-se no tamanho total do dado que será armazenado e processado. Para ambientes com eventos pequenos e frequentes, essa métrica pode ser mais previsível e econômica.</p>
+      <div class="guide-callout">
+        <div class="guide-callout-icon">💡</div>
+        <div id="g-s1-callout">A mesma infraestrutura pode gerar volumes muito diferentes dependendo do tipo de evento — não apenas da velocidade com que os eventos chegam.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: A fórmula -->
+  <div class="guide-section">
+    <div class="guide-section-num">02</div>
+    <div class="guide-section-body">
+      <h2 class="guide-section-title" id="g-s2-title">A fórmula desmontada</h2>
+      <p class="guide-text" id="g-s2-p1">O cálculo parte de uma equação simples que conecta velocidade de eventos ao volume anual de dados:</p>
+
+      <div class="guide-formula-box">
+        <div class="guide-formula">
+          <span class="gf-var">Qtde</span>
+          <span class="gf-op">×</span>
+          <span class="gf-var">EPS<sub>/ativo</sub></span>
+          <span class="gf-op">×</span>
+          <span class="gf-var">bytes<sub>/evt</sub></span>
+          <span class="gf-op">×</span>
+          <span class="gf-const">86.400</span>
+          <span class="gf-op">×</span>
+          <span class="gf-const">365</span>
+          <span class="gf-op">÷</span>
+          <span class="gf-const">10¹²</span>
+          <span class="gf-op">=</span>
+          <span class="gf-result">TB/ano</span>
+        </div>
+      </div>
+
+      <div class="guide-steps">
+        <div class="guide-step">
+          <div class="guide-step-num">1</div>
+          <div>
+            <div class="guide-step-title" id="g-step1-title">Quantidade de ativos</div>
+            <div class="guide-step-desc" id="g-step1-desc">Quantos dispositivos, instâncias ou serviços do mesmo tipo existem no ambiente. 50 firewalls geram 50× o volume de 1 firewall.</div>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">2</div>
+          <div>
+            <div class="guide-step-title" id="g-step2-title">EPS por ativo (eventos por segundo)</div>
+            <div class="guide-step-desc" id="g-step2-desc">Taxa média de geração de logs de cada dispositivo. Varia muito por tipo: um firewall de borda gera centenas de EPS, um servidor de arquivos gera menos de 2 EPS em condições normais.</div>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">3</div>
+          <div>
+            <div class="guide-step-title" id="g-step3-title">Tamanho médio do evento (bytes)</div>
+            <div class="guide-step-desc" id="g-step3-desc">Cada evento tem um tamanho em bytes. Um log de autenticação simples pode ter 400 bytes. Um alerta de EDR com contexto de processo pode ter 1.500 bytes. Multiplicado por bilhões de eventos, essa diferença é enorme.</div>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">4</div>
+          <div>
+            <div class="guide-step-title" id="g-step4-title">86.400 segundos por dia</div>
+            <div class="guide-step-desc" id="g-step4-desc">Converte a taxa por segundo em volume diário: 60 seg × 60 min × 24 h = 86.400. Sistemas de segurança operam 24/7 — não há janelas de inatividade na geração de logs.</div>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">5</div>
+          <div>
+            <div class="guide-step-title" id="g-step5-title">Padrão decimal: 1 TB = 10¹² bytes</div>
+            <div class="guide-step-desc" id="g-step5-desc">O SecOps usa o padrão SI decimal, não o binário. 1 TB = 1.000 GB = 1.000.000 MB = 10¹² bytes. Essa é a unidade de referência para precificação.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Por que EPS e bytes importam juntos -->
+  <div class="guide-section">
+    <div class="guide-section-num">03</div>
+    <div class="guide-section-body">
+      <h2 class="guide-section-title" id="g-s3-title">EPS e bytes: dois fatores, um resultado</h2>
+      <p class="guide-text" id="g-s3-p1">É tentador pensar que "mais EPS = mais volume". Mas o tamanho do evento é igualmente determinante. O exemplo abaixo mostra dois tipos com EPS similares gerando volumes muito diferentes:</p>
+
+      <div class="guide-compare">
+        <div class="guide-compare-card">
+          <div class="guide-compare-label" id="g-cmp1-lbl">Firewall NGFW</div>
+          <div class="guide-compare-row"><span id="g-cmp-eps">EPS/ativo</span><strong>300</strong></div>
+          <div class="guide-compare-row"><span id="g-cmp-bytes">Bytes/evt</span><strong>800</strong></div>
+          <div class="guide-compare-row"><span id="g-cmp-gbday">GB/dia <small>(×50 ativos)</small></span><strong>1.036 GB</strong></div>
+          <div class="guide-compare-result">≈ <strong>378 TB/ano</strong></div>
+        </div>
+        <div class="guide-compare-vs">VS</div>
+        <div class="guide-compare-card">
+          <div class="guide-compare-label" id="g-cmp2-lbl">EDR / XDR</div>
+          <div class="guide-compare-row"><span>EPS/ativo</span><strong>3</strong></div>
+          <div class="guide-compare-row"><span>Bytes/evt</span><strong>1.500</strong></div>
+          <div class="guide-compare-row"><span>GB/dia <small>(×5.000 endpoints)</small></span><strong>1.944 GB</strong></div>
+          <div class="guide-compare-result">≈ <strong>709 TB/ano</strong></div>
+        </div>
+      </div>
+
+      <div class="guide-callout guide-callout-warn">
+        <div class="guide-callout-icon">⚠️</div>
+        <div id="g-s3-callout">O EDR tem 100× menos EPS por ativo, mas gera quase o dobro do volume total — por causa da combinação de eventos maiores e muito mais endpoints. Subestimar bytes/evento é a fonte mais comum de erros de sizing.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: O que este cálculo não inclui -->
+  <div class="guide-section">
+    <div class="guide-section-num">04</div>
+    <div class="guide-section-body">
+      <h2 class="guide-section-title" id="g-s5-title">O que este cálculo não inclui</h2>
+      <p class="guide-text" id="g-s5-p1">Esta ferramenta calcula o <strong>volume bruto estimado</strong> com base em referências de mercado. Na prática, fatores técnicos podem reduzir o volume final ingerido:</p>
+
+      <div class="guide-factors">
+        <div class="guide-factor">
+          <div class="guide-factor-icon">📦</div>
+          <div>
+            <div class="guide-factor-title" id="g-f1-title">Compressão</div>
+            <div class="guide-factor-desc" id="g-f1-desc">Logs em trânsito são comprimidos. A taxa varia por tipo de dado, mas pode reduzir o volume transmitido em 60–80%. O SecOps mede o volume pós-ingestão.</div>
+          </div>
+        </div>
+        <div class="guide-factor">
+          <div class="guide-factor-icon">🔽</div>
+          <div>
+            <div class="guide-factor-title" id="g-f2-title">Filtros e descarte</div>
+            <div class="guide-factor-desc" id="g-f2-desc">Pipelines de ingestão podem descartar eventos de baixo valor antes do armazenamento. Ruído de DNS, health checks e heartbeats são candidatos comuns.</div>
+          </div>
+        </div>
+        <div class="guide-factor">
+          <div class="guide-factor-icon">🔄</div>
+          <div>
+            <div class="guide-factor-title" id="g-f3-title">Deduplicação</div>
+            <div class="guide-factor-desc" id="g-f3-desc">Eventos idênticos enviados por múltiplas fontes ou por erros de configuração podem ser deduplicados, reduzindo o volume efetivo.</div>
+          </div>
+        </div>
+        <div class="guide-factor">
+          <div class="guide-factor-icon">📊</div>
+          <div>
+            <div class="guide-factor-title" id="g-f4-title">Variação de carga</div>
+            <div class="guide-factor-desc" id="g-f4-desc">Os valores de EPS/ativo são médias. Picos de incidentes, manutenções e sazonalidade podem elevar o volume temporariamente acima da estimativa.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-callout guide-callout-tip">
+        <div class="guide-callout-icon">✅</div>
+        <div id="g-s5-callout">Para propostas formais, valide sempre com dados reais do ambiente — relatórios de ingestão do sistema atual do cliente são a melhor fonte de referência. Use esta ferramenta como ponto de partida e ancoragem da conversa técnica.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /guide-wrap -->
+</div><!-- /panel-4 -->
+
 <footer>
-  <div class="ft"><em>SecOps</em> · Ingestion Sizing Tool · <span class="au">Matheus Damacena</span></div>
+  <div class="ft"><em>SecOps</em> · Sizing Tool · <span class="au">Matheus Damacena</span></div>
   <div class="ft" style="text-align:center" id="ft-note">Estimativas de referência · valide com dados reais · Volume = EPS × bytes × 86.400 s/dia</div>
   <div class="ft" style="text-align:right">v2.0.0</div>
 </footer>
@@ -1791,7 +2165,7 @@ const I18={
     'lm-src':'Fontes ativas','lm-cfg':'configuradas','lm-eps':'EPS total','lm-eps2':'eventos / seg',
     'lm-evd':'Eventos / dia','lm-evd2':'total diário','lm-gbm':'GB / mês','lm-est':'estimativa',
     'lm-tby':'TB / ano','lm-base':'base de cotação',
-    't1lbl':'SIZING POR FONTE','t1badge':'110 fontes','t2lbl':'CALCULADORA RÁPIDA','t2badge':'GB · EPS · TB',
+    't1lbl':'SIZING POR FONTE','t1badge':'146 fontes','t2lbl':'CALCULADORA RÁPIDA','t2badge':'GB · EPS · TB',
     'sb-search-lbl':'Buscar fonte','search-ph':'fonte ou fabricante…',
     'sb-overview':'Visão geral','sb-all':'Todas as fontes',
     'sb-infra':'Infraestrutura','sb-srv':'Servidores','sb-net':'Rede',
@@ -1859,13 +2233,52 @@ const I18={
     'clone-confirm-lbl':'Duplicar selecionados',
     'clone-search-ph':'Buscar tipo de evento...',
     'tb-hint':'Qtde editável em cada linha',
+    'g-s1-p1':'Plataformas de operações de segurança podem ser licenciadas por métricas diferentes. Algumas medem velocidade, quantos eventos chegam por segundo (EPS). O SecOps mede volume, quantos dados são ingeridos por ano (TB/ano).',
+    'g-s1-p2':'Isso não é apenas uma diferença de unidade. É uma mudança de perspectiva: em vez de pensar na taxa de chegada dos logs, pensa-se no tamanho total do dado que será armazenado e processado. Para ambientes com eventos pequenos e frequentes, essa métrica pode ser mais previsível e econômica.',
+    'g-s1-callout':'A mesma infraestrutura pode gerar volumes muito diferentes dependendo do tipo de evento, não apenas da velocidade com que os eventos chegam.',
+    'g-s2-p1':'O cálculo parte de uma equação simples que conecta velocidade de eventos ao volume anual de dados:',
+    'g-step1-desc':'Quantos dispositivos, instâncias ou serviços do mesmo tipo existem no ambiente. 50 firewalls geram 50x o volume de 1 firewall.',
+    'g-step2-desc':'Taxa média de geração de logs de cada dispositivo. Varia muito por tipo: um firewall de borda gera centenas de EPS, um servidor de arquivos gera menos de 2 EPS em condições normais.',
+    'g-step3-desc':'Cada evento tem um tamanho em bytes. Um log de autenticação simples pode ter 400 bytes. Um alerta de EDR com contexto de processo pode ter 1.500 bytes. Multiplicado por bilhões de eventos, essa diferença é enorme.',
+    'g-step4-desc':'Converte a taxa por segundo em volume diário: 60 seg x 60 min x 24 h = 86.400. Sistemas de segurança operam 24/7, não há janelas de inatividade na geração de logs.',
+    'g-step5-desc':'O SecOps usa o padrão SI decimal, não o binário. 1 TB = 1.000 GB = 1.000.000 MB = 10 elevado a 12 bytes. Essa é a unidade de referência para precificação.',
+    'g-s3-p1':'É tentador pensar que mais EPS significa mais volume. Mas o tamanho do evento é igualmente determinante. O exemplo abaixo mostra dois tipos com EPS similares gerando volumes muito diferentes:',
+    'g-s3-callout':'O EDR tem 100x menos EPS por ativo, mas gera quase o dobro do volume total por causa da combinação de eventos maiores e muito mais endpoints. Subestimar bytes/evento é a fonte mais comum de erros de sizing.',
+    'g-s5-p1':'Esta ferramenta calcula o volume bruto estimado com base em referências de mercado. Na prática, fatores técnicos podem reduzir o volume final ingerido:',
+    'g-f1-title':'Compressão',
+    'g-f1-desc':'Logs em trânsito são comprimidos. A taxa varia por tipo de dado, mas pode reduzir o volume transmitido em 60 a 80%. O SecOps mede o volume após a ingestão.',
+    'g-f2-title':'Filtros e descarte',
+    'g-f2-desc':'Pipelines de ingestão podem descartar eventos de baixo valor antes do armazenamento. Ruído de DNS, health checks e heartbeats são candidatos comuns.',
+    'g-f3-title':'Deduplicação',
+    'g-f3-desc':'Eventos idênticos enviados por múltiplas fontes ou por erros de configuração podem ser deduplicados, reduzindo o volume efetivo.',
+    'g-f4-title':'Variação de carga',
+    'g-f4-desc':'Os valores de EPS/ativo são médias. Picos de incidentes, manutenções e sazonalidade podem elevar o volume temporariamente acima da estimativa.',
+    'g-s5-callout':'Para propostas formais, valide sempre com dados reais do ambiente. Relatórios de ingestão do sistema atual do cliente são a melhor fonte de referência. Use esta ferramenta como ponto de partida e ancoragem da conversa técnica.',
+    't4lbl':'COMO FUNCIONA?',
+    't4badge':'guia',
+    'g-hero-title':'Como o dimensionamento funciona?',
+    'g-hero-sub':'Entenda a lógica por trás dos cálculos e por que cada variável importa para uma cotação precisa do SecOps.',
+    'g-s1-title':'Por que volume e não velocidade?',
+    'g-s2-title':'A fórmula desmontada',
+    'g-s3-title':'EPS e bytes: dois fatores, um resultado',
+    'g-s5-title':'O que este cálculo não inclui',
+    'g-cmp1-lbl':'Firewall NGFW',
+    'g-cmp2-lbl':'EDR / XDR',
+    'g-cmp-eps':'EPS/ativo',
+    'g-cmp-bytes':'Bytes/evt',
+    'g-cmp-gbday':'GB/dia',
+    'g-step1-title':'Quantidade de ativos',
+    'g-step2-title':'EPS por ativo (eventos por segundo)',
+    'g-step3-title':'Tamanho médio do evento (bytes)',
+    'g-step4-title':'86.400 segundos por dia',
+    'g-step5-title':'Padrão decimal: 1 TB = 10¹² bytes',
   },
   en:{
     'lbl-live':'LIVE CALC',
     'lm-src':'Active sources','lm-cfg':'configured','lm-eps':'Total EPS','lm-eps2':'events / sec',
     'lm-evd':'Events / day','lm-evd2':'daily total','lm-gbm':'GB / month','lm-est':'estimate',
     'lm-tby':'TB / year','lm-base':'quote basis',
-    't1lbl':'SIZING BY SOURCE','t1badge':'110 sources','t2lbl':'QUICK CALCULATOR','t2badge':'GB · EPS · TB',
+    't1lbl':'SIZING BY SOURCE','t1badge':'146 sources','t2lbl':'QUICK CALCULATOR','t2badge':'GB · EPS · TB',
     'sb-search-lbl':'Search source','search-ph':'source or vendor…',
     'sb-overview':'Overview','sb-all':'All sources',
     'sb-infra':'Infrastructure','sb-srv':'Servers','sb-net':'Network',
@@ -1933,13 +2346,52 @@ const I18={
     'clone-confirm-lbl':'Duplicate selected',
     'clone-search-ph':'Search event type...',
     'tb-hint':'Qty editable in each row',
+    'g-s1-p1':'Security operations platforms can be licensed by different metrics. Some measure speed, how many events arrive per second (EPS). SecOps measures volume, how much data is ingested per year (TB/year).',
+    'g-s1-p2':'This is not just a unit difference. It is a shift in perspective: instead of thinking about the rate of log arrival, you think about the total size of the data that will be stored and processed. For environments with small, frequent events, this metric can be more predictable and cost-effective.',
+    'g-s1-callout':'The same infrastructure can generate very different volumes depending on the event type, not just the rate at which events arrive.',
+    'g-s2-p1':'The calculation starts from a simple equation that connects event rate to annual data volume:',
+    'g-step1-desc':'How many devices, instances or services of the same type exist in the environment. 50 firewalls generate 50x the volume of 1 firewall.',
+    'g-step2-desc':'Average log generation rate per device. Varies greatly by type: an edge firewall generates hundreds of EPS, a file server generates less than 2 EPS under normal conditions.',
+    'g-step3-desc':'Each event has a size in bytes. A simple authentication log can have 400 bytes. An EDR alert with process context can have 1,500 bytes. Multiplied by billions of events, this difference is enormous.',
+    'g-step4-desc':'Converts the per-second rate to daily volume: 60 sec x 60 min x 24 h = 86,400. Security systems operate 24/7, there are no inactivity windows in log generation.',
+    'g-step5-desc':'SecOps uses the SI decimal standard, not binary. 1 TB = 1,000 GB = 1,000,000 MB = 10 to the power of 12 bytes. This is the reference unit for pricing.',
+    'g-s3-p1':'It is tempting to think that more EPS means more volume. But event size is equally decisive. The example below shows two types with similar EPS generating very different volumes:',
+    'g-s3-callout':'EDR has 100x less EPS per asset, but generates almost twice the total volume due to the combination of larger events and many more endpoints. Underestimating bytes/event is the most common source of sizing errors.',
+    'g-s5-p1':'This tool calculates the estimated gross volume based on market references. In practice, technical factors can reduce the final ingested volume:',
+    'g-f1-title':'Compression',
+    'g-f1-desc':'Logs in transit are compressed. The rate varies by data type, but can reduce transmitted volume by 60 to 80%. SecOps measures volume after ingestion.',
+    'g-f2-title':'Filters and dropping',
+    'g-f2-desc':'Ingestion pipelines can discard low-value events before storage. DNS noise, health checks and heartbeats are common candidates.',
+    'g-f3-title':'Deduplication',
+    'g-f3-desc':'Identical events sent by multiple sources or due to misconfiguration can be deduplicated, reducing the effective volume.',
+    'g-f4-title':'Load variation',
+    'g-f4-desc':'EPS/asset values are averages. Incident spikes, maintenance and seasonality can temporarily raise volume above the estimate.',
+    'g-s5-callout':'For formal proposals, always validate with real environment data. Ingestion reports from the client current system are the best reference source. Use this tool as a starting point and anchor for the technical conversation.',
+    't4lbl':'HOW IT WORKS?',
+    't4badge':'guide',
+    'g-hero-title':'How the sizing calculation works?',
+    'g-hero-sub':'Understand the logic behind the calculations and why each variable matters for an accurate SecOps quote.',
+    'g-s1-title':'Why volume and not speed?',
+    'g-s2-title':'The formula broken down',
+    'g-s3-title':'EPS and bytes: two factors, one result',
+    'g-s5-title':'What this calculation does not include',
+    'g-cmp1-lbl':'NGFW Firewall',
+    'g-cmp2-lbl':'EDR / XDR',
+    'g-cmp-eps':'EPS/asset',
+    'g-cmp-bytes':'Bytes/evt',
+    'g-cmp-gbday':'GB/day',
+    'g-step1-title':'Number of assets',
+    'g-step2-title':'EPS per asset (events per second)',
+    'g-step3-title':'Average event size (bytes)',
+    'g-step4-title':'86,400 seconds per day',
+    'g-step5-title':'Decimal standard: 1 TB = 10¹² bytes',
   },
   es:{
     'lbl-live':'CÁLCULO EN VIVO',
     'lm-src':'Fuentes activas','lm-cfg':'configuradas','lm-eps':'EPS total','lm-eps2':'eventos / seg',
     'lm-evd':'Eventos / día','lm-evd2':'total diario','lm-gbm':'GB / mes','lm-est':'estimación',
     'lm-tby':'TB / año','lm-base':'base de cotización',
-    't1lbl':'SIZING POR FUENTE','t1badge':'110 fuentes','t2lbl':'CALCULADORA RÁPIDA','t2badge':'GB · EPS · TB',
+    't1lbl':'SIZING POR FUENTE','t1badge':'146 fuentes','t2lbl':'CALCULADORA RÁPIDA','t2badge':'GB · EPS · TB',
     'sb-search-lbl':'Buscar fuente','search-ph':'fuente o fabricante…',
     'sb-overview':'Visión general','sb-all':'Todas las fuentes',
     'sb-infra':'Infraestructura','sb-srv':'Servidores','sb-net':'Red',
@@ -2006,7 +2458,46 @@ const I18={
     'clone-cancel-lbl':'Cancelar',
     'clone-confirm-lbl':'Duplicar seleccionados',
     'clone-search-ph':'Buscar tipo de evento...',
-    'tb-hint':'Cant. editable en cada fila'
+    'tb-hint':'Cant. editable en cada fila',
+    'g-s1-p1':'Las plataformas de operaciones de seguridad pueden licenciarse por métricas diferentes. Algunas miden velocidad, cuántos eventos llegan por segundo (EPS). SecOps mide volumen, cuántos datos se ingestan por año (TB/año).',
+    'g-s1-p2':'No es solo una diferencia de unidad. Es un cambio de perspectiva: en lugar de pensar en la tasa de llegada de logs, se piensa en el tamaño total del dato que será almacenado y procesado. Para entornos con eventos pequeños y frecuentes, esta métrica puede ser más predecible y económica.',
+    'g-s1-callout':'La misma infraestructura puede generar volúmenes muy diferentes dependiendo del tipo de evento, no solo de la velocidad con que llegan.',
+    'g-s2-p1':'El cálculo parte de una ecuación simple que conecta la velocidad de eventos al volumen anual de datos:',
+    'g-step1-desc':'Cuántos dispositivos, instancias o servicios del mismo tipo existen en el entorno. 50 firewalls generan 50x el volumen de 1 firewall.',
+    'g-step2-desc':'Tasa media de generación de logs de cada dispositivo. Varía mucho por tipo: un firewall de borde genera cientos de EPS, un servidor de archivos genera menos de 2 EPS en condiciones normales.',
+    'g-step3-desc':'Cada evento tiene un tamaño en bytes. Un log de autenticación simple puede tener 400 bytes. Una alerta de EDR con contexto de proceso puede tener 1.500 bytes. Multiplicado por miles de millones de eventos, esa diferencia es enorme.',
+    'g-step4-desc':'Convierte la tasa por segundo en volumen diario: 60 seg x 60 min x 24 h = 86.400. Los sistemas de seguridad operan 24/7, no hay ventanas de inactividad en la generación de logs.',
+    'g-step5-desc':'SecOps usa el estándar SI decimal, no el binario. 1 TB = 1.000 GB = 1.000.000 MB = 10 elevado a 12 bytes. Esta es la unidad de referencia para la tarificación.',
+    'g-s3-p1':'Es tentador pensar que más EPS significa más volumen. Pero el tamaño del evento es igualmente determinante. El ejemplo a continuación muestra dos tipos con EPS similares generando volúmenes muy diferentes:',
+    'g-s3-callout':'El EDR tiene 100x menos EPS por activo, pero genera casi el doble del volumen total debido a la combinación de eventos más grandes y muchos más endpoints. Subestimar bytes/evento es la fuente más común de errores de sizing.',
+    'g-s5-p1':'Esta herramienta calcula el volumen bruto estimado con base en referencias de mercado. En la práctica, factores técnicos pueden reducir el volumen final ingerido:',
+    'g-f1-title':'Compresión',
+    'g-f1-desc':'Los logs en tránsito son comprimidos. La tasa varía por tipo de dato, pero puede reducir el volumen transmitido entre un 60 y 80%. SecOps mide el volumen tras la ingestión.',
+    'g-f2-title':'Filtros y descarte',
+    'g-f2-desc':'Los pipelines de ingestión pueden descartar eventos de bajo valor antes del almacenamiento. El ruido de DNS, health checks y heartbeats son candidatos comunes.',
+    'g-f3-title':'Deduplicación',
+    'g-f3-desc':'Eventos idénticos enviados por múltiples fuentes o por errores de configuración pueden ser deduplicados, reduciendo el volumen efectivo.',
+    'g-f4-title':'Variación de carga',
+    'g-f4-desc':'Los valores de EPS/activo son promedios. Picos de incidentes, mantenimientos y estacionalidad pueden elevar el volumen temporalmente por encima de la estimativa.',
+    'g-s5-callout':'Para propuestas formales, valide siempre con datos reales del entorno. Los reportes de ingestión del sistema actual del cliente son la mejor fuente de referencia. Use esta herramienta como punto de partida y ancla para la conversación técnica.',
+    't4lbl':'CÓMO FUNCIONA?',
+    't4badge':'guía',
+    'g-hero-title':'Cómo funciona el dimensionamiento?',
+    'g-hero-sub':'Entiende la lógica detrás de los cálculos y por qué cada variable importa para una cotización precisa de SecOps.',
+    'g-s1-title':'¿Por qué volumen y no velocidad?',
+    'g-s2-title':'La fórmula desglosada',
+    'g-s3-title':'EPS y bytes: dos factores, un resultado',
+    'g-s5-title':'Lo que este cálculo no incluye',
+    'g-cmp1-lbl':'Firewall NGFW',
+    'g-cmp2-lbl':'EDR / XDR',
+    'g-cmp-eps':'EPS/activo',
+    'g-cmp-bytes':'Bytes/evt',
+    'g-cmp-gbday':'GB/día',
+    'g-step1-title':'Cantidad de activos',
+    'g-step2-title':'EPS por activo (eventos por segundo)',
+    'g-step3-title':'Tamaño medio del evento (bytes)',
+    'g-step4-title':'86.400 segundos por día',
+    'g-step5-title':'Estándar decimal: 1 TB = 10¹² bytes'
   }
 };
 let lang='pt';
@@ -2294,11 +2785,11 @@ function render(){
       ch+=`<tr class="dr${hv?' lit':''}">
         <td class="rn">${row.n}</td>
         <td class="rs" title="${row.s}">${row.s}</td>
-        <td style="text-align:right"><input class="ni${hv?' on':''}" type="number" min="0" value="${sv.qty}" data-k="${k}" data-f="qty" oninput="upd(this)"></td>
-        <td style="text-align:right"><input class="ni" type="number" min="0" step="0.1" value="${sv.eps}" data-k="${k}" data-f="eps" oninput="upd(this)"></td>
+        <td style="text-align:right"><input class="ni${hv?' on':''}" type="number" min="0" max="99999" value="${sv.qty}" data-k="${k}" data-f="qty" oninput="upd(this)"></td>
+        <td style="text-align:right"><input class="ni" type="number" min="0" max="999999" step="0.1" value="${sv.eps}" data-k="${k}" data-f="eps" oninput="upd(this)"></td>
         <td class="nc${hv?' a':''}" id="et_${k}">${f0(et)}</td>
         <td class="nc${hv?' a':''}" id="ed_${k}">${f0(evd)}</td>
-        <td style="text-align:right"><input class="ni" type="number" min="0" value="${sv.b}" data-k="${k}" data-f="b" oninput="upd(this)"></td>
+        <td style="text-align:right"><input class="ni" type="number" min="0" max="99999" value="${sv.b}" data-k="${k}" data-f="b" oninput="upd(this)"></td>
         <td class="nc${hv?' h':''}" id="gd_${k}">${f2(gbd)}</td>
         <td class="td-note"><input class="note-input" type="text" placeholder="${notePh()}" value="${getNote(k)}" data-nk="${k}" oninput="setNote(this.dataset.nk,this.value)"></td>
       </tr>`;
@@ -2357,195 +2848,236 @@ function t1Totals(){
 }
 function resetAll(){Object.keys(S).forEach(k=>{S[k].qty=0});render()}
 function exportXLSX(){
-  if(typeof XLSX==='undefined'){
-    const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-    s.onload=_doExport;
+  const btn = document.querySelector('.sact.primary');
+  if(btn){ btn.style.opacity='.5'; btn.style.pointerEvents='none'; }
+  const done = ()=>{ if(btn){ btn.style.opacity=''; btn.style.pointerEvents=''; } };
+
+  if(typeof XLSX !== 'undefined'){
+    try{ _doExport(); } catch(e){ _xlsxErr(e); } finally{ done(); }
+  } else {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = ()=>{ try{ _doExport(); } catch(e){ _xlsxErr(e); } finally{ done(); } };
+    s.onerror = ()=>{ done(); _xlsxErr(new Error('CDN load failed')); };
     document.head.appendChild(s);
-  } else { _doExport(); }
+  }
+}
+
+function _xlsxErr(e){
+  console.error('XLSX export error:', e);
+  const msg = lang==='en' ? 'Export failed. Check your internet connection (SheetJS CDN required).'
+            : lang==='es' ? 'Error al exportar. Verifique su conexión a internet.'
+            : 'Erro ao exportar. Verifique sua conexão com a internet (CDN SheetJS necessário).';
+  alert(msg);
 }
 
 function _doExport(){
-  const wb  = XLSX.utils.book_new();
+  // i18n labels
+  const T   = I18[lang] || I18.pt;
   const CL  = CATS_LABELS[lang] || CATS_LABELS.pt;
   const proj = getProjName();
 
-  // -- Palette --------------------------------------------------
+  const wb = XLSX.utils.book_new();
+
+  // ── Palette ──────────────────────────────────────────────────
   const C = {
-    navyDark : '0D1827', navy:'1A3A5C', navyMid:'2E5F8A',
-    teal:'0B7B8C', tealLight:'D6EEF2',
-    green:'1A6B3C', blue:'0069B4', blueBg:'D6E8F7',
-    gray1:'F4F6F9', gray2:'E8ECF2', gray3:'D0D6E0',
-    white:'FFFFFF', text:'111827', textMid:'4B5563', textLight:'9CA3AF',
+    navyDark:'0D1827', navy:'1A3A5C', navyMid:'2E5F8A',
+    pink:'FF1A75',     pinkDark:'C4005A', pinkBg:'FFE4EF',
+    green:'1A6B3C',    greenBg:'D6F0E2',
+    gray1:'F4F6F9',    gray2:'E8ECF2',    gray3:'D0D7E3',
+    white:'FFFFFF',    black:'111111',    text2:'4A4A5A',
   };
 
-  // -- Style factories -------------------------------------------
-  const fnt=(color,sz,bold,italic)=>({name:'Calibri',sz:sz||10,bold:!!bold,italic:!!italic,color:{rgb:color||C.text}});
-  const bg=(color)=>({patternType:'solid',fgColor:{rgb:color}});
-  const al=(h,v,wrap)=>({horizontal:h||'left',vertical:v||'center',wrapText:!!wrap});
-  const bdr=(s,c)=>{const sd={style:s||'thin',color:{rgb:c||C.gray3}};return{top:sd,bottom:sd,left:sd,right:sd}};
-  const bdrB=(c)=>{const t={style:'thin',color:{rgb:c||C.gray3}},m={style:'medium',color:{rgb:c||C.navy}};return{top:m,bottom:m,left:t,right:t}};
-  const st=(font,fill,alignment,border,numFmt)=>{
-    const s={};
-    if(font)s.font=font; if(fill)s.fill=fill;
-    if(alignment)s.alignment=alignment; if(border)s.border=border;
-    if(numFmt)s.numFmt=numFmt; return s;
-  };
-
-  // Predefined styles
-  const ST = {
-    title : st(fnt(C.white,15,true),  bg(C.navyDark), al('left','center')),
-    sub   : st(fnt(C.white,10),       bg(C.navy),     al('left','center')),
-    date  : st(fnt(C.textLight,9,false,true), bg(C.gray1), al('left','center')),
-    hdr   : st(fnt(C.white,10,true),  bg(C.navyMid),  al('center','center'), bdr('thin',C.navy)),
-    hdrL  : st(fnt(C.white,10,true),  bg(C.navyMid),  al('left','center'),   bdr('thin',C.navy)),
-    cat   : st(fnt(C.navy,10,true),   bg(C.tealLight),al('left','center'),   bdr('thin',C.gray3)),
-    d0L   : st(fnt(C.text,10),        bg(C.white),    al('left','center',true),  bdr('thin',C.gray3)),
-    d1L   : st(fnt(C.text,10),        bg(C.gray1),    al('left','center',true),  bdr('thin',C.gray3)),
-    d0sc  : st(fnt(C.textLight,9,false,true), bg(C.white), al('left','center',true), bdr('thin',C.gray3)),
-    d1sc  : st(fnt(C.textLight,9,false,true), bg(C.gray1), al('left','center',true), bdr('thin',C.gray3)),
-    d0R   : st(fnt(C.text,10),        bg(C.white),    al('right','center'),  bdr('thin',C.gray3)),
-    d1R   : st(fnt(C.text,10),        bg(C.gray1),    al('right','center'),  bdr('thin',C.gray3)),
-    d0EPS : st(fnt(C.navyMid,10,true),bg(C.white),    al('right','center'),  bdr('thin',C.gray3)),
-    d1EPS : st(fnt(C.navyMid,10,true),bg(C.gray1),    al('right','center'),  bdr('thin',C.gray3)),
-    d0GB  : st(fnt(C.teal,10),        bg(C.white),    al('right','center'),  bdr('thin',C.gray3)),
-    d1GB  : st(fnt(C.teal,10),        bg(C.gray1),    al('right','center'),  bdr('thin',C.gray3)),
-    d0TB  : st(fnt(C.blue,10,true),   bg(C.blueBg),   al('right','center'),  bdrB(C.navyMid), '#,##0.0000'),
-    d1TB  : st(fnt(C.blue,10,true),   bg(C.blueBg),   al('right','center'),  bdrB(C.navyMid), '#,##0.0000'),
-    totLbl: st(fnt(C.white,11,true),  bg(C.navy),     al('left','center'),   bdrB(C.navyDark)),
-    totNum: st(fnt(C.white,10,true),  bg(C.navy),     al('right','center'),  bdrB(C.navyDark)),
-    totGB : st(fnt(C.white,11,true),  bg(C.teal),     al('right','center'),  bdrB(C.navyDark)),
-    totTB : st(fnt(C.white,14,true),  bg(C.green),    al('right','center'),  bdrB(C.green),   '#,##0.0000'),
-    note  : st(fnt(C.textLight,8,false,true), null, al('left','center')),
-  };
-
-  // -- Collect filled rows only ----------------------------------
-  let tEPS=0,tEvD=0,tGBD=0,tSrc=0;
-  const rows=[];
-  CATS.forEach((cat,ci)=>{
-    let catAdded=false;
-    cat.rows.forEach((row,ri)=>{
-      const k=`${ci}_${ri}`;
-      const state=_S[k];
-      if(!state||state.qty===0) return;
-      const et=state.qty*state.eps, evd=et*86400, gbd=(evd*state.b)/1e9;
-      if(!catAdded){ rows.push({type:'cat', label:CL[ci]||cat.label}); catAdded=true; }
-      rows.push({type:'data', cat:CL[ci]||cat.label, name:row.n, scope:row.s,
-        qty:state.qty, eps:state.eps, epsT:et, evd, bytes:state.b,
-        gbD:gbd, gbM:gbd*30, tbY:(gbd*365)/1000});
-      tEPS+=et; tEvD+=evd; tGBD+=gbd; tSrc++;
-    });
+  // ── Style helpers ─────────────────────────────────────────────
+  const fnt = (color, sz=10, bold=false) => ({ font:{ color:{rgb:color}, sz, bold } });
+  const bg  = (color) => ({ fill:{ fgColor:{rgb:color} } });
+  const al  = (h='left', v='center') => ({ alignment:{ horizontal:h, vertical:v, wrapText:true } });
+  const bdr = (color='D0D7E3') => ({
+    border:{
+      top:{style:'thin',color:{rgb:color}},
+      bottom:{style:'thin',color:{rgb:color}},
+      left:{style:'thin',color:{rgb:color}},
+      right:{style:'thin',color:{rgb:color}},
+    }
   });
-  const tTBY=(tGBD*365)/1000, tGBM=tGBD*30;
+  const bdrB = (color) => ({ border:{ bottom:{style:'medium',color:{rgb:color}} } });
+  const st = (...objs) => Object.assign({}, ...objs);
+  const nf_num = '###,##0';
+  const nf_dec = '###,##0.00';
 
-  // -- Build worksheet -------------------------------------------
-  const ws={};
-  const NCOLS=10; // A–J (no separate Categoria col in data rows)
-
-  const sc=(r,c,v,s,nf)=>{
-    const addr=XLSX.utils.encode_cell({r,c});
-    ws[addr]={v, t:typeof v==='number'?'n':'s', s:s||{}};
-    if(nf)ws[addr].z=nf;
+  // ── Cell writer ───────────────────────────────────────────────
+  const ws = {};
+  const sc = (r, c, v, s, nf) => {
+    const addr = XLSX.utils.encode_cell({r, c});
+    ws[addr] = { v, t: typeof v==='number' ? 'n' : 's' };
+    if(s) ws[addr].s = s;
+    if(nf) ws[addr].z = nf;
   };
-  const fillRow=(r,s)=>{ for(let c=0;c<NCOLS;c++){ const a=XLSX.utils.encode_cell({r,c}); if(!ws[a])ws[a]={v:'',t:'s',s:s||{}}; }};
 
-  let r=0;
-  const merges=[];
+  // ── Styles ───────────────────────────────────────────────────
+  const ST = {
+    title:   st(fnt(C.white,13,true), bg(C.navy), al('left','center')),
+    subhdr:  st(fnt(C.white,9,false), bg(C.navyMid), al('left','center')),
+    colHdr:  st(fnt(C.white,9,true),  bg(C.navy), al('center','center'), bdr(C.navyDark)),
+    cat:     st(fnt(C.pink,9,true),   bg(C.pinkBg), al('left','center'), bdr(C.gray3)),
+    dataL:   st(fnt(C.black,9),       bg(C.white), al('left','center'), bdr(C.gray3)),
+    dataR:   st(fnt(C.black,9),       bg(C.white), al('right','center'), bdr(C.gray3)),
+    dataR2:  st(fnt(C.text2,9),       bg(C.gray1), al('right','center'), bdr(C.gray3)),
+    hlR:     st(fnt(C.navy,10,true),  bg(C.gray1), al('right','center'), bdr(C.gray3)),
+    totLbl:  st(fnt(C.white,10,true), bg(C.navy),  al('left','center'),  bdrB(C.navyDark)),
+    totNum:  st(fnt(C.white,10,true), bg(C.navy),  al('right','center'), bdrB(C.navyDark)),
+    totHl:   st(fnt(C.white,11,true), bg(C.pinkDark), al('right','center'), bdrB(C.navyDark)),
+    note:    st(fnt(C.text2,8),       bg(C.gray1), al('left','center')),
+    blank:   st(bg(C.white), bdr(C.gray3)),
+  };
 
-  // Title
-  const titleTxt=proj?`SecOps Sizing Tool  ·  ${proj}`:'SecOps Sizing Tool — Dimensionamento de Ingestão';
-  sc(r,0,titleTxt,ST.title); fillRow(r,ST.title);
-  merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
-
-  // Sub
-  sc(r,0,'Estimativa de Volume de Ingestão para Cotação',ST.sub);
-  fillRow(r,ST.sub); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
-
-  // Date
-  const dt=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  sc(r,0,`Gerado em ${dt}   ·   SecOps Sizing Tool v2.0.0`,ST.date);
-  fillRow(r,ST.date); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}}); r++;
-
-  r++; // spacer
-
-  // Headers — 10 cols: Fonte | Escopo | Qtde | EPS/ativo | EPS total | Eventos/dia | Bytes/evt | GB/dia | GB/mês | TB/ano
-  const heads=[
-    {l:T['th-type']||'Fonte de log',al:'left'},
-    {l:T['th-scope']||'Escopo / exemplos',al:'left'},
-    {l:T['th-qty']||'Qtde',al:'center'},
-    {l:T['th-epsa']||'EPS / ativo',al:'center'},
-    {l:T['th-epst']||'EPS total',al:'center'},
-    {l:T['th-evd']||'Eventos / dia',al:'center'},
-    {l:T['th-bytes']||'Bytes / evt',al:'center'},
-    {l:T['lm-gbd']||'GB / dia',al:'center'},
-    {l:T['lm-gbm']||'GB / mês',al:'center'},
-    {l:'TB / ano  ★',al:'center'},
+  // ── Column config ──────────────────────────────────────────────
+  const heads = [
+    { l: T['th-type']  || 'Fonte de log',      al:'left',  w:28 },
+    { l: T['th-scope'] || 'Escopo / exemplos', al:'left',  w:30 },
+    { l: T['th-qty']   || 'Qtde',              al:'center',w:8  },
+    { l: T['th-epsa']  || 'EPS / ativo',       al:'center',w:10 },
+    { l: T['th-epst']  || 'EPS total',         al:'center',w:12 },
+    { l: T['th-evd']   || 'Eventos / dia',     al:'center',w:14 },
+    { l: T['th-bytes'] || 'Bytes / evt',       al:'center',w:10 },
+    { l: T['lm-gbd']   || 'GB / dia',          al:'center',w:10 },
+    { l: 'GB / mês',                           al:'center',w:10 },
+    { l: 'TB / ano ★', al:'center',w:11 },
   ];
-  const HDR_ROW=r;
-  heads.forEach((h,c)=>sc(r,c,h.l,h.al==='left'?ST.hdrL:ST.hdr));
+  const NCOLS = heads.length;
+
+  let r = 0;
+
+  // ── Title row ──────────────────────────────────────────────────
+  sc(r, 0, 'SecOps Sizing Tool v2.0.0' + (proj ? ' — ' + proj : ''), ST.title);
+  for(let c=1;c<NCOLS;c++) sc(r, c, '', ST.title);
+  ws['!merges'] = ws['!merges'] || [];
+  ws['!merges'].push({s:{r,c:0}, e:{r,c:NCOLS-1}});
   r++;
 
-  // Data rows
-  let alt=false;
-  rows.forEach(d=>{
-    if(d.type==='cat'){
-      sc(r,0,d.label,ST.cat); fillRow(r,ST.cat);
-      merges.push({s:{r,c:0},e:{r,c:NCOLS-1}});
-      r++; alt=false; return;
-    }
-    const L=alt?ST.d1L:ST.d0L, SC=alt?ST.d1sc:ST.d0sc,
-          R=alt?ST.d1R:ST.d0R, E=alt?ST.d1EPS:ST.d0EPS,
-          G=alt?ST.d1GB:ST.d0GB, TB=alt?ST.d1TB:ST.d0TB;
+  // ── Sub-header ────────────────────────────────────────────────
+  const dateStr = new Date().toLocaleDateString(lang==='pt'?'pt-BR':lang==='es'?'es-ES':'en-US');
+  sc(r, 0, dateStr, ST.subhdr);
+  for(let c=1;c<NCOLS;c++) sc(r, c, '', ST.subhdr);
+  ws['!merges'].push({s:{r,c:0}, e:{r,c:NCOLS-1}});
+  r++; r++; // blank line
 
-    sc(r,0,d.name,  L);
-    sc(r,1,d.scope, SC);
-    sc(r,2,d.qty,   R,  '#,##0');
-    sc(r,3,d.eps,   R,  '#,##0.00');
-    sc(r,4,parseFloat(d.epsT.toFixed(2)),  E, '#,##0.00');
-    sc(r,5,parseFloat(d.evd.toFixed(0)),   R, '#,##0');
-    sc(r,6,d.bytes, R,  '#,##0');
-    sc(r,7,parseFloat(d.gbD.toFixed(4)),   G, '#,##0.00');
-    sc(r,8,parseFloat(d.gbM.toFixed(4)),   G, '#,##0.00');
-    sc(r,9,parseFloat(d.tbY.toFixed(4)),   TB);
-    r++; alt=!alt;
+  // ── Column headers ────────────────────────────────────────────
+  heads.forEach((h,c) => {
+    const s = Object.assign({}, ST.colHdr, { alignment:{ horizontal:h.al, vertical:'center' } });
+    sc(r, c, h.l, s);
+  });
+  r++;
+
+  // ── Data rows ─────────────────────────────────────────────────
+  let tEPS=0, tEvD=0, tGBD=0, tGBM=0, tTBY=0, tSrc=0;
+  let rowCount = 0;
+
+  CATS.forEach((cat, ci) => {
+    const label = CL[ci] || cat.label;
+    let catHasData = false;
+    const catRows = [];
+
+    cat.rows.forEach((row, ri) => {
+      const sv = _S[`${ci}_${ri}`];
+      if(!sv || sv.qty === 0) return;
+      const et=sv.qty*sv.eps, evd=et*86400, gbd=(evd*sv.b)/1e9, gbm=gbd*30, tby=(gbd*365)/1000;
+      catRows.push({ name:row.n, scope:row.s, qty:sv.qty, eps:sv.eps, et, evd, gbd, gbm, tby });
+      tEPS+=et; tEvD+=evd; tGBD+=gbd; tGBM+=gbm; tTBY+=tby; tSrc++;
+    });
+
+    if(catRows.length === 0) return;
+    catHasData = true;
+
+    // Category header
+    sc(r, 0, label, ST.cat);
+    for(let c=1;c<NCOLS;c++) sc(r, c, '', ST.cat);
+    ws['!merges'].push({s:{r,c:0}, e:{r,c:NCOLS-1}});
+    r++;
+
+    catRows.forEach((row, idx) => {
+      const isAlt = idx % 2 === 1;
+      const dL = isAlt ? Object.assign({},ST.dataL,bg(C.gray1)) : ST.dataL;
+      const dR = isAlt ? Object.assign({},ST.dataR,bg(C.gray1)) : ST.dataR;
+      const hl = isAlt ? Object.assign({},ST.hlR,bg(C.gray2)) : ST.hlR;
+
+      sc(r, 0, row.name,  dL);
+      sc(r, 1, row.scope, dL);
+      sc(r, 2, row.qty,   dR, nf_num);
+      sc(r, 3, row.eps,   dR, nf_dec);
+      sc(r, 4, row.et,    dR, nf_num);
+      sc(r, 5, row.evd,   dR, nf_num);
+      sc(r, 6, row.b||0,  dR, nf_num);
+      sc(r, 7, row.gbd,   hl, nf_dec);
+      sc(r, 8, row.gbm,   hl, nf_dec);
+      sc(r, 9, row.tby,   hl, nf_dec);
+      r++; rowCount++;
+    });
   });
 
-  r++; // spacer before totals
+  // Extra (custom/clone) rows
+  if(EXTRA && EXTRA.length > 0){
+    const customs = EXTRA.filter(e => e.qty > 0);
+    if(customs.length > 0){
+      const customLabel = lang==='en'?'Custom Events':lang==='es'?'Eventos Personalizados':'Eventos Customizados';
+      sc(r, 0, customLabel, ST.cat);
+      for(let c=1;c<NCOLS;c++) sc(r, c, '', ST.cat);
+      ws['!merges'].push({s:{r,c:0}, e:{r,c:NCOLS-1}});
+      r++;
 
-  // Totals
-  const totLbl=lang==='en'?`GRAND TOTAL  ·  ${tSrc} active source${tSrc!==1?'s':''}`:lang==='es'?`TOTAL GENERAL  ·  ${tSrc} fuente${tSrc!==1?'s':''} activas`:`TOTAL GERAL  ·  ${tSrc} fonte${tSrc!==1?'s':''} ativas`;
-  sc(r,0,totLbl,ST.totLbl);
-  sc(r,1,'',ST.totLbl);
-  sc(r,2,'',ST.totNum);
-  sc(r,3,'',ST.totNum);
-  sc(r,4,parseFloat(tEPS.toFixed(2)), ST.totNum,'#,##0.00');
-  sc(r,5,parseFloat(tEvD.toFixed(0)), ST.totNum,'#,##0');
-  sc(r,6,'',ST.totNum);
-  sc(r,7,parseFloat(tGBD.toFixed(2)), ST.totGB,'#,##0.00');
-  sc(r,8,parseFloat(tGBM.toFixed(2)), ST.totGB,'#,##0.00');
-  sc(r,9,parseFloat(tTBY.toFixed(4)), ST.totTB);
-  merges.push({s:{r,c:0},e:{r,c:1}});
-  const TOT_ROW=r; r+=2;
+      customs.forEach((e, idx) => {
+        const et=e.qty*e.eps, evd=et*86400, gbd=(evd*e.b)/1e9, gbm=gbd*30, tby=(gbd*365)/1000;
+        tEPS+=et; tEvD+=evd; tGBD+=gbd; tGBM+=gbm; tTBY+=tby; tSrc++;
+        const dL = ST.dataL, hl = ST.hlR;
+        sc(r, 0, e.name,  dL);
+        sc(r, 1, e.scope, dL);
+        sc(r, 2, e.qty,   dL, nf_num);
+        sc(r, 3, e.eps,   dL, nf_dec);
+        sc(r, 4, et,      dL, nf_num);
+        sc(r, 5, evd,     dL, nf_num);
+        sc(r, 6, e.b||0,  dL, nf_num);
+        sc(r, 7, gbd,     hl, nf_dec);
+        sc(r, 8, gbm,     hl, nf_dec);
+        sc(r, 9, tby,     hl, nf_dec);
+        r++;
+      });
+    }
+  }
 
-  // Note
-  const xlsxNote=T['rpt-footer-note']?T['rpt-footer-note']+' (decimal)':'★  TB/ano = EPS × bytes/evt × 86.400 s/dia × 365 ÷ 10¹²    ·    1 TB = 1.000 GB (decimal)';
-  sc(r,0,xlsxNote,ST.note);
-  fillRow(r,ST.note); merges.push({s:{r,c:0},e:{r,c:NCOLS-1}});
+  // ── Total row ─────────────────────────────────────────────────
+  r++; // blank line before totals
+  const totLabel = lang==='en' ? `TOTAL — ${tSrc} source${tSrc!==1?'s':''}`
+                 : lang==='es' ? `TOTAL — ${tSrc} fuente${tSrc!==1?'s':''}`
+                 : `TOTAL — ${tSrc} fonte${tSrc!==1?'s':''}`;
+  sc(r, 0, totLabel, ST.totLbl);
+  sc(r, 1, '',        ST.totLbl);
+  sc(r, 2, tSrc,      ST.totNum, nf_num);
+  sc(r, 3, '',        ST.totNum);
+  sc(r, 4, tEPS,      ST.totNum, nf_num);
+  sc(r, 5, tEvD,      ST.totNum, nf_num);
+  sc(r, 6, '',        ST.totNum);
+  sc(r, 7, tGBD,      ST.totNum, nf_dec);
+  sc(r, 8, tGBM,      ST.totNum, nf_dec);
+  sc(r, 9, tTBY,      ST.totHl,  nf_dec);
+  ws['!merges'].push({s:{r,c:0}, e:{r,c:1}});
+  r++;
 
-  // Sheet config
-  ws['!ref']    = XLSX.utils.encode_range({s:{r:0,c:0},e:{r,c:NCOLS-1}});
-  ws['!cols']   = [{wch:30},{wch:36},{wch:7},{wch:11},{wch:13},{wch:14},{wch:10},{wch:11},{wch:11},{wch:14}];
-  ws['!merges'] = merges;
-  ws['!rows']   = Array.from({length:r+1},(_,i)=>
-    i===0?{hpt:26}:i===1?{hpt:18}:i===2?{hpt:14}:i===HDR_ROW?{hpt:28}:i===TOT_ROW?{hpt:24}:{hpt:17});
-  ws['!freeze'] = {xSplit:0,ySplit:HDR_ROW+1,topLeftCell:`A${HDR_ROW+2}`,activePane:'bottomLeft',state:'frozen'};
+  // ── Note footer ───────────────────────────────────────────────
+  const note = (T['rpt-footer-note'] || 'Volume = EPS × bytes/evt × 86.400 s/dia × 365 ÷ 10¹²') + ' · 1 TB = 1.000 GB (decimal)';
+  sc(r, 0, note, ST.note);
+  ws['!merges'].push({s:{r,c:0}, e:{r,c:NCOLS-1}});
 
-  XLSX.utils.book_append_sheet(wb,ws,'Dimensionamento');
+  // ── Sheet dimensions ──────────────────────────────────────────
+  ws['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0}, e:{r,c:NCOLS-1}});
+  ws['!cols'] = heads.map(h => ({wch: h.w}));
 
-  // Download
-  const dateStr=new Date().toISOString().slice(0,10);
-  const slug=proj.replace(/[^a-zA-Z0-9\xC0-\xFF]/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'').slice(0,40);
-  XLSX.writeFile(wb,`secops_sizing${slug?'_'+slug:''}_${dateStr}.xlsx`);
+  // ── Write workbook ────────────────────────────────────────────
+  const sheetName = lang==='en'?'Sizing':lang==='es'?'Dimensionamiento':'Dimensionamento';
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+  const slug = proj.replace(/[^a-zA-Z0-9]/g,'_').slice(0,30);
+  const today = new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `secops_sizing${slug?'_'+slug:''}_${today}.xlsx`);
 }
 
 
@@ -3382,14 +3914,34 @@ const _origSwitchTab=switchTab;
 switchTab=function(n,el){
   _origSwitchTab(n,el);
   if(n===3) renderReport();
+  // tab 4 is static — just needs setLang applied
+  if(n===4) setLang(lang);
 };
 
 // --- INIT --------------------------------------------
+// Auto dark mode: apply system preference if no saved preference
+if(!localStorage.getItem('secops-sizing')){
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.dataset.theme = prefersDark ? 'dark' : 'light';
+}
+// Listen for system theme changes
+if(window.matchMedia){
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if(!localStorage.getItem('secops-sizing')) {
+      document.body.dataset.theme = e.matches ? 'dark' : 'light';
+    }
+  });
+}
 toggleEPS();
 cCalc();
 // Load from URL first, then localStorage
 if(!loadFromURL()) loadLocal();
 // Apply translations from the start
+setLang(lang);
+render();
+renderExtra();
+t1Totals();
+if(!loadFromURL()) loadLocal();
 setLang(lang);
 render();
 renderExtra();
